@@ -40,7 +40,8 @@
                     2.Java语言代码请按照这种格式：输入输出流：System.In 和 System.Out，主类：Main，函数：标准 main 函数。
                     <br><br>
                     3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告<br><br>
-                    4.作业的题目请用$分开
+                    4.作业的题目请用<strong>div----------div</strong>在问题之间进行隔开(两个div中间10个-)，
+                    题目中禁止出现，否则自动批改可能出错
                 </p>
                 <label class="homeworkLabel">
                     提交自己的作业：
