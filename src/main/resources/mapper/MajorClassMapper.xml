@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zym.dao.MajorClassMapper">
+  <resultMap id="BaseResultMap" type="zym.pojo.MajorClass">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="class_number" jdbcType="VARCHAR" property="classNumber" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, class_number, class_name, grade
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from major_class
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from major_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zym.pojo.MajorClass">
+    insert into major_class (id, class_number, class_name, 
+      grade)
+    values (#{id,jdbcType=INTEGER}, #{classNumber,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+      #{grade,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="zym.pojo.MajorClass">
+    insert into major_class
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="classNumber != null">
+        class_number,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
+      <if test="grade != null">
+        grade,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classNumber != null">
+        #{classNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        #{grade,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.MajorClass">
+    update major_class
+    <set>
+      <if test="classNumber != null">
+        class_number = #{classNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        grade = #{grade,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zym.pojo.MajorClass">
+    update major_class
+    set class_number = #{classNumber,jdbcType=VARCHAR},
+      class_name = #{className,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

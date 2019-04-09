@@ -1,0 +1,123 @@
+.ml-1{font-size: 16px}
+#findBar{padding:20px 0 0 50px;text-align: center;}
+.myLabel{text-align: right; margin-top:8px;}
+.font{font-size: 16px;}
+#updateModal,#saveModal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+#tips{
+    font-size: 30px;
+    font-family:"Showcard Gothic";
+    color: green;
+    text-align: center;
+}
+#tips1{
+    margin-top:15px;
+    font-size: 16px;
+    color:#0ebeda;
+    margin-left: 40px;
+}
+#tip{
+    padding-right: 40px;
+    padding-left: 75px;
+    margin-right: auto;
+    margin-left: 170px;
+    margin-top: 50px;
+    padding-bottom: 20px;
+}
+#colorRed{
+    color: red;
+}
+
+#assign{
+    padding: 100px auto auto auto;
+}
+.alert-warning {
+    color: #fff;
+    background-color: #f8fbcb;
+    border-color: #baeca9;
+}
+#assign{
+    padding-right: 40px;
+    padding-left: 75px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+    padding-bottom: 20px;
+}
+#courseChoose{
+    margin-right: 10px;
+    margin-left: 70px;
+}
+#itemBankChoose,#questionChoose,#selfDefinedDescription{
+    margin-right: 10px;
+}
+#questionChoose{
+    margin-left: 40px;
+}
+#time,#questionMake,#selfDefined{
+    margin-right: 20px;
+    margin-left: 70px;
+    margin-top: 50px;
+}
+#assignThis{
+    margin-right: 20px;
+    margin-left: 70px;
+    margin-top: 30px;
+}
+#isAutomatic{
+    margin-right: 20px;
+    margin-left: 400px;
+    margin-top: 20px;
+}
+#optionsRadios2{
+    margin-left: 20px;
+}
+#endTime{
+    margin-left: 135px
+}
+#assignButton{
+    margin-left: 362px;
+}
+
+/* 未访问的链接 */
+.bootstrap-table a:link {
+    color: #5c809a
+    /*color: #9a1513*/
+}
+/* 当有鼠标悬停在链接上 */
+.bootstrap-table a:hover {
+    color: #248835
+}
+/* 已访问的链接 */
+.bootstrap-table a:visited {
+    color: #5c809a
+}
+
+.homeworkLabel{
+    margin-top: 30px;
+}
+
+#assignLabel{
+    margin-right: 30px;
+    margin-left: 120px;
+    margin-top: 20px;
+}
+
+#deadlineLabel{
+    margin-right: 30px;
+    margin-left: 170px;
+    margin-top: 20px;
+}
+.scrollSet{
+    overflow-x: auto; overflow-y: auto; height: 800px; width:2000px;
+}
+
+#submitButton{
+    margin-left: 516px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

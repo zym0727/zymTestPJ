@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zym.dao.HomeworkMapper">
+  <resultMap id="BaseResultMap" type="zym.pojo.Homework">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="course_id" jdbcType="INTEGER" property="courseId" />
+    <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime" />
+    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
+    <result column="question_ids" jdbcType="VARCHAR" property="questionIds" />
+    <result column="is_automatic" jdbcType="INTEGER" property="isAutomatic" />
+    <result column="is_assign" jdbcType="INTEGER" property="isAssign" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, course_id, assign_time, deadline, question_ids, is_automatic, is_assign, remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from homework
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from homework
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zym.pojo.Homework" useGeneratedKeys="true" keyProperty="id">
+    insert into homework (course_id, assign_time,
+      deadline, question_ids, is_automatic, 
+      is_assign, remark)
+    values (#{courseId,jdbcType=INTEGER}, #{assignTime,jdbcType=TIMESTAMP},
+      #{deadline,jdbcType=TIMESTAMP}, #{questionIds,jdbcType=VARCHAR}, #{isAutomatic,jdbcType=INTEGER}, 
+      #{isAssign,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="zym.pojo.Homework" useGeneratedKeys="true" keyProperty="id">
+    insert into homework
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="assignTime != null">
+        assign_time,
+      </if>
+      <if test="deadline != null">
+        deadline,
+      </if>
+      <if test="questionIds != null">
+        question_ids,
+      </if>
+      <if test="isAutomatic != null">
+        is_automatic,
+      </if>
+      <if test="isAssign != null">
+        is_assign,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courseId != null">
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="assignTime != null">
+        #{assignTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deadline != null">
+        #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="questionIds != null">
+        #{questionIds,jdbcType=VARCHAR},
+      </if>
+      <if test="isAutomatic != null">
+        #{isAutomatic,jdbcType=INTEGER},
+      </if>
+      <if test="isAssign != null">
+        #{isAssign,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.Homework">
+    update homework
+    <set>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="assignTime != null">
+        assign_time = #{assignTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deadline != null">
+        deadline = #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="questionIds != null">
+        question_ids = #{questionIds,jdbcType=VARCHAR},
+      </if>
+      <if test="isAutomatic != null">
+        is_automatic = #{isAutomatic,jdbcType=INTEGER},
+      </if>
+      <if test="isAssign != null">
+        is_assign = #{isAssign,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zym.pojo.Homework">
+    update homework
+    set course_id = #{courseId,jdbcType=INTEGER},
+      assign_time = #{assignTime,jdbcType=TIMESTAMP},
+      deadline = #{deadline,jdbcType=TIMESTAMP},
+      question_ids = #{questionIds,jdbcType=VARCHAR},
+      is_automatic = #{isAutomatic,jdbcType=INTEGER},
+      is_assign = #{isAssign,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--学生查询作业信息-->
+  <resultMap id="studentResultMap" type="zym.pojo.param.HomeworkMessage">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="course_id" jdbcType="INTEGER" property="courseId" />
+    <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime" />
+    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
+    <result column="question_ids" jdbcType="VARCHAR" property="questionIds" />
+    <result column="is_automatic" jdbcType="INTEGER" property="isAutomatic" />
+    <result column="is_assign" jdbcType="INTEGER" property="isAssign" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
+    <result column="class_time" jdbcType="VARCHAR" property="classTime" />
+    <result column="user_name" jdbcType="VARCHAR" property="teacherName" />
+  </resultMap>
+
+  <!--学生查询未提交作业sql字段-->
+  <sql id="studentHomework">
+    h.id,h.assign_time,h.deadline,h.question_ids,h.remark,c1.course_name,c1.class_time,u.user_name
+  </sql>
+
+  <!--学生查询未提交作业sql-->
+  <sql id="unSubmitList">
+    select
+    <include refid="studentHomework"/>
+    from homework h left join
+    (select s.homework_id,s.submit_time from homework_score s
+    where s.student_id=#{id,jdbcType=INTEGER}) as hs
+    on h.id = hs.homework_id
+    left join course c1 on c1.id = h.course_id
+    left join users u on u.id = c1.teacher_id
+    where h.is_assign = '1' and hs.submit_time is null
+  </sql>
+
+  <!--学生查询未提交作业-->
+  <select id="getUnSubmitListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+    <include refid="unSubmitList"/>
+  </select>
+
+  <!--学生查询未提交作业数量-->
+  <select id="countUnSubmitListStudent" parameterType="java.lang.Integer" resultType="int">
+    select count(1) from (
+    <include refid="unSubmitList"/>
+    ) as counts
+  </select>
+
+  <!--学生查询提交作业sql-->
+  <sql id="submitList">
+    select
+    <include refid="studentHomework"/>
+    from homework h left join
+    homework_score hs
+    on h.id = hs.homework_id
+    left join course c1 on c1.id = h.course_id
+    left join users u on u.id = c1.teacher_id
+    where h.is_assign = '1' and hs.student_id = #{id,jdbcType=INTEGER} and hs.submit_time is not null
+  </sql>
+
+  <!--学生查询提交作业-->
+  <select id="getSubmitListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+    <include refid="submitList"/>
+  </select>
+
+  <!--学生查询提交作业数量-->
+  <select id="countSubmitListStudent" parameterType="java.lang.Integer" resultType="int">
+    select count(1) from (
+    <include refid="submitList"/>
+    ) as counts
+  </select>
+
+  <!--学生查询未批改作业sql-->
+  <sql id="unMarkList">
+    <include refid="submitList"/>
+    and hs.score is null
+  </sql>
+
+  <!--学生查询未批改作业-->
+  <select id="getUnMarkListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+    <include refid="unMarkList"/>
+  </select>
+
+  <!--学生查询未批改作业数量-->
+  <select id="countUnMarkListStudent" parameterType="java.lang.Integer" resultType="int">
+    select count(1) from (
+    <include refid="unMarkList"/>
+    ) as counts
+  </select>
+
+  <!--学生查询已批改作业sql-->
+  <sql id="markList">
+    <include refid="submitList"/>
+    and hs.score is not null
+  </sql>
+
+  <!--学生查询已批改作业-->
+  <select id="getMarkListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+    <include refid="markList"/>
+  </select>
+
+  <!--学生查询已批改作业数量-->
+  <select id="countMarkListStudent" parameterType="java.lang.Integer" resultType="int">
+    select count(1) from (
+    <include refid="markList"/>
+    ) as counts
+  </select>
+</mapper>

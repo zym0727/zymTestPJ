@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.1.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+    <!-- 包下注解扫描 -->
+    <context:component-scan base-package="zym.service" />
+
+    <!-- 数据源 -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="driverClass"  value="${jdbc.driverClassName}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--初始化时获取三个连接，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+        <property name="initialPoolSize" value="10"/>
+        <!--最大空闲时间,指定的时间内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+        <property name="maxIdleTime" value="180"/>
+        <!--连接池中保留的最大连接数。Default: 15 -->
+        <property name="maxPoolSize" value="100"/>
+        <!-- 连接池中最小连接数，default: 3 -->
+        <property name="minPoolSize" value="10"/>
+    </bean>
+
+
+    <!-- 配置和mybatis的整合 -->
+    <bean  id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定mybatis全局配置文件的位置  -->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- mapper 文件放的位置 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+
+    <!-- 配置扫描器 将mybatis接口的实现加入到ioc容器中    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描所有dao接口的mapper的实现 加入到ioc容器中  -->
+        <property name="basePackage" value="zym.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean >
+
+    <!--事务控制  -->
+    <bean  id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <aop:config>
+        <!-- 切入表达式   下面是所有的方法多少个参数都能切入事务-->
+        <aop:pointcut expression="execution(* zym.service..*.*(..))" id="thePointCut"/>
+        <!-- 配置事务增强 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="thePointCut"/>
+    </aop:config>
+    <!-- 配置事务增强如何切入 -->
+    <tx:advice id="txAdvice"  transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception" />
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception"/>
+            <tx:method name="save*" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- spring-security 配置 -->
+    <security:http auto-config="true" use-expressions="true">
+        <!-- 静态资源都可以访问 -->
+        <security:intercept-url pattern="/**/*.jpg" access="permitAll" />
+        <security:intercept-url pattern="/**/*.png" access="permitAll" />
+        <security:intercept-url pattern="/**/*.ico" access="permitAll" />
+        <security:intercept-url pattern="/**/*.css" access="permitAll" />
+        <security:intercept-url pattern="/**/*.js" access="permitAll" />
+        <security:intercept-url pattern="/**/*.gif" access="permitAll" />
+        <security:intercept-url pattern="/js/**" access="permitAll" />
+        <security:intercept-url pattern="/css/**" access="permitAll" />
+        <security:intercept-url pattern="/fonts/**" access="permitAll" />
+
+        <security:intercept-url pattern="/index" access="permitAll" />
+        <security:intercept-url pattern="/user/login/test" access="permitAll" />
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_TEACHER','ROLE_STUDENT')" />
+        <!--<security:intercept-url pattern="/main/**" access="hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')"/>-->
+        <!--<security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')"/>-->
+        <!--<security:intercept-url pattern="/main/main" access="hasRole('ROLE_ADMIN')" />-->
+
+
+        <security:form-login login-page="/index" login-processing-url="/user/login"
+                             default-target-url="/firstSee" always-use-default-target="true"/>
+        <!--login-processing-url="/user/login"-->
+        <!--default-target-url="/main/main"-->
+        <security:logout logout-success-url="/index"/>
+        <!-- XML 配置中默认csrf是关闭的，此处设置为打开
+            如果这里打开csrf，则在form表单中需要添加
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        -->
+        <security:csrf />
+        <security:remember-me />
+    </security:http>
+    <security:authentication-manager alias="authenticationManager">
+    <security:authentication-provider>
+        <security:jdbc-user-service data-source-ref="dataSource"
+                                    users-by-username-query="select account, password, enabled from users where account = ?"
+                                    authorities-by-username-query="select u.account, r.role_name from users u left join role r on u.role_id=r.id where u.account = ?"/>
+        <!--<security:user-service>-->
+            <!--<security:user name="admin" password="admin123" authorities="ROLE_ADMIN" />-->
+            <!--<security:user name="teacher" password="teacher" authorities="ROLE_TEACHER" />-->
+        <!--</security:user-service>-->
+    </security:authentication-provider>
+    </security:authentication-manager>
+</beans>

@@ -1,0 +1,110 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-title">模块列表</li>
+
+
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/firstSee" class="nav-link" id="homePage">
+                    <i class="icon icon-home"></i> 首页
+                </a>
+            </li>
+
+            <security:authorize access="hasRole('ROLE_TEACHER')">
+                <li class="nav-item nav-dropdown">
+                    <a href="#" class="nav-link nav-dropdown-toggle">
+                        <i class="icon icon-target"></i> 题库管理 <i class="fa fa-caret-left"></i>
+                    </a>
+
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/itemBank/getPage"
+                               class="nav-link" id="itemBankList">
+                                <i class="icon icon-tag"></i> 题库列表
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/itemBank/question/getPage"
+                               class="nav-link" id="questionList">
+                                <i class="icon icon-book-open"></i> 题目列表
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/itemBank/programHomework/getPage"
+                               class="nav-link" id="programHomeworkSetting">
+                                <i class="icon icon-list"></i> 程序作业设置
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/homework/teacher/assign/getPage" class="nav-link"
+                       id="homeworkAssign">
+                        <i class="icon icon icon-grid"></i> 作业发布
+                    </a>
+                </li>
+
+                <%--<li class="nav-item nav-dropdown">--%>
+                    <%--<a href="#" class="nav-link nav-dropdown-toggle">--%>
+                        <%--<i class="icon icon-energy"></i> 作业查阅 <i class="fa fa-caret-left"></i>--%>
+                    <%--</a>--%>
+
+                    <%--<ul class="nav-dropdown-items">--%>
+                        <%--<li class="nav-item">--%>
+                            <%--<a href="alerts.html" class="nav-link">--%>
+                                <%--<i class="icon icon-energy"></i> 作业查看--%>
+                            <%--</a>--%>
+                        <%--</li>--%>
+
+                        <%--<li class="nav-item">--%>
+                            <%--<a href="buttons.html" class="nav-link">--%>
+                                <%--<i class="icon icon-energy"></i> 功能2--%>
+                            <%--</a>--%>
+                        <%--</li>--%>
+
+                        <%--<li class="nav-item">--%>
+                            <%--<a href="cards.html" class="nav-link">--%>
+                                <%--<i class="icon icon-energy"></i> 功能3--%>
+                            <%--</a>--%>
+                    <%--</ul>--%>
+                <%--</li>--%>
+            </security:authorize>
+
+            <security:authorize access="hasRole('ROLE_STUDENT')">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/homework/student/see" class="nav-link"
+                   id="studentHomeworkPage">
+                    <i class="icon icon-pencil"></i> 作业查看
+                </a>
+            </li>
+            </security:authorize>
+
+            <li class="nav-item nav-dropdown">
+                <a href="#" class="nav-link nav-dropdown-toggle">
+                    <i class="icon icon-graph"></i> 模块4 <i class="fa fa-caret-left"></i>
+                </a>
+
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a href="chartjs.html" class="nav-link">
+                            <i class="icon icon-graph"></i> 功能1
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+            <li class="nav-item">
+                <a href="tables.html" class="nav-link">
+                    <i class="icon icon-user"></i> 个人信息
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

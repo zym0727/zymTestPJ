@@ -1,0 +1,41 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<nav class="navbar page-header">
+    <a href="#" class="btn btn-link sidebar-mobile-toggle d-md-none mr-auto">
+        <i class="fa fa-bars"></i>
+    </a>
+
+    <a class="navbar-brand" href="#">
+
+    </a>
+
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item d-md-down-none">
+            <a href="#">
+                <i class="fa fa-bell"></i>
+                <span class="badge badge-pill badge-danger">5</span>
+            </a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="small ml-1 d-md-down-none">${user.userName}</span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header">Account</div>
+
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-envelope"></i> Messages
+                </a>
+
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-wrench"></i> Settings
+                </a>
+
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-lock"></i> Logout
+                </a>
+            </div>
+        </li>
+    </ul>
+</nav>

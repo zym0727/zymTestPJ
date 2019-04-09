@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zym.dao.TestDataMapper">
+  <resultMap id="BaseResultMap" type="zym.pojo.TestData">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="input" jdbcType="VARCHAR" property="input" />
+    <result column="output" jdbcType="VARCHAR" property="output" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, question_id, input, output
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from test_data
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from test_data
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zym.pojo.TestData">
+    insert into test_data (id, question_id, input, 
+      output)
+    values (#{id,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER}, #{input,jdbcType=VARCHAR}, 
+      #{output,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="zym.pojo.TestData">
+    insert into test_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="input != null">
+        input,
+      </if>
+      <if test="output != null">
+        output,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="input != null">
+        #{input,jdbcType=VARCHAR},
+      </if>
+      <if test="output != null">
+        #{output,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.TestData">
+    update test_data
+    <set>
+      <if test="questionId != null">
+        question_id = #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="input != null">
+        input = #{input,jdbcType=VARCHAR},
+      </if>
+      <if test="output != null">
+        output = #{output,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zym.pojo.TestData">
+    update test_data
+    set question_id = #{questionId,jdbcType=INTEGER},
+      input = #{input,jdbcType=VARCHAR},
+      output = #{output,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

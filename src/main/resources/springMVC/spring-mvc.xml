@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.1.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+    <!-- 扫描controller -->
+    <context:component-scan base-package="zym.controller" />
+
+    <!--json解析器配置-->
+    <!--将字符串转换为json-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+                <!-- 解决@ResponseBody注解直接返回对象并转换成JSON时出现406问题 -->
+                <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <!--<value>text/html;charset=UTF-8</value>-->
+                            <value>application/json;charset=UTF-8</value>
+                        </list>
+                    </property>
+                    <property name="features">
+                        <list>
+                            <value>WriteMapNullValue</value>
+                            <value>QuoteFieldNames</value>
+                            <value>WriteNullStringAsEmpty</value>
+                            <value>WriteNullNumberAsZero</value>
+                            <value>WriteNullListAsEmpty</value>
+                            <value>WriteNullBooleanAsFalse</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Spring 来扫描指定包下的类，并注册被@Component，@Controller，@Service，@Repository等注解标记的组件 -->
+    <mvc:annotation-driven />
+
+
+    <!-- 对静态资源放行 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 配置SpringMVC的视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+</beans>

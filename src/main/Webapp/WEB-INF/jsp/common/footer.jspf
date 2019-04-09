@@ -1,0 +1,19 @@
+<%@page pageEncoding="UTF-8" %>
+<footer class="site-footer">
+    <div class="bottom" style="margin:8px auto 0 auto;
+    width:100%;
+    position:fixed;
+    text-align:center;
+    bottom:0;
+    left:0;
+    overflow:hidden;
+    padding-bottom:8px;
+    color:#0c0b2f;
+    word-spacing:3px;
+    zoom:1;
+    font-size:15px">
+        <p class="text-center">
+            Copyright &copy; 2019 zym
+        </p>
+    </div>
+</footer>

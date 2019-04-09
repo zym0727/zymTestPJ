@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zym.dao.ItemBankMapper">
+    <resultMap id="BaseResultMap" type="zym.pojo.ItemBank">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="item_name" jdbcType="VARCHAR" property="itemName"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, item_name, description
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from item_bank
+        where id = #{id,jdbcType=INTEGER}
+     </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from item_bank
+    where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="zym.pojo.ItemBank" useGeneratedKeys="true" keyProperty="id">
+    insert into item_bank (item_name, description
+      )
+    values (#{itemName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
+    </insert>
+    <insert id="insertSelective" parameterType="zym.pojo.ItemBank" useGeneratedKeys="true" keyProperty="id">
+        insert into item_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemName != null">
+                #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.ItemBank">
+        update item_bank
+        <set>
+            <if test="itemName != null">
+                item_name = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="zym.pojo.ItemBank">
+    update item_bank
+    set item_name = #{itemName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 模糊查询sql语句 -->
+    <sql id="exampleWhere">
+        <where>
+            <if test="itemName != null">
+                and item_name like concat('%',#{itemName},'%')
+            </if>
+            <if test="description != null">
+                and description like concat('%',#{description},'%')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 数据全部查询 -->
+    <select id="selectItemBankList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from item_bank
+        <include refid="exampleWhere"/>
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <!-- 查询单表中数据总量 -->
+    <select id="countAll" resultType="int">
+        select count(1) from item_bank
+        <include refid="exampleWhere"/>
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from item_bank
+        where id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+    </delete>
+
+</mapper>

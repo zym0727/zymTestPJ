@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zym.dao.HomeworkScoreMapper">
+  <resultMap id="BaseResultMap" type="zym.pojo.HomeworkScore">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="homework_id" jdbcType="INTEGER" property="homeworkId" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="correct_rate" jdbcType="DOUBLE" property="correctRate" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="evaluate" jdbcType="VARCHAR" property="evaluate" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, student_id, homework_id, answer, submit_time, correct_rate, score, evaluate, 
+    file_name, file_path
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from homework_score
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from homework_score
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zym.pojo.HomeworkScore" useGeneratedKeys="true" keyProperty="id">
+    insert into homework_score (student_id, homework_id,
+      answer, submit_time, correct_rate, 
+      score, evaluate, file_name, 
+      file_path)
+    values (#{studentId,jdbcType=INTEGER}, #{homeworkId,jdbcType=INTEGER},
+      #{answer,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{correctRate,jdbcType=DOUBLE}, 
+      #{score,jdbcType=INTEGER}, #{evaluate,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="zym.pojo.HomeworkScore" useGeneratedKeys="true" keyProperty="id">
+    insert into homework_score
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="homeworkId != null">
+        homework_id,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+      <if test="submitTime != null">
+        submit_time,
+      </if>
+      <if test="correctRate != null">
+        correct_rate,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="evaluate != null">
+        evaluate,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="homeworkId != null">
+        #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="correctRate != null">
+        #{correctRate,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="evaluate != null">
+        #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.HomeworkScore">
+    update homework_score
+    <set>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="homeworkId != null">
+        homework_id = #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null">
+        submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="correctRate != null">
+        correct_rate = #{correctRate,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="evaluate != null">
+        evaluate = #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zym.pojo.HomeworkScore">
+    update homework_score
+    set student_id = #{studentId,jdbcType=INTEGER},
+      homework_id = #{homeworkId,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=VARCHAR},
+      submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      correct_rate = #{correctRate,jdbcType=DOUBLE},
+      score = #{score,jdbcType=INTEGER},
+      evaluate = #{evaluate,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
