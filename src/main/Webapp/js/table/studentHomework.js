@@ -68,8 +68,6 @@ var initTheTable= function (status) {
         width:$(window).width(),
         uniqueId: "id",                     //每一行的唯一标识，一般为主键列
         columns: [{
-            checkbox: true
-        }, {
             //field: 'id',
             title: '序号',
             align: 'center',
@@ -117,11 +115,10 @@ function aFormatter(value, row, index) {
 
 function getHomeworkNumber() {
     $.ajax({
-        url: "/homework/student/homework/count" ,
+        url: "/homework/student/count" ,
         method: "get",
         dataType: "json",
         success: function (data) {
-            console.log(data);
             $("#unSubmitNumber").text(data.unSubmit);
             $("#submittedNumber").text(data.submitted);
             $("#unMarkNumber").text(data.unMark);

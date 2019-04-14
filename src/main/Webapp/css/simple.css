@@ -121,3 +121,20 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.btn-file {
+    margin-top: 2px;
+    margin-left: 10px;
+}
+
+.help-block{
+    margin-top: 14px;
+    color: #9a918a;
+}
+
+#downloadFile{
+    margin-top: 27px;
+    margin-left: 30px;
+    display: none;
+    color: #949e46;
+}

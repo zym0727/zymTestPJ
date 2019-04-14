@@ -1,5 +1,6 @@
 package zym.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,8 +12,13 @@ public class DateUtil {
 
     static private String common = "yyyy-MM-dd hh:mm:ss";
 
+    static private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(common);
+
     static public String dateFormat(Date date){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(common);
         return simpleDateFormat.format(date);
+    }
+
+    static public Date getNow() throws ParseException {
+        return simpleDateFormat.parse(simpleDateFormat.format(new Date()));
     }
 }

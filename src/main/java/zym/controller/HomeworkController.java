@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
 import zym.pojo.Homework;
+import zym.pojo.HomeworkScore;
 import zym.pojo.param.QuestionDetail;
 import zym.service.CourseService;
 import zym.service.HomeworkService;
@@ -18,6 +19,7 @@ import zym.service.ItemBankService;
 import zym.service.QuestionService;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -53,8 +55,8 @@ public class HomeworkController {
     }
 
     @RequestMapping(path = {"/student/submitHomework/{homeworkId}"}, method = RequestMethod.GET)
-    public String getStudentHomeworkPage(@PathVariable Integer homeworkId, Model model) {
-        String s = homeworkService.getStudentHomework(homeworkId, model);
+    public String getStudentHomeworkPage(@PathVariable Integer homeworkId, Model model, HttpSession session) {
+        String s = homeworkService.getStudentHomework(homeworkId, model, session);
         if(s.equals("success"))
             return "homework/submit";
         else
@@ -83,9 +85,15 @@ public class HomeworkController {
         return homeworkService.getStudentHomeworkList(httpSession,status);
     }
 
-    @RequestMapping(path = {"/student/homework/count"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/count"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getStudentHomeworkCount(HttpSession httpSession){
         return homeworkService.getStudentHomeworkCount(httpSession);
+    }
+
+    @RequestMapping(path = {"/student/submit"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String submitHomework(HomeworkScore homeworkScore) throws ParseException {
+        return homeworkService.saveHomework(homeworkScore);
     }
 }

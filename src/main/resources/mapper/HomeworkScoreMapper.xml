@@ -144,4 +144,45 @@
       file_path = #{filePath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--模糊查询sql-->
+  <sql id="where">
+    <where>
+      <if test="studentId != null">
+        and student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="homeworkId != null">
+        and homework_id = #{homeworkId,jdbcType=INTEGER}
+      </if>
+      <if test="answer != null">
+        and answer = #{answer,jdbcType=VARCHAR}
+      </if>
+      <if test="submitTime != null">
+        and submit_time = #{submitTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="correctRate != null">
+        and correct_rate = #{correctRate,jdbcType=DOUBLE}
+      </if>
+      <if test="score != null">
+        and score = #{score,jdbcType=INTEGER}
+      </if>
+      <if test="evaluate != null">
+        and evaluate = #{evaluate,jdbcType=VARCHAR}
+      </if>
+      <if test="fileName != null">
+        and file_name = #{fileName,jdbcType=VARCHAR}
+      </if>
+      <if test="filePath != null">
+        and file_path = #{filePath,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!--模糊查询作业成绩表-->
+  <select id="selectList" parameterType="zym.pojo.HomeworkScore" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework_score
+    <include refid="where" />
+  </select>
 </mapper>

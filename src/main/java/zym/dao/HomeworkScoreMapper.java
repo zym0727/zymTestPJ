@@ -2,6 +2,8 @@ package zym.dao;
 
 import zym.pojo.HomeworkScore;
 
+import java.util.List;
+
 public interface HomeworkScoreMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -15,5 +17,5 @@ public interface HomeworkScoreMapper {
 
     int updateByPrimaryKey(HomeworkScore record);
 
-
+    List<HomeworkScore> selectList(HomeworkScore homeworkScore);
 }
