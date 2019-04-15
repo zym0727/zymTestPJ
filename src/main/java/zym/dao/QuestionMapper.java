@@ -26,4 +26,6 @@ public interface QuestionMapper {
     int countAll(QuestionPage questionPage);
 
     void batchDelete(List<String> list);
+
+
 }

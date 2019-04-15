@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    static private String common = "yyyy-MM-dd hh:mm:ss";
+    static private String common = "yyyy-MM-dd HH:mm:ss";
 
     static private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(common);
 
@@ -20,5 +20,9 @@ public class DateUtil {
 
     static public Date getNow() throws ParseException {
         return simpleDateFormat.parse(simpleDateFormat.format(new Date()));
+    }
+
+    static public String getNowTimeString() {
+        return simpleDateFormat.format(new Date());
     }
 }

@@ -2,6 +2,8 @@ package zym.dao;
 
 import zym.pojo.TestData;
 
+import java.util.List;
+
 public interface TestDataMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface TestDataMapper {
     int updateByPrimaryKeySelective(TestData record);
 
     int updateByPrimaryKey(TestData record);
+
+    List<TestData> getListByQuestionId(Integer QuestionId);
 }

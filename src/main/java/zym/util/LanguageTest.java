@@ -1,10 +1,8 @@
 package zym.util;
 
-import zym.pojo.param.InputOutput;
-import zym.pojo.param.TestInfo;
+import zym.pojo.TestData;
 
 import java.io.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -44,23 +42,33 @@ public abstract class LanguageTest {
 
     protected abstract String getCodeFileName();
 
+    /**
+     * 代码文件编译
+     *
+     * @return
+     * @throws IOException
+     */
     public String compile() throws IOException {
-        File codeFile = new File(String.format("%s/%s/%s/%s/%s", "C:/Users", uid, qid, submitTime,getCodeFileName()));
+        //先创建编译前的代码文件
+        File codeFile = new File(String.format("%s/%s/%s/%s/%s", "C:/Users", uid, qid, submitTime,
+                getCodeFileName()));
         if (!codeFile.exists()) {
             codeFile.getParentFile().mkdirs();
             codeFile.createNewFile();
         }
+        //把代码写入到该文件中
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(codeFile), "UTF-8"))) {
             writer.write(code);
             writer.flush();
             writer.close();
         }
-
+        //启动系统进程，设定工作路径，调用指令
         ProcessBuilder processBuilder = new ProcessBuilder(compileCommands);
         processBuilder.directory(new File(String.format("%s/%s/%s/%s", "C:/Users", uid, qid, submitTime)));
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
+        //获取编译结果返回
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             StringBuilder output = new StringBuilder();
             String line = null;
@@ -71,45 +79,50 @@ public abstract class LanguageTest {
         }
     }
 
-    public TestInfo execute(ArrayList<InputOutput> inputOutputs) throws IOException {
+    /**
+     * 代码执行
+     *
+     * @param testDataList
+     * @return
+     * @throws IOException
+     */
+    public int execute(List<TestData> testDataList) throws IOException {
         if (!isCompiled) throw new IllegalStateException("not compiled");
 
         int correct = 0;
-        ArrayList<InputOutput> results = new ArrayList<>();
-        // test all test cases
-        for (InputOutput inputOutput : inputOutputs) {
-            String output = test(inputOutput.getInput());
-            InputOutput actualInputOutput = new InputOutput();
-            actualInputOutput.setInput(inputOutput.getInput());
-            actualInputOutput.setOutput(output);
-            if (output.equals(inputOutput.getOutput())) {
+        // 执行所有的输入输出数据
+        for (TestData testData : testDataList) {
+            //执行一组输入输出
+            String output = test(testData.getInput());
+            if (output.equals(testData.getOutput()))
                 correct++;
-                actualInputOutput.setCorrect(true);
-            } else {
-                actualInputOutput.setCorrect(false);
-            }
-            results.add(actualInputOutput);
         }
-        TestInfo testInfo = new TestInfo(uid, qid, new Timestamp(submitTime), code,
-                (double) correct / (double) inputOutputs.size());
-        testInfo.setInputOutputs(results);
-        return testInfo;
+        return correct;
     }
 
+    /**
+     * 将一组输入进行运行并得到结果
+     *
+     * @param input
+     * @return
+     * @throws IOException
+     */
     private String test(String input) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(executeCommands);
         processBuilder.directory(new File(String.format("%s/%s/%s/%s", "C:/Users", uid, qid, submitTime)));
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
+        //把一组输入写到运行的程序中
         try (OutputStream outputStream = process.getOutputStream()) {
             outputStream.write(input.getBytes("UTF-8"));
             outputStream.flush();
         }
+        //获取运行的输出结果
         StringBuilder results = new StringBuilder();
-        try (Scanner in = new Scanner(process.getInputStream(),"UTF-8")) {
-            while (in.hasNextLine()){
+        try (Scanner in = new Scanner(process.getInputStream(), "UTF-8")) {
+            while (in.hasNextLine()) {
                 results.append(in.nextLine());
-                System.out.println("此时InputStream结果为："+results);
+                System.out.println("此时InputStream结果为：" + results);
             }
         }
         return results.toString();

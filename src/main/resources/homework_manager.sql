@@ -93,6 +93,21 @@ CREATE TABLE `item_bank` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for language_mark
+-- ----------------------------
+DROP TABLE IF EXISTS `language_mark`;
+CREATE TABLE `language_mark` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `question_id` int(11) NOT NULL COMMENT '题目id',
+  `mark` varchar(100) NOT NULL COMMENT '语言标记',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='题目语言登记表';
+
+-- ----------------------------
+-- Records of language_mark
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for major_class
 -- ----------------------------
 DROP TABLE IF EXISTS `major_class`;

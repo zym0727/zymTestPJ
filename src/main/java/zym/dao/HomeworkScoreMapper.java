@@ -18,4 +18,6 @@ public interface HomeworkScoreMapper {
     int updateByPrimaryKey(HomeworkScore record);
 
     List<HomeworkScore> selectList(HomeworkScore homeworkScore);
+
+    List<HomeworkScore> selectListByHomeworkId(Integer homeworkId);
 }

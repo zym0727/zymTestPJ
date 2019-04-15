@@ -185,4 +185,12 @@
     from homework_score
     <include refid="where" />
   </select>
+
+  <!--通过作业id来找作业成绩列表-->
+  <select id="selectListByHomeworkId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework_score
+    where homework_id = #{homeworkId,jdbcType=INTEGER}
+  </select>
 </mapper>

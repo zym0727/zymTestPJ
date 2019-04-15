@@ -33,4 +33,10 @@ public interface HomeworkMapper {
     List<HomeworkMessage> getMarkListByStudentId(Integer id);
 
     int countMarkListStudent(Integer id);
+
+    List<Homework> getHomeworkList(Homework homework);
+
+    List<Homework> getHomeworkListByIsAssign(Integer isAssign);
+
+    List<Homework> getHomeworkListByIsAutomatic(Integer isAutomatic);
 }

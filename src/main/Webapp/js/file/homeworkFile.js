@@ -27,7 +27,7 @@
                 success: function (data) {
                     if (data === "success"){
                         alert("提交成功！");
-                        window.location.reload();
+                        window.history.go(-1);
                     }
                 },
                 error: function () {
@@ -85,7 +85,7 @@ var FileInput = function () {
             console.log(data.response);
             if (data.response === "success"){
                 alert("提交作业成功");
-                window.location.reload();
+                window.history.go(-1);
             }
         });
 

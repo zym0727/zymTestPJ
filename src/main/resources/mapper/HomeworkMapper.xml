@@ -224,4 +224,55 @@
     <include refid="markList"/>
     ) as counts
   </select>
+
+  <!--模糊查询作业-->
+  <sql id="where">
+    <where>
+      <if test="courseId != null">
+        and course_id = #{courseId,jdbcType=INTEGER}
+      </if>
+      <if test="assignTime != null">
+        and assign_time = #{assignTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deadline != null">
+        and deadline = #{deadline,jdbcType=TIMESTAMP}
+      </if>
+      <if test="questionIds != null">
+        and question_ids = #{questionIds,jdbcType=VARCHAR}
+      </if>
+      <if test="isAutomatic != null">
+        and is_automatic = #{isAutomatic,jdbcType=INTEGER}
+      </if>
+      <if test="isAssign != null">
+        and is_assign = #{isAssign,jdbcType=INTEGER}
+      </if>
+      <if test="remark != null">
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!--模糊查询作业-->
+  <select id="getHomeworkList" parameterType="zym.pojo.Homework" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework
+    <include refid="where" />
+  </select>
+
+  <!--通过是否发布查询作业-->
+  <select id="getHomeworkListByIsAssign" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework
+    where is_assign = #{isAssign,jdbcType=INTEGER}
+  </select>
+
+  <!--通过是否自动批改查询作业-->
+  <select id="getHomeworkListByIsAutomatic" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from homework
+    where is_automatic = #{isAutomatic,jdbcType=INTEGER}
+  </select>
 </mapper>

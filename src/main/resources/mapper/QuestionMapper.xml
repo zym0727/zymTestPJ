@@ -22,20 +22,17 @@
     delete from question
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="zym.pojo.Question">
-    insert into question (id, question_number, question_name, 
+  <insert id="insert" parameterType="zym.pojo.Question" useGeneratedKeys="true" keyProperty="id">
+    insert into question (question_number, question_name,
       description, item_id, answer
       )
-    values (#{id,jdbcType=INTEGER}, #{questionNumber,jdbcType=VARCHAR}, #{questionName,jdbcType=VARCHAR}, 
+    values (#{questionNumber,jdbcType=VARCHAR}, #{questionName,jdbcType=VARCHAR},
       #{description,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="zym.pojo.Question">
+  <insert id="insertSelective" parameterType="zym.pojo.Question" useGeneratedKeys="true" keyProperty="id">
     insert into question
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="questionNumber != null">
         question_number,
       </if>
@@ -53,9 +50,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="questionNumber != null">
         #{questionNumber,jdbcType=VARCHAR},
       </if>
@@ -161,10 +155,13 @@
     </foreach>
   </delete>
 
+  <!-- 通过题库id来查询 -->
   <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from question
     where item_id = #{itemId,jdbcType=INTEGER}
   </select>
+
+
 </mapper>

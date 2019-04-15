@@ -5,6 +5,7 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/context
@@ -14,10 +15,15 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
        http://www.springframework.org/schema/security
-       http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+       http://www.springframework.org/schema/security/spring-security-4.2.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-4.1.xsd ">
 
     <!-- 包下注解扫描 -->
     <context:component-scan base-package="zym.service" />
+
+    <!--基于注解的spring task 配置-->
+    <task:annotation-driven/>
 
     <!-- 数据源 -->
     <context:property-placeholder location="classpath:jdbc.properties"/>
