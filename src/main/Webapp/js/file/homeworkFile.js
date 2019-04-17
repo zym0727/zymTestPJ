@@ -1,22 +1,37 @@
 ﻿$(function () {
-    //初始化fileinput${pageContext.request.contextPath}/fileupload/${user.id}/${courseId}/${homeworkId}
+    //初始化fileinput
     var fileInput = new FileInput();
     fileInput.Init("uploadFile", $("#pageContext").val() + "/file/homework/upload");
     $(".kv-upload-progress").remove();
+    if ($("#fileName").val() !== "") {
+        $("#downloadFile").show();
+    }
+    var uploadFile = $("#uploadFile");
     $("#submitButton").bind("click", function () {
         if ($("#deadline").val() < nowDateTime()) {
             alert("作业提交的截止时间已经过了");
             return;
         }
-        var homeworkSubmit = $("#homeworkSubmit");
-        if (homeworkSubmit.val() !== "") {
+        var homeworkSubmit = "";
+        var e = 0;
+        var haveValue = true;
+        for (e; e < questionNumber; e++) {
+            var homeworkSubmits = $("#homeworkSubmit" + e).val();
+            if (homeworkSubmits === "" || homeworkSubmits === undefined)
+                haveValue = false;
+            homeworkSubmit += homeworkSubmits;
+            if (e !== questionNumber - 1)
+                homeworkSubmit += "div----------div";
+        }
+        homeworkSubmit = homeworkSubmit.replace(/\n/g,"\r\n");//windows环境下需要这样处理，js获取时会去掉\r
+        if (haveValue !== false && uploadFile.val() === "") {
             $.ajax({
                 url: "/homework/student/submit",
                 method: "post",
                 data: {
                     studentId: $("#userId").val(),
                     homeworkId: $("#homeworkId").val(),
-                    answer: homeworkSubmit.val()
+                    answer: homeworkSubmit
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -25,7 +40,7 @@
                     xhr.setRequestHeader(header, token);
                 },
                 success: function (data) {
-                    if (data === "success"){
+                    if (data === "success") {
                         alert("提交成功！");
                         window.history.go(-1);
                     }
@@ -34,12 +49,12 @@
                     alert("提交失败，请再次提交或者联系管理员！")
                 }
             });
-        } else
-            $("#uploadFile").fileinput("upload");
+        } else if (uploadFile.val() === "") {
+            alert("请检查一下自己的作业是否全部填写完毕或者文件是否选择上传了！");
+        } else if (uploadFile.val() !== "") {
+            uploadFile.fileinput("upload");//作业文件上传模式
+        }
     });
-    if ($("#fileName").val() !== ""){
-        $("#downloadFile").show();
-    }
 });
 //初始化fileinput
 var FileInput = function () {
@@ -83,7 +98,7 @@ var FileInput = function () {
         //文件同步上传完成之后发生的事件
         control.on("filebatchuploadsuccess", function (event, data) {
             console.log(data.response);
-            if (data.response === "success"){
+            if (data.response === "success") {
                 alert("提交作业成功");
                 window.history.go(-1);
             }
@@ -91,7 +106,7 @@ var FileInput = function () {
 
         //文件同步上传失败之后发生的事件
         control.on("filebatchuploaderror", function () {
-            alert("作业提交失败了，请检查自己上交的作业再次尝试或联系管理员！")
+            alert("作业提交失败了，请检查自己上传的作业！")
         });
     };
     return oFile; //这里必须返回oFile对象，否则FileInput组件初始化不成功

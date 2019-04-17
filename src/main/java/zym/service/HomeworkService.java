@@ -1,5 +1,6 @@
 package zym.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,13 +9,16 @@ import zym.dao.HomeworkMapper;
 import zym.dao.HomeworkScoreMapper;
 import zym.dao.QuestionMapper;
 import zym.pojo.*;
+import zym.pojo.param.HomeworkManagePage;
 import zym.pojo.param.HomeworkMessage;
+import zym.pojo.param.StudentHomeworkPage;
 import zym.util.DateUtil;
 
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,9 +58,13 @@ public class HomeworkService {
         return JSONObject.toJSONString("success");
     }
 
-    public JSONObject getStudentHomeworkList(HttpSession httpSession, Integer status) {
+    public JSONObject getStudentHomeworkList(HttpSession httpSession,
+                                             StudentHomeworkPage studentHomeworkPage) {
         JSONObject result = new JSONObject();
+        studentHomeworkPage.setOffset(
+                (studentHomeworkPage.getPageNumber() - 1) * studentHomeworkPage.getPageSize());
         Object user = httpSession.getAttribute("user");
+        int status = studentHomeworkPage.getStatus();
         if (user == null || status < 1 || status > 4) {
             result.put("total", 0);
             result.put("rows", new ArrayList<>());
@@ -64,18 +72,19 @@ public class HomeworkService {
         }
         Users student = (Users) user;
         int id = student.getId();
+        studentHomeworkPage.setId(student.getId());
         if (status == 1) { //未提交作业
             result.put("total", homeworkMapper.countUnSubmitListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getUnSubmitListByStudentId(id)));
+            result.put("rows", spiltToName(homeworkMapper.getUnSubmitListByStudentId(studentHomeworkPage)));
         } else if (status == 2) { //已提交作业
             result.put("total", homeworkMapper.countSubmitListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getSubmitListByStudentId(id)));
+            result.put("rows", spiltToName(homeworkMapper.getSubmitListByStudentId(studentHomeworkPage)));
         } else if (status == 3) { //未批改作业
             result.put("total", homeworkMapper.countUnMarkListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getUnMarkListByStudentId(id)));
-        } else if (status == 4) { //已批改作业
+            result.put("rows", spiltToName(homeworkMapper.getUnMarkListByStudentId(studentHomeworkPage)));
+        } else  { //已批改作业   status == 4
             result.put("total", homeworkMapper.countMarkListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(id)));
+            result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(studentHomeworkPage)));
         }
         return result;
     }
@@ -126,10 +135,12 @@ public class HomeworkService {
         model.addAttribute("courseId", homework.getCourseId());
         model.addAttribute("homeworkId", homework.getId());
         String[] questionIds = homework.getQuestionIds().split(",");
+        model.addAttribute("questionNumber", questionIds.length);
         StringBuilder homeworkDetail = new StringBuilder("");
         for (int i = 0; i < questionIds.length; i++) {
             Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(questionIds[i]));
-            homeworkDetail.append("第").append(i + 1).append("题：").append(question.getQuestionName()).append("\n\n")
+            homeworkDetail.append("第").append(i + 1).append("题：").append(question.getQuestionName())
+                    .append("\n\n")
                     .append(question.getDescription());
             if (i < questionIds.length - 1)
                 homeworkDetail.append("\n\n\n\n");
@@ -163,5 +174,36 @@ public class HomeworkService {
             homeworkScoreMapper.insert(homeworkScore);
         }
         return JSONObject.toJSONString("success");
+    }
+
+    public JSONArray getHomeworkScoreAnswer(Integer homeworkScoreId) {
+        HomeworkScore homeworkScore = new HomeworkScore();
+        homeworkScore.setId(homeworkScoreId);
+        List<HomeworkScore> scoreList = homeworkScoreMapper.selectList(homeworkScore);
+        if (scoreList != null && scoreList.size() > 0) {
+            HomeworkScore findHomeworkScore = scoreList.get(0);
+            if (findHomeworkScore.getAnswer() != null) {
+                String[] answers = findHomeworkScore.getAnswer().split("div----------div");
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.addAll(Arrays.asList(answers));
+                return jsonArray;
+            }
+        }
+        return null;
+    }
+
+    public JSONObject getHomeworkMessageList(HttpSession httpSession, HomeworkManagePage homeworkManagePage){
+        JSONObject result = new JSONObject();
+        Object user = httpSession.getAttribute("user");
+        if (user == null) {
+            result.put("total", 0);
+            result.put("rows", new ArrayList<>());
+            return result;
+        }
+        Users teacher = (Users) user;
+        homeworkManagePage.setTeacherId(teacher.getId());
+        result.put("total", homeworkMapper.countHomeworkMessageList(homeworkManagePage));
+        result.put("rows", spiltToName(homeworkMapper.getHomeworkMessageList(homeworkManagePage)));
+        return result;
     }
 }

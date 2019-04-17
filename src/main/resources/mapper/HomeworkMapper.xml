@@ -146,7 +146,7 @@
     <include refid="studentHomework"/>
     from homework h left join
     (select s.homework_id,s.submit_time from homework_score s
-    where s.student_id=#{id,jdbcType=INTEGER}) as hs
+    where s.student_id = #{id,jdbcType=INTEGER}) as hs
     on h.id = hs.homework_id
     left join course c1 on c1.id = h.course_id
     left join users u on u.id = c1.teacher_id
@@ -154,8 +154,12 @@
   </sql>
 
   <!--学生查询未提交作业-->
-  <select id="getUnSubmitListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+  <select id="getUnSubmitListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultMap="studentResultMap">
     <include refid="unSubmitList"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
   </select>
 
   <!--学生查询未提交作业数量-->
@@ -178,8 +182,12 @@
   </sql>
 
   <!--学生查询提交作业-->
-  <select id="getSubmitListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+  <select id="getSubmitListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultMap="studentResultMap">
     <include refid="submitList"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
   </select>
 
   <!--学生查询提交作业数量-->
@@ -196,8 +204,12 @@
   </sql>
 
   <!--学生查询未批改作业-->
-  <select id="getUnMarkListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+  <select id="getUnMarkListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultMap="studentResultMap">
     <include refid="unMarkList"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
   </select>
 
   <!--学生查询未批改作业数量-->
@@ -214,8 +226,12 @@
   </sql>
 
   <!--学生查询已批改作业-->
-  <select id="getMarkListByStudentId" parameterType="java.lang.Integer" resultMap="studentResultMap">
+  <select id="getMarkListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultMap="studentResultMap">
     <include refid="markList"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
   </select>
 
   <!--学生查询已批改作业数量-->
@@ -274,5 +290,41 @@
     <include refid="Base_Column_List" />
     from homework
     where is_automatic = #{isAutomatic,jdbcType=INTEGER}
+  </select>
+
+  <!--教师查询详细作业信息列表sql字段-->
+  <sql id="HomeworkMessageList">
+    h.id, h.assign_time, h.deadline, h.question_ids, h.is_automatic, h.is_assign, h.remark, c1.course_name
+  </sql>
+
+  <!--教师查询详细作业信息列表sql-->
+  <sql id="getTeacherSee">
+    select
+    <include refid="HomeworkMessageList" />
+    from homework h left join course c1 on h.course_id = c1.id
+    <where>
+      <if test="teacherId != null">
+        and c1.teacher_id = #{teacherId,jdbcType=INTEGER}
+      </if>
+      <if test="courseId != null">
+        and c1.id = #{courseId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!--教师查询详细作业信息列表-->
+  <select id="getHomeworkMessageList" parameterType="zym.pojo.param.HomeworkManagePage"
+          resultMap="studentResultMap">
+    <include refid="getTeacherSee" />
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+
+  <select id="countHomeworkMessageList" parameterType="zym.pojo.param.HomeworkManagePage" resultType="int">
+    select count(1) from (
+    <include refid="getTeacherSee" />
+    ) as t
   </select>
 </mapper>

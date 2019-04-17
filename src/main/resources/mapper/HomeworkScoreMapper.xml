@@ -33,7 +33,7 @@
       score, evaluate, file_name, 
       file_path)
     values (#{studentId,jdbcType=INTEGER}, #{homeworkId,jdbcType=INTEGER},
-      #{answer,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{correctRate,jdbcType=DOUBLE}, 
+      #{answer,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{correctRate,jdbcType=DOUBLE},
       #{score,jdbcType=INTEGER}, #{evaluate,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
       #{filePath,jdbcType=VARCHAR})
   </insert>
@@ -148,6 +148,9 @@
   <!--模糊查询sql-->
   <sql id="where">
     <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
       <if test="studentId != null">
         and student_id = #{studentId,jdbcType=INTEGER}
       </if>
@@ -186,11 +189,12 @@
     <include refid="where" />
   </select>
 
-  <!--通过作业id来找作业成绩列表-->
+  <!--通过作业id来找已批改作业成绩列表-->
   <select id="selectListByHomeworkId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from homework_score
     where homework_id = #{homeworkId,jdbcType=INTEGER}
+    and score is null
   </select>
 </mapper>

@@ -13,6 +13,7 @@ import zym.util.JavaTest;
 import zym.util.LanguageTest;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -76,25 +77,22 @@ public class TimeTaskService {
                                 homework.getId());
                         if (homeworkScoreList != null && homeworkScoreList.size() > 0)
                             correctHomework(homeworkScoreList, ids);
-                        else
-                            log.info("作业记录表中id为：" + homework.getId() + "的作业没有人上交，出现问题??");
                     }
                 }
             });
         }
-        System.out.println("我是2");
     }
 
     //批改作业
     private void correctHomework(List<HomeworkScore> homeworkScoreList, String[] ids) {
         homeworkScoreList.forEach(homeworkScore -> {
+            System.out.println("homeworkScore"+homeworkScore.getId());
             String answer = homeworkScore.getAnswer();
             if (answer != null) {
-                String[] answers = answer.split("\ndiv----------div\n");
+                String[] answers = answer.split("div----------div");
                 if (ids.length != answers.length) {
                     homeworkScore.setScore(0);
-                    homeworkScore.setEvaluate("你没有按照规范提交作业！缺少" +
-                            "div----------div或者少题目上交");
+                    homeworkScore.setEvaluate("缺少题目上交？");
                 } else {
                     //count正确的        all所有题目
                     int i, count = 0;
@@ -102,12 +100,12 @@ public class TimeTaskService {
                     for (i = 0; i < ids.length; i++) {
                         Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(ids[i]));
                         if (question != null) {
-                            List<TestData> testDataList = testDataMapper.getListByQuestionId(question.getId());
-                            //程序作业是一定有测试数据的,非程序作业没有测试数据
+                            List<TestData> testDataList = testDataMapper.getListByQuestionId(
+                                    question.getId());
+                            //自动批改的程序作业是一定有测试数据的,非程序作业没有测试数据
                             if (testDataList != null && testDataList.size() > 0) {
-                                all = 0;//重置总体数量
-                                List<LanguageMark> languageMarkList = languageMarkMapper.getListByQuestionId(
-                                        question.getId());//获取当前题目的标记语言，如java
+                                List<LanguageMark> languageMarkList = languageMarkMapper
+                                        .getListByQuestionId(question.getId());//获取当前题目的标记语言，如java
                                 if (languageMarkList != null && languageMarkList.size() > 0) {
                                     LanguageMark languageMark = languageMarkList.get(0);
                                     if (languageMark.getMark() != null) {
@@ -130,20 +128,32 @@ public class TimeTaskService {
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }
-                                            if (result == null)
+                                            if (result == null){
                                                 try {
-                                                    count = languageTest.execute(testDataList);
-                                                    all += testDataList.size();
+                                                    //编译正确，开始执行多组输入验证对应的输出
+                                                    count += languageTest.execute(testDataList);
+                                                    all += testDataList.size()-1;//叠加测试数量
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
                                                 }
+                                            }
+                                            else{
+                                                try {
+                                                    //编译错误信息，其原始编码格式是cp936
+                                                    result = new String(result.getBytes("cp936")
+                                                            ,"utf-8");
+                                                } catch (UnsupportedEncodingException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                System.out.println("result:"+result);
+                                            }
                                         } else
-                                            log.info("标记语言表中id为：" + languageMark.getId() + "的标记语言" +
-                                                    "不匹配代码，请更新程序！");
+                                            log.info("标记语言表中id为：" + languageMark.getId() +
+                                                    "的标记语言不匹配代码，请更新程序！");
                                     }
                                 } else
-                                    log.info("题目中id为：" + question.getId() + "的标记语言为空而有测试数据，" +
-                                            "出现问题！");
+                                    log.info("题目中id为：" + question.getId() + "的标记语言为空而有测试数据，"
+                                            + "出现问题！");
                             } else {
                                 if (question.getAnswer().trim().equals(answers[i].trim()))
                                     count++;
@@ -152,13 +162,14 @@ public class TimeTaskService {
                             log.info("作业布置中题目id为：" + ids[i] + "不存在！");
                     }
                     double correctRate = (double) count / (double) all;
-                    correctRate = (double) Math.round(correctRate * 100) / 100;
+                    correctRate = (double) Math.round(correctRate * 10000) / 100;
                     homeworkScore.setCorrectRate(correctRate);
                     homeworkScore = giveScoreAndEvaluate(homeworkScore, correctRate);
+                    System.out.println("correctRate"+correctRate);
                 }
             } else {
                 homeworkScore.setScore(0);
-                homeworkScore.setEvaluate("你没有提交作业！");
+                homeworkScore.setEvaluate("作业答案是空的，没有提交作业！");
             }
             homeworkScoreMapper.updateByPrimaryKeySelective(homeworkScore);
         });
@@ -168,7 +179,7 @@ public class TimeTaskService {
     private HomeworkScore giveScoreAndEvaluate(HomeworkScore homeworkScore, double correctRate) {
         homeworkScore.setScore((int) correctRate);
         if (correctRate == 100.00)
-            homeworkScore.setEvaluate("太棒了！你全部作对了");
+            homeworkScore.setEvaluate("完美地完成了作业");
         else if (correctRate > 90.00)
             homeworkScore.setEvaluate("很优秀，基本上全做对了");
         else if (correctRate > 80.00)
@@ -177,8 +188,12 @@ public class TimeTaskService {
             homeworkScore.setEvaluate("较好得完成了本次作业");
         else if (correctRate > 60.00)
             homeworkScore.setEvaluate("此次作业做的一般般");
+        else if (correctRate > 50.00)
+            homeworkScore.setEvaluate("此次作业做的不够认真");
+        else if (correctRate > 40.00)
+            homeworkScore.setEvaluate("此次作业做的不怎么样");
         else
-            homeworkScore.setEvaluate("此次作业不及格");
+            homeworkScore.setEvaluate("此次作业做的不好，请继续努力");
         return homeworkScore;
     }
 }

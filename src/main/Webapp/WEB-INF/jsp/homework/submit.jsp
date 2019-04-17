@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,14 +40,17 @@
                     1.请选择文件上传或者输入信息到文本框提交作业，如果文本框内有信息将不会上传文件   <br><br>
                     2.Java语言代码请按照这种格式：输入输出流：System.In 和 System.Out，主类：Main，函数：标准 main 函数。
                     <br><br>
-                    3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告<br><br>
-                    4.作业的题目请<strong>换行后写div----------div(两个div中间10个-)再换行</strong>在问题之间进行隔开，
-                    题目中禁止出现，否则自动批改可能出错
+                    3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告
                 </p>
-                <label class="homeworkLabel">
-                    自己的作业答案：
-                </label>
-                <textarea id="homeworkSubmit" class="form-control"   rows="20" >${homeworkScore.answer}</textarea>
+                <div id="homeworkSubmit">
+                    <c:forEach items="${requestScope.list}" var="keyword" varStatus="id">
+                        ${id.index} ${keyword}<br>
+                    </c:forEach>
+                </div>
+                <%--<label class="homeworkLabel">--%>
+                    <%--自己的作业答案：--%>
+                <%--</label>--%>
+                <%--<textarea id="homeworkSubmit" class="form-control"   rows="20" >${homeworkScore.answer}</textarea>--%>
                 <div class="form-inline">
                     <label class="homeworkLabel">
                         文件上传：
@@ -70,14 +74,27 @@
                 <input id="userId" type="hidden" value="${user.id}" />
                 <input id="deadline" type="hidden" value="${deadline}" />
                 <input id="fileName" type="hidden" value="${homeworkScore.fileName}" />
+                <input id="questionNumber" type="hidden" value="${questionNumber}" />
+                <input id="homeworkScoreId" type="hidden" value="${homeworkScore.id}" />
+            </div>
+            <div class="bottom" style="margin:8px auto 0 25px;
+                    text-align:center;
+                    bottom:0;
+                    left:0;
+                    overflow:hidden;
+                    padding-bottom:8px;
+                    color:#0c0b2f;
+                    word-spacing:3px;
+                    zoom:1;
+                    font-size:15px
+                    ">
+                <p class="text-center">
+                    Copyright &copy; 2019 zym
+                </p>
             </div>
         </div>
-
     </div>
 </div>
-<%@include file="../common/mainFooter.jspf" %>
-<script>
-    $("#studentHomeworkPage").attr("class","nav-link active");
-</script>
+<script src="${pageContext.request.contextPath}/js/homework/submit.js"></script>
 </body>
 </html>

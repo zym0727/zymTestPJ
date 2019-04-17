@@ -1,37 +1,16 @@
-﻿$("#studentHomeworkPage").attr("class","nav-link active");
+﻿$("#homeworkManage").attr("class","nav-link active");
 
 $(function () {
-    getHomeworkNumber();
-
-    initTheTable(1);
-
-    $("#unSubmit").click(function () {
-        $('#studentHomeworkTable').bootstrapTable("destroy");
-        initTheTable(1)
-    });
-
-    $("#haveSubmitted").click(function () {
-        $('#studentHomeworkTable').bootstrapTable("destroy");
-        initTheTable(2)
-    });
-
-    $("#unMark").click(function () {
-        $('#studentHomeworkTable').bootstrapTable("destroy");
-        initTheTable(3)
-    });
-
-    $("#haveMarked").click(function () {
-        $('#studentHomeworkTable').bootstrapTable("destroy");
-        initTheTable(4)
-    });
+    initTheTable("");
+    $("#selectCourse").change(function () {
+        $('#homeworkTable').bootstrapTable("destroy");
+        initTheTable($("#selectCourse").val());
+    })
 });
 
-
-
-var initTheTable= function (status) {
-    var myTable = $('#studentHomeworkTable');
-    myTable.bootstrapTable({
-        url: '/homework/student/homeworkList',         //请求后台的URL（*）
+var initTheTable= function (courseId) {
+    $('#homeworkTable').bootstrapTable({
+        url: '/homework/teacher/homeworkManageList',         //请求后台的URL（*）
         method: 'get',                      //请求方式（*）
         toolbar: '#toolbar',                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
@@ -42,21 +21,11 @@ var initTheTable= function (status) {
         onLoadError: function(){  //加载失败时执行
             return "加载失败";
         },
-        formatNoMatches: function formatNoMatches() {
-            if(status===1)
-                return '你已经没有未提交作业了';
-            else if(status===2)
-                return '你没有提交过作业！';
-            else if(status===3)
-                return '你已经没有未被批改的作业了！';
-            else if(status===4)
-                return '你没有被批改过作业！';
-        },
         queryParams: function () { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
             return {
                 pageSize:this.pageSize,
                 pageNumber:this.pageNumber,
-                status: status
+                courseId:checkParam(courseId)
             }
         },
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -65,20 +34,22 @@ var initTheTable= function (status) {
         pageList: [10, 20, 30],        //可供选择的每页的行数（*）
         showColumns: true,                  //是否显示所有的列
         clickToSelect: true,                //是否启用点击选中行
-        height: $(window).height() - 300,
+        height: $(window).height() - 240,
         width:$(window).width(),
         uniqueId: "id",                     //每一行的唯一标识，一般为主键列
         columns: [{
+            checkbox: true
+        }, {
             //field: 'id',
             title: '序号',
             align: 'center',
             width:50,
             formatter: function (value, row, index) {
-                var studentHomeworkTable = $('#studentHomeworkTable');
+                var homeworkTable = $('#homeworkTable');
                 //获取每页显示的数量
-                var pageSize = studentHomeworkTable.bootstrapTable('getOptions').pageSize;
+                var pageSize = homeworkTable.bootstrapTable('getOptions').pageSize;
                 //获取当前是第几页
-                var pageNumber = studentHomeworkTable.bootstrapTable('getOptions').pageNumber;
+                var pageNumber = homeworkTable.bootstrapTable('getOptions').pageNumber;
                 //返回序号，注意index是从0开始的，所以要加上1
                 return pageSize * (pageNumber - 1) + index + 1;
             }
@@ -98,7 +69,7 @@ var initTheTable= function (status) {
             title: '发布时间',
             align: 'center',
             width: 100
-         }, {
+        }, {
             field: 'deadline',
             title: '截止时间',
             align: 'center',
@@ -112,21 +83,4 @@ function aFormatter(value, row, index) {
     return [
         '<a href="'+"/homework/student/submitHomework/"+row.id+'">'+row.questionName+'</a>'
     ].join("")
-}
-
-function getHomeworkNumber() {
-    $.ajax({
-        url: "/homework/student/count" ,
-        method: "get",
-        dataType: "json",
-        success: function (data) {
-            $("#unSubmitNumber").text(data.unSubmit);
-            $("#submittedNumber").text(data.submitted);
-            $("#unMarkNumber").text(data.unMark);
-            $("#markNumber").text(data.mark);
-        },
-        error:function () {
-            alert("出错了,请联系管理员");
-        }
-    });
 }

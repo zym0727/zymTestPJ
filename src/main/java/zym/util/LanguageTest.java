@@ -73,7 +73,7 @@ public abstract class LanguageTest {
             StringBuilder output = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null)
-                output.append(line + "\n");
+                output.append(line).append(System.lineSeparator());
             isCompiled = true;
             return output.toString().isEmpty() ? null : output.toString();
         }
@@ -93,7 +93,9 @@ public abstract class LanguageTest {
         // 执行所有的输入输出数据
         for (TestData testData : testDataList) {
             //执行一组输入输出
+            System.out.println("数据库中的一组输出："+testData.getOutput());
             String output = test(testData.getInput());
+            System.out.println("两者是否相同："+output.equals(testData.getOutput()));
             if (output.equals(testData.getOutput()))
                 correct++;
         }
@@ -122,8 +124,10 @@ public abstract class LanguageTest {
         try (Scanner in = new Scanner(process.getInputStream(), "UTF-8")) {
             while (in.hasNextLine()) {
                 results.append(in.nextLine());
-                System.out.println("此时InputStream结果为：" + results);
+                if(in.hasNextLine())
+                    results.append(System.lineSeparator());//windows环境下是"\r\n",linux环境下是"\n"，mac环境下是"\r"
             }
+            System.out.println("此时InputStream结果为：" + results);
         }
         return results.toString();
     }

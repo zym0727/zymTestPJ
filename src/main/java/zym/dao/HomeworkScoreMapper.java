@@ -19,5 +19,5 @@ public interface HomeworkScoreMapper {
 
     List<HomeworkScore> selectList(HomeworkScore homeworkScore);
 
-    List<HomeworkScore> selectListByHomeworkId(Integer homeworkId);
+    List<HomeworkScore> selectListByHomeworkId(Integer homeworkId);//通过作业id来找已批改作业成绩列表
 }
