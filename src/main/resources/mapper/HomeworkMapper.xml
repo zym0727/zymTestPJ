@@ -321,7 +321,7 @@
     </if>
   </select>
 
-
+  <!--教师查询详细作业信息列表总数量-->
   <select id="countHomeworkMessageList" parameterType="zym.pojo.param.HomeworkManagePage" resultType="int">
     select count(1) from (
     <include refid="getTeacherSee" />

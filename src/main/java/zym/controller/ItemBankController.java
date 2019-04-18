@@ -139,4 +139,12 @@ public class ItemBankController {
             throw new MessageException("参数为空");
         return questionService.getQuestionList(questionPage);
     }
+
+    @RequestMapping(path = {"/id/get"}, method = RequestMethod.GET)
+    @ResponseBody
+    public int getItemBankId(String ids){
+        if (StringUtils.isEmpty(ids))
+            throw new MessageException("参数为空");
+        return itemBankService.getItemBankId(ids);
+    }
 }

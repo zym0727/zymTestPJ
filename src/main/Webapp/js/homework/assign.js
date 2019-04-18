@@ -1,4 +1,4 @@
-﻿function assignHomework() {
+﻿function assignHomework(isAssign) {
     var courseId = $("#selectCourse").val();
     if (courseId === "") {
         alert("请选择课程");
@@ -9,10 +9,11 @@
         alert("请选择发布时间！");
         return;
     }
-    if (assignTime < curDateTime()) {
-        alert("发布时间已经小于当前时间了！");
-        return;
-    }
+    if (isAssign === true)
+        if (assignTime < curDateTime()) {
+            alert("发布时间已经小于当前时间了！");
+            return;
+        }
     var deadline = $("#datetimepicker_end").val();
     if (deadline === "") {
         alert("请选择截止时间！");
@@ -29,37 +30,67 @@
     }
     var remark = $("#remarkText").val();
     var isAutomatic = $('input:radio[name="marking"]:checked').val();
+    console.log(isAutomatic);
     if (isAutomatic === undefined) {
         alert("请选择是否自动批改！");
         return;
     }
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
-    $.ajax({
-        url: "/homework/teacher/assign",
-        method: "post",
-        data: {
-            courseId: courseId,
-            assignTime: new Date(assignTime),
-            deadline: new Date(deadline),
-            questionIds: questionIds.toString(),
-            isAutomatic: isAutomatic,
-            remark: remark
-        },
-        dataType: "json",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        success: function (data) {
-            if (data === "success")
-                alert("发布成功！");
-            else if (data === "time out")
-                alert("发布时间已过了，请重新发布！")
-        },
-        error: function () {
-            alert("发布失败，请联系管理员！")
-        }
-    });
+    if (isAssign === true) {
+        $.ajax({
+            url: "/homework/teacher/assign",
+            method: "post",
+            data: {
+                courseId: courseId,
+                assignTime: new Date(assignTime),
+                deadline: new Date(deadline),
+                questionIds: questionIds.toString(),
+                isAutomatic: isAutomatic,
+                remark: remark
+            },
+            dataType: "json",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                if (data === "success")
+                    alert("发布成功！");
+                else if (data === "time out")
+                    alert("发布时间已过了，请重新发布！")
+            },
+            error: function () {
+                alert("发布失败，请联系管理员！")
+            }
+        });
+    } else {
+        $.ajax({
+            url: "/homework/teacher/update",
+            method: "post",
+            data: {
+                id: updateHomeworkId,
+                courseId: courseId,
+                assignTime: new Date(assignTime),
+                deadline: new Date(deadline),
+                questionIds: questionIds.toString(),
+                isAutomatic: isAutomatic,
+                remark: remark
+            },
+            dataType: "json",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                if (data === "success")
+                    alert("修改成功！");
+                $("#updateModal").modal("hide");
+                $('#homeworkTable').bootstrapTable("refresh");
+            },
+            error: function () {
+                alert("修改失败，请联系管理员！")
+            }
+        });
+    }
 }
 
 $(function () {

@@ -72,6 +72,12 @@ public class ItemBankService {
         return JSONObject.toJSONString("success");
     }
 
+    public Integer getItemBankId(String ids){
+        String[] listId = ids.split(",");
+        Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(listId[0]));
+        return itemBankMapper.selectByPrimaryKey(question.getItemId()).getId();
+    }
+
     private void batchDeleteQuestion(Integer id){
         List<Question> questionList = questionMapper.selectByItemId(id);
         if (questionList.size() > 0) {

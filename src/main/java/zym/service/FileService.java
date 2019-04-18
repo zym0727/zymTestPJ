@@ -52,7 +52,7 @@ public class FileService {
         homeworkScore.setHomeworkId(Integer.parseInt(homeworkId));
         homeworkScore.setFilePath(finalFile);
         homeworkScore.setFileName(fileName);
-        homeworkService.saveHomework(homeworkScore);
+        homeworkService.saveHomeworkScore(homeworkScore);
         return JSONObject.toJSONString("success");
     }
 

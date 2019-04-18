@@ -55,6 +55,7 @@ public class HomeworkController {
     @RequestMapping(path = {"/teacher/manage/getPage"}, method = RequestMethod.GET)
     public String getAssignHomework(Model model, HttpSession session) {
         model.addAttribute("courseList", courseService.selectCourseList(session));
+        model.addAttribute("itemBankList", itemBankService.getItemBankList());
         return "homework/homework";
     }
 
@@ -86,7 +87,7 @@ public class HomeworkController {
                 StringUtils.isEmpty(homework.getAssignTime()) || StringUtils.isEmpty(homework.getDeadline())
                 || StringUtils.isEmpty(homework.getIsAutomatic()))
             throw new MessageException("参数为空");
-        return homeworkService.saveAssignHomework(homework);
+        return homeworkService.saveOrUpdateAssignHomework(homework, true);
     }
 
     @RequestMapping(path = {"/student/homeworkList"}, method = RequestMethod.GET)
@@ -109,7 +110,7 @@ public class HomeworkController {
     @RequestMapping(path = {"/student/submit"}, method = RequestMethod.POST)
     @ResponseBody
     public String submitHomework(HomeworkScore homeworkScore) throws ParseException {
-        return homeworkService.saveHomework(homeworkScore);
+        return homeworkService.saveHomeworkScore(homeworkScore);
     }
 
     @RequestMapping(path = {"/student/AnswerList/get/{homeworkScoreId}"}, method = RequestMethod.GET)
@@ -121,10 +122,41 @@ public class HomeworkController {
     @RequestMapping(path = {"/teacher/homeworkManageList"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getHomeworkManageList(HttpSession httpSession,
-                                             HomeworkManagePage homeworkManagePage) {
+                                            HomeworkManagePage homeworkManagePage) {
         if (StringUtils.isEmpty(homeworkManagePage) || StringUtils.isEmpty(homeworkManagePage.getPageNumber())
                 || StringUtils.isEmpty(homeworkManagePage.getPageSize()))
             throw new MessageException("参数为空");
         return homeworkService.getHomeworkMessageList(httpSession, homeworkManagePage);
+    }
+
+    @RequestMapping(path = {"/teacher/delete/{homeworkId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteHomework(@PathVariable Integer homeworkId) {
+        return homeworkService.deleteHomework(homeworkId);
+    }
+
+    @RequestMapping(path = {"/teacher/batchDelete"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String batchDeleteHomework(String ids) {
+        if (StringUtils.isEmpty(ids))
+            throw new MessageException("参数为空");
+        return homeworkService.deleteHomeworkList(ids);
+    }
+
+    @RequestMapping(path = {"/teacher/update"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHomework(Homework homework) {
+        if (StringUtils.isEmpty(homework) || StringUtils.isEmpty(homework.getCourseId()) ||
+                StringUtils.isEmpty(homework.getAssignTime()) || StringUtils.isEmpty(homework.getDeadline())
+                || StringUtils.isEmpty(homework.getIsAutomatic())
+                || StringUtils.isEmpty(homework.getId()))
+            throw new MessageException("参数为空");
+        return homeworkService.saveOrUpdateAssignHomework(homework, false);
+    }
+
+    @RequestMapping(path = {"/teacher/get/{homeworkId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public Homework getHomework(@PathVariable Integer homeworkId){
+        return homeworkService.getHomework(homeworkId);
     }
 }

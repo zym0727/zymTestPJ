@@ -38,23 +38,34 @@ public class HomeworkService {
     @Autowired
     private HomeworkScoreMapper homeworkScoreMapper;
 
-    public String saveAssignHomework(Homework homework) {
+    public String saveOrUpdateAssignHomework(Homework homework, Boolean isSave) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date assignTime = homework.getAssignTime();
         try {
             Date now = simpleDateFormat.parse(simpleDateFormat.format(new Date()));
-            if (now.getTime() > assignTime.getTime())
-                return JSONObject.toJSONString("time out");
-            if (now.getTime() == assignTime.getTime()) {
-                homework.setIsAssign(1);
-                homeworkMapper.insertSelective(homework);
-                return JSONObject.toJSONString("success");
+            if(isSave){
+                if (now.getTime() > assignTime.getTime())
+                    return JSONObject.toJSONString("time out");
+                if (now.getTime() == assignTime.getTime()) {
+                    homework.setIsAssign(1);
+                    homeworkMapper.insertSelective(homework);
+                    return JSONObject.toJSONString("success");
+                }
+            } else {
+                if (now.getTime() > assignTime.getTime() || now.getTime() == assignTime.getTime()){
+                    homework.setIsAssign(1);
+                    homeworkMapper.updateByPrimaryKeySelective(homework);
+                    return JSONObject.toJSONString("success");
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
         homework.setIsAssign(0);
-        homeworkMapper.insertSelective(homework);
+        if (isSave)
+            homeworkMapper.insertSelective(homework);
+        else
+            homeworkMapper.updateByPrimaryKeySelective(homework);
         return JSONObject.toJSONString("success");
     }
 
@@ -82,7 +93,7 @@ public class HomeworkService {
         } else if (status == 3) { //未批改作业
             result.put("total", homeworkMapper.countUnMarkListStudent(id));
             result.put("rows", spiltToName(homeworkMapper.getUnMarkListByStudentId(studentHomeworkPage)));
-        } else  { //已批改作业   status == 4
+        } else { //已批改作业   status == 4
             result.put("total", homeworkMapper.countMarkListStudent(id));
             result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(studentHomeworkPage)));
         }
@@ -156,20 +167,20 @@ public class HomeworkService {
         return "success";
     }
 
-    public String saveHomework(HomeworkScore homeworkScore) throws ParseException {
+    public String saveHomeworkScore(HomeworkScore homeworkScore) throws ParseException {
         HomeworkScore test = new HomeworkScore();
         test.setHomeworkId(homeworkScore.getHomeworkId());
         test.setStudentId(homeworkScore.getStudentId());
         List<HomeworkScore> scoreList = homeworkScoreMapper.selectList(test);
         Date now = DateUtil.getNow();
-        if (scoreList != null && scoreList.size() > 0){
+        if (scoreList != null && scoreList.size() > 0) {
             HomeworkScore haveOne = scoreList.get(0);
             haveOne.setAnswer(homeworkScore.getAnswer());
             haveOne.setFileName(homeworkScore.getFileName());
             haveOne.setFilePath(homeworkScore.getFilePath());
             haveOne.setSubmitTime(now);
             homeworkScoreMapper.updateByPrimaryKey(haveOne);
-        }else {
+        } else {
             homeworkScore.setSubmitTime(now);
             homeworkScoreMapper.insert(homeworkScore);
         }
@@ -192,8 +203,10 @@ public class HomeworkService {
         return null;
     }
 
-    public JSONObject getHomeworkMessageList(HttpSession httpSession, HomeworkManagePage homeworkManagePage){
+    public JSONObject getHomeworkMessageList(HttpSession httpSession, HomeworkManagePage homeworkManagePage) {
         JSONObject result = new JSONObject();
+        homeworkManagePage.setOffset(
+                (homeworkManagePage.getPageNumber() - 1) * homeworkManagePage.getPageSize());
         Object user = httpSession.getAttribute("user");
         if (user == null) {
             result.put("total", 0);
@@ -205,5 +218,27 @@ public class HomeworkService {
         result.put("total", homeworkMapper.countHomeworkMessageList(homeworkManagePage));
         result.put("rows", spiltToName(homeworkMapper.getHomeworkMessageList(homeworkManagePage)));
         return result;
+    }
+
+    public String deleteHomework(Integer homeworkId) {
+        homeworkMapper.deleteByPrimaryKey(homeworkId);
+        HomeworkScore homeworkScore = new HomeworkScore();
+        homeworkScore.setHomeworkId(homeworkId);
+        List<HomeworkScore> homeworkScoreList = homeworkScoreMapper.selectList(homeworkScore);
+        if (homeworkScoreList != null && homeworkScoreList.size() > 0)
+            homeworkScoreMapper.batchDelete(homeworkScoreList);
+        return JSONObject.toJSONString("success");
+    }
+
+    public String deleteHomeworkList(String ids) {
+        String[] listIds = ids.split(",");
+        for (String id : listIds) {
+            deleteHomework(Integer.valueOf(id));
+        }
+        return JSONObject.toJSONString("success");
+    }
+
+    public Homework getHomework(Integer homeworkId){
+        return homeworkMapper.selectByPrimaryKey(homeworkId);
     }
 }

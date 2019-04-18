@@ -197,4 +197,13 @@
     where homework_id = #{homeworkId,jdbcType=INTEGER}
     and score is null
   </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from homework_score
+    where id IN
+    <foreach collection="list" item="homeworkScore" open="(" separator="," close=")">
+      ${homeworkScore.id}
+    </foreach>
+  </delete>
 </mapper>

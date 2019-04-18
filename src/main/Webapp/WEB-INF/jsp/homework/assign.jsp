@@ -90,7 +90,7 @@
 
                 <div id="assignThis">
                     <button id="assignButton" type="button" class="btn btn-success btn-lg"
-                            onclick="assignHomework();">发布作业</button>
+                            onclick="assignHomework(true);">发布作业</button>
                 </div>
             </div>
 
