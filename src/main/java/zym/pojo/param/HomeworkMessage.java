@@ -15,6 +15,8 @@ public class HomeworkMessage extends Homework {
 
     private String questionName;
 
+    private String studentName;
+
     public String getCourseName() {
         return courseName;
     }
@@ -45,5 +47,13 @@ public class HomeworkMessage extends Homework {
 
     public void setQuestionName(String questionName) {
         this.questionName = questionName;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 }

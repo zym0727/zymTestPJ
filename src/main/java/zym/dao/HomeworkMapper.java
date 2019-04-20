@@ -1,6 +1,5 @@
 package zym.dao;
 
-import org.apache.ibatis.annotations.Param;
 import zym.pojo.Homework;
 import zym.pojo.param.HomeworkManagePage;
 import zym.pojo.param.HomeworkMessage;
@@ -29,13 +28,9 @@ public interface HomeworkMapper {
 
     int countSubmitListStudent(Integer id);
 
-    List<HomeworkMessage> getUnMarkListByStudentId(StudentHomeworkPage studentHomeworkPage);
-
-    int countUnMarkListStudent(Integer id);
-
     List<HomeworkMessage> getMarkListByStudentId(StudentHomeworkPage studentHomeworkPage);
 
-    int countMarkListStudent(Integer id);
+    int countMarkListStudent(StudentHomeworkPage studentHomeworkPage);
 
     List<Homework> getHomeworkList(Homework homework);
 
@@ -47,5 +42,7 @@ public interface HomeworkMapper {
 
     int countHomeworkMessageList(HomeworkManagePage homeworkManagePage);
 
+    List<HomeworkMessage> getSubmitHomeworkListByTeacherId(StudentHomeworkPage studentHomeworkPage);
 
+    int countSubmitHomeworkListTeacher(StudentHomeworkPage studentHomeworkPage);
 }

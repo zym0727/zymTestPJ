@@ -63,8 +63,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="buttons.html" class="nav-link">
-                                <i class="icon icon-pencil"></i> 学生作业查阅
+                            <a href="${pageContext.request.contextPath}/homework/teacher/see"
+                               class="nav-link" id="teacherSeeHomeworkPage">
+                                <i class="icon icon-pencil"></i> 学生作业批阅
                             </a>
                         </li>
                     </ul>
@@ -78,7 +79,15 @@
                     <ul class="nav-dropdown-items">
                         <li class="nav-item">
                             <a href="chartjs.html" class="nav-link">
-                                <i class="icon icon-energy"></i> 功能1
+                                <i class="icon icon-energy"></i> 作业成绩查阅
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a href="chartjs.html" class="nav-link">
+                                <i class="icon icon-energy"></i> 成绩统计分析
                             </a>
                         </li>
                     </ul>

@@ -59,6 +59,12 @@ public class HomeworkController {
         return "homework/homework";
     }
 
+    @RequestMapping(path = {"/teacher/see"}, method = RequestMethod.GET)
+    public String getStudentHomework(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        return "homework/teacherSee";
+    }
+
     @RequestMapping(path = {"/student/see"}, method = RequestMethod.GET)
     public String getStudentSeePage() {
         return "homework/studentSee";
@@ -90,7 +96,7 @@ public class HomeworkController {
         return homeworkService.saveOrUpdateAssignHomework(homework, true);
     }
 
-    @RequestMapping(path = {"/student/homeworkList"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/homeworkList","/teacher/homeworkList"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getStudentHomeworkList(HttpSession httpSession,
                                              StudentHomeworkPage studentHomeworkPage) {
@@ -101,7 +107,7 @@ public class HomeworkController {
         return homeworkService.getStudentHomeworkList(httpSession, studentHomeworkPage);
     }
 
-    @RequestMapping(path = {"/student/count"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/count","/teacher/count"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getStudentHomeworkCount(HttpSession httpSession) {
         return homeworkService.getStudentHomeworkCount(httpSession);

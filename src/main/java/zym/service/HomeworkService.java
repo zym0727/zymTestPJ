@@ -43,7 +43,7 @@ public class HomeworkService {
         Date assignTime = homework.getAssignTime();
         try {
             Date now = simpleDateFormat.parse(simpleDateFormat.format(new Date()));
-            if(isSave){
+            if (isSave) {
                 if (now.getTime() > assignTime.getTime())
                     return JSONObject.toJSONString("time out");
                 if (now.getTime() == assignTime.getTime()) {
@@ -52,7 +52,7 @@ public class HomeworkService {
                     return JSONObject.toJSONString("success");
                 }
             } else {
-                if (now.getTime() > assignTime.getTime() || now.getTime() == assignTime.getTime()){
+                if (now.getTime() > assignTime.getTime() || now.getTime() == assignTime.getTime()) {
                     homework.setIsAssign(1);
                     homeworkMapper.updateByPrimaryKeySelective(homework);
                     return JSONObject.toJSONString("success");
@@ -81,21 +81,53 @@ public class HomeworkService {
             result.put("rows", new ArrayList<>());
             return result;
         }
-        Users student = (Users) user;
-        int id = student.getId();
-        studentHomeworkPage.setId(student.getId());
-        if (status == 1) { //未提交作业
-            result.put("total", homeworkMapper.countUnSubmitListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getUnSubmitListByStudentId(studentHomeworkPage)));
-        } else if (status == 2) { //已提交作业
-            result.put("total", homeworkMapper.countSubmitListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getSubmitListByStudentId(studentHomeworkPage)));
-        } else if (status == 3) { //未批改作业
-            result.put("total", homeworkMapper.countUnMarkListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getUnMarkListByStudentId(studentHomeworkPage)));
-        } else { //已批改作业   status == 4
-            result.put("total", homeworkMapper.countMarkListStudent(id));
-            result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(studentHomeworkPage)));
+        Users users = (Users) user;
+        int id = users.getId();
+        studentHomeworkPage.setId(users.getId());
+        //当前用户是学生
+        if (users.getRoleId() == 3) {
+            if (status == 1) { //未提交作业
+                result.put("total", homeworkMapper.countUnSubmitListStudent(id));
+                result.put("rows", spiltToName(homeworkMapper.getUnSubmitListByStudentId(
+                        studentHomeworkPage)));
+            } else if (status == 2) { //已提交作业
+                result.put("total", homeworkMapper.countSubmitListStudent(id));
+                result.put("rows", spiltToName(homeworkMapper.getSubmitListByStudentId(
+                        studentHomeworkPage)));
+            } else if (status == 3) { //未批改作业
+                result.put("total", homeworkMapper.countMarkListStudent(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(
+                        studentHomeworkPage)));
+            } else { //已批改作业   status == 4
+                studentHomeworkPage.setScore(1);
+                result.put("total", homeworkMapper.countMarkListStudent(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(
+                        studentHomeworkPage)));
+            }
+        } else if (users.getRoleId() == 2) { //用户是老师
+            if (status == 1) { //未手动批改作业
+                studentHomeworkPage.setIsAutomatic(0);
+                result.put("total", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getSubmitHomeworkListByTeacherId(
+                        studentHomeworkPage)));
+            } else if (status == 2) { //已手动批改作业
+                studentHomeworkPage.setIsAutomatic(0);
+                studentHomeworkPage.setScore(1);
+                result.put("total", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getSubmitHomeworkListByTeacherId(
+                        studentHomeworkPage)));
+            } else if (status == 3) { //未自动批改作业
+                studentHomeworkPage.setIsAutomatic(1);
+                result.put("total", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getSubmitHomeworkListByTeacherId(
+                        studentHomeworkPage)));
+            } else { //已自动批改作业   status == 4
+                studentHomeworkPage.setIsAutomatic(1);
+                studentHomeworkPage.setScore(1);
+                result.put("total", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+                result.put("rows", spiltToName(homeworkMapper.getSubmitHomeworkListByTeacherId(
+                        studentHomeworkPage)));
+            }
         }
         return result;
     }
@@ -121,18 +153,39 @@ public class HomeworkService {
         JSONObject result = new JSONObject();
         Object user = httpSession.getAttribute("user");
         if (user == null) {
-            result.put("unSubmit", 0);
-            result.put("submit", 0);
-            result.put("unMark", 0);
-            result.put("mark", 0);
+            result.put("paramOne", 0);
+            result.put("paramTwo", 0);
+            result.put("paramThree", 0);
+            result.put("paramFour", 0);
             return result;
         }
-        Users student = (Users) user;
-        int id = student.getId();
-        result.put("unSubmit", homeworkMapper.countUnSubmitListStudent(id));
-        result.put("submitted", homeworkMapper.countSubmitListStudent(id));
-        result.put("unMark", homeworkMapper.countUnMarkListStudent(id));
-        result.put("mark", homeworkMapper.countMarkListStudent(id));
+        Users users = (Users) user;
+        int id = users.getId();
+        StudentHomeworkPage studentHomeworkPage = new StudentHomeworkPage();
+        studentHomeworkPage.setId(id);
+        //当前用户是学生
+        if (users.getRoleId() == 3) {
+            result.put("paramOne", homeworkMapper.countUnSubmitListStudent(id));//未提交作业
+            result.put("paramTwo", homeworkMapper.countSubmitListStudent(id));//已提交作业
+            result.put("paramThree", homeworkMapper.countMarkListStudent(studentHomeworkPage));//未批改作业
+            studentHomeworkPage.setScore(1);//设置score值不为空，是已批改的作业
+            result.put("paramFour", homeworkMapper.countMarkListStudent(studentHomeworkPage));//已批改作业
+        } else if (users.getRoleId() == 2) { //用户是老师
+            studentHomeworkPage.setIsAutomatic(0); //设置批改为手动
+            //未手动批改作业
+            result.put("paramOne", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+            studentHomeworkPage.setScore(1);//设置score值不为空，是已批改的作业
+            //已手动批改作业
+            result.put("paramTwo", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+            studentHomeworkPage.setIsAutomatic(1);//设置批改为自动
+            studentHomeworkPage.setScore(null);//设置score值为空，是未批改的作业
+            //未自动批改作业
+            result.put("paramThree", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+            studentHomeworkPage.setScore(1);//设置score值不为空，是已批改的作业
+            //已自动批改作业
+            result.put("paramFour", homeworkMapper.countSubmitHomeworkListTeacher(studentHomeworkPage));
+        }
+
         return result;
     }
 
@@ -238,7 +291,7 @@ public class HomeworkService {
         return JSONObject.toJSONString("success");
     }
 
-    public Homework getHomework(Integer homeworkId){
+    public Homework getHomework(Integer homeworkId) {
         return homeworkMapper.selectByPrimaryKey(homeworkId);
     }
 }
