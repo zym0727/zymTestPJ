@@ -151,6 +151,9 @@
     left join course c1 on c1.id = h.course_id
     left join users u on u.id = c1.teacher_id
     where h.is_assign = '1' and hs.submit_time is null
+    <if test="courseId != null">
+      and h.course_id = #{courseId,jdbcType=INTEGER}
+    </if>
   </sql>
 
   <!--学生查询未提交作业-->
@@ -163,7 +166,8 @@
   </select>
 
   <!--学生查询未提交作业数量-->
-  <select id="countUnSubmitListStudent" parameterType="java.lang.Integer" resultType="int">
+  <select id="countUnSubmitListStudent" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultType="int">
     select count(1) from (
     <include refid="unSubmitList"/>
     ) as counts
@@ -179,6 +183,9 @@
     left join course c1 on c1.id = h.course_id
     left join users u on u.id = c1.teacher_id
     where h.is_assign = '1' and hs.student_id = #{id,jdbcType=INTEGER} and hs.submit_time is not null
+    <if test="courseId != null">
+      and h.course_id = #{courseId,jdbcType=INTEGER}
+    </if>
   </sql>
 
   <!--学生查询提交作业-->
@@ -191,7 +198,8 @@
   </select>
 
   <!--学生查询提交作业数量-->
-  <select id="countSubmitListStudent" parameterType="java.lang.Integer" resultType="int">
+  <select id="countSubmitListStudent" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultType="int">
     select count(1) from (
     <include refid="submitList"/>
     ) as counts
@@ -218,7 +226,8 @@
   </select>
 
   <!--学生查询是否批改作业数量-->
-  <select id="countMarkListStudent" parameterType="zym.pojo.param.StudentHomeworkPage" resultType="int">
+  <select id="countMarkListStudent" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultType="int">
     select count(1) from (
     <include refid="MarkList"/>
     ) as counts

@@ -87,11 +87,11 @@ public class HomeworkService {
         //当前用户是学生
         if (users.getRoleId() == 3) {
             if (status == 1) { //未提交作业
-                result.put("total", homeworkMapper.countUnSubmitListStudent(id));
+                result.put("total", homeworkMapper.countUnSubmitListStudent(studentHomeworkPage));
                 result.put("rows", spiltToName(homeworkMapper.getUnSubmitListByStudentId(
                         studentHomeworkPage)));
             } else if (status == 2) { //已提交作业
-                result.put("total", homeworkMapper.countSubmitListStudent(id));
+                result.put("total", homeworkMapper.countSubmitListStudent(studentHomeworkPage));
                 result.put("rows", spiltToName(homeworkMapper.getSubmitListByStudentId(
                         studentHomeworkPage)));
             } else if (status == 3) { //未批改作业
@@ -140,7 +140,7 @@ public class HomeworkService {
                 for (String s : ids) {
                     Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(s));
                     if (question != null)
-                        questionName.append(question.getQuestionName()).append(",");
+                        questionName.append(question.getQuestionName()).append("，");
                 }
                 if (!questionName.toString().equals(""))
                     h.setQuestionName(questionName.toString().substring(0, questionName.length() - 1));
@@ -149,7 +149,7 @@ public class HomeworkService {
         return list;
     }
 
-    public JSONObject getStudentHomeworkCount(HttpSession httpSession) {
+    public JSONObject getStudentHomeworkCount(HttpSession httpSession, Integer courseId) {
         JSONObject result = new JSONObject();
         Object user = httpSession.getAttribute("user");
         if (user == null) {
@@ -163,10 +163,11 @@ public class HomeworkService {
         int id = users.getId();
         StudentHomeworkPage studentHomeworkPage = new StudentHomeworkPage();
         studentHomeworkPage.setId(id);
+        studentHomeworkPage.setCourseId(courseId);
         //当前用户是学生
         if (users.getRoleId() == 3) {
-            result.put("paramOne", homeworkMapper.countUnSubmitListStudent(id));//未提交作业
-            result.put("paramTwo", homeworkMapper.countSubmitListStudent(id));//已提交作业
+            result.put("paramOne", homeworkMapper.countUnSubmitListStudent(studentHomeworkPage));//未提交作业
+            result.put("paramTwo", homeworkMapper.countSubmitListStudent(studentHomeworkPage));//已提交作业
             result.put("paramThree", homeworkMapper.countMarkListStudent(studentHomeworkPage));//未批改作业
             studentHomeworkPage.setScore(1);//设置score值不为空，是已批改的作业
             result.put("paramFour", homeworkMapper.countMarkListStudent(studentHomeworkPage));//已批改作业
@@ -244,16 +245,16 @@ public class HomeworkService {
         HomeworkScore homeworkScore = new HomeworkScore();
         homeworkScore.setId(homeworkScoreId);
         List<HomeworkScore> scoreList = homeworkScoreMapper.selectList(homeworkScore);
+        JSONArray jsonArray = new JSONArray();
         if (scoreList != null && scoreList.size() > 0) {
             HomeworkScore findHomeworkScore = scoreList.get(0);
             if (findHomeworkScore.getAnswer() != null) {
                 String[] answers = findHomeworkScore.getAnswer().split("div----------div");
-                JSONArray jsonArray = new JSONArray();
                 jsonArray.addAll(Arrays.asList(answers));
                 return jsonArray;
             }
         }
-        return null;
+        return jsonArray;
     }
 
     public JSONObject getHomeworkMessageList(HttpSession httpSession, HomeworkManagePage homeworkManagePage) {
@@ -293,5 +294,17 @@ public class HomeworkService {
 
     public Homework getHomework(Integer homeworkId) {
         return homeworkMapper.selectByPrimaryKey(homeworkId);
+    }
+
+    public String getStudentHomeworkDetail(Integer homeworkScoreId, Model model){
+        HomeworkScore homeworkScore = homeworkScoreMapper.selectByPrimaryKey(homeworkScoreId);
+        if(homeworkScore==null)
+            return "null";
+        model.addAttribute("homeworkScore",homeworkScore);
+        Homework homework = homeworkMapper.selectByPrimaryKey(homeworkScore.getHomeworkId());
+        model.addAttribute("courseId", homework.getCourseId());
+        String[] questionIds = homework.getQuestionIds().split(",");
+        model.addAttribute("questionNumber", questionIds.length);
+        return "success";
     }
 }

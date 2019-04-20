@@ -22,11 +22,11 @@ public interface HomeworkMapper {
 
     List<HomeworkMessage> getUnSubmitListByStudentId(StudentHomeworkPage studentHomeworkPage);
 
-    int countUnSubmitListStudent(Integer id);
+    int countUnSubmitListStudent(StudentHomeworkPage studentHomeworkPage);
 
     List<HomeworkMessage> getSubmitListByStudentId(StudentHomeworkPage studentHomeworkPage);
 
-    int countSubmitListStudent(Integer id);
+    int countSubmitListStudent(StudentHomeworkPage studentHomeworkPage);
 
     List<HomeworkMessage> getMarkListByStudentId(StudentHomeworkPage studentHomeworkPage);
 

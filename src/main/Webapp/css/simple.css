@@ -146,3 +146,26 @@
     margin-left: 130px;
     margin-top: 40px;
 }
+
+#commit{
+    margin-left: 130px;
+    margin-top: 40px;
+    margin-right: 100px;
+}
+
+#score{
+    margin-left: 430px;
+    margin-top: 40px;
+    margin-right: 100px;
+}
+
+#scoreMark{
+    margin-top: 37px;
+    margin-left: 15px;
+}
+
+#markButton{
+    margin-left: 500px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}

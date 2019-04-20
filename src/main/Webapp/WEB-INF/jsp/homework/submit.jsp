@@ -43,14 +43,7 @@
                     3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告
                 </p>
                 <div id="homeworkSubmit">
-                    <c:forEach items="${requestScope.list}" var="keyword" varStatus="id">
-                        ${id.index} ${keyword}<br>
-                    </c:forEach>
                 </div>
-                <%--<label class="homeworkLabel">--%>
-                    <%--自己的作业答案：--%>
-                <%--</label>--%>
-                <%--<textarea id="homeworkSubmit" class="form-control"   rows="20" >${homeworkScore.answer}</textarea>--%>
                 <div class="form-inline">
                     <label class="homeworkLabel">
                         文件上传：

@@ -53,3 +53,13 @@ function nowDateTime() {
     second = second < 10 ? "0" + second : second;
     return curDateTime() + ":" + second;
 }
+
+function isNullOrEmpty(id) {
+    var idDocument = document.getElementById(id);
+    return idDocument.value === "";
+}
+
+function checkInputPattern(regexString, id) {
+    var regexp = new RegExp(regexString);
+    return regexp.test(document.getElementById(id).value);
+}

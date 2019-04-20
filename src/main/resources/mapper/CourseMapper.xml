@@ -160,4 +160,11 @@
     from course
     <include refid="exampleWhere" />
   </select>
+
+  <select id="selectCourseListByStudentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from course c1 where c1.class_ids like
+    concat('%',(select u.class_id from users u where u.id = #{studentId,jdbcType=INTEGER}),'%')
+  </select>
 </mapper>

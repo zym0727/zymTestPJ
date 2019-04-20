@@ -66,7 +66,8 @@ public class HomeworkController {
     }
 
     @RequestMapping(path = {"/student/see"}, method = RequestMethod.GET)
-    public String getStudentSeePage() {
+    public String getStudentSeePage(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
         return "homework/studentSee";
     }
 
@@ -76,8 +77,22 @@ public class HomeworkController {
         String s = homeworkService.getStudentHomework(homeworkId, model, session);
         if (s.equals("success"))
             return "homework/submit";
-        else
+        else{
+            model.addAttribute("courseList", courseService.selectCourseList(session));
             return "homework/studentSee";
+        }
+    }
+
+    @RequestMapping(path = {"/teacher/studentHomework/{homeworkScoreId}"}, method = RequestMethod.GET)
+    public String getStudentHomeworkDetail(@PathVariable Integer homeworkScoreId, Model model,
+                                           HttpSession session){
+        String s = homeworkService.getStudentHomeworkDetail(homeworkScoreId, model);
+        if (s.equals("success"))
+            return "homework/mark";
+        else {
+            model.addAttribute("courseList", courseService.selectCourseList(session));
+            return "homework/teacherSee";
+        }
     }
 
     @RequestMapping(path = {"/teacher/questionList/{itemBankId}"}, method = RequestMethod.GET)
@@ -109,8 +124,8 @@ public class HomeworkController {
 
     @RequestMapping(path = {"/student/count","/teacher/count"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject getStudentHomeworkCount(HttpSession httpSession) {
-        return homeworkService.getStudentHomeworkCount(httpSession);
+    public JSONObject getStudentHomeworkCount(HttpSession httpSession, Integer courseId) {
+        return homeworkService.getStudentHomeworkCount(httpSession, courseId);
     }
 
     @RequestMapping(path = {"/student/submit"}, method = RequestMethod.POST)
@@ -119,7 +134,8 @@ public class HomeworkController {
         return homeworkService.saveHomeworkScore(homeworkScore);
     }
 
-    @RequestMapping(path = {"/student/AnswerList/get/{homeworkScoreId}"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/AnswerList/get/{homeworkScoreId}",
+                            "/teacher/AnswerList/get/{homeworkScoreId}"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONArray getHomeworkScoreAnswer(@PathVariable Integer homeworkScoreId) {
         return homeworkService.getHomeworkScoreAnswer(homeworkScoreId);

@@ -18,4 +18,6 @@ public interface CourseMapper {
     int updateByPrimaryKey(Course record);
 
     List<Course> selectCourseList(Course course);
+
+    List<Course> selectCourseListByStudentId(Integer studentId);
 }

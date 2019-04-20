@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,8 +7,10 @@
     <%@include file="../common/mainHeader.jspf" %>
     <link href="${pageContext.request.contextPath}/css/other.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-table.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-table.js"></script>
     <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-select.min.js"></script>
 </head>
 <body>
 <div class="page-wrapper">
@@ -55,6 +58,18 @@
                     </div>
                 </div>
             </section>
+
+            <div class="form-inline" style="margin-top: 30px; margin-left: 40px; margin-bottom: 10px">
+                <label id="courseChoose" class="control-label">课程:</label>
+                <select name="select" id="selectCourse" class="selectpicker show-tick form-control col-sm-9"
+                        data-width="98%" data-first-option="false"  title="请选择" data-live-search="true">
+                    <c:forEach items="${courseList}" var="course">
+                        <option value="${course.id}">
+                                ${course.courseName}   (上课时间：${course.classTime}  上课班级:${course.classIds})
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
 
             <div>
                 <table id="studentHomeworkTable" class="table table-striped"></table>

@@ -1,14 +1,4 @@
-﻿function isNullOrEmpty(id) {
-    var idDocument = document.getElementById(id);
-    return idDocument.value === "";
-}
-
-function checkInputPattern(regexString, id) {
-    var regexp = new RegExp(regexString);
-    return regexp.test(document.getElementById(id).value);
-}
-
-function isAccountValid() {
+﻿function isAccountValid() {
     return !(isNullOrEmpty("username") || !checkInputPattern("^[a-zA-Z0-9]{3,20}$", "username"));
 
 }
