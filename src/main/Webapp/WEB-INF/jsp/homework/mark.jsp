@@ -32,18 +32,16 @@
                         此作业成绩：
                     </label>
                     <input type="text" id="scoreMark" name="scoreMark" class="form-control"
-                           placeholder="         1-3数字"
+                           placeholder="        1-3数字" value= "${homeworkScore.score}"
                            aria-describedby="basic-addon1" minlength="1"  maxlength="3"
                            required oninput="showScoreMarkInputSuggestion();">
                 </div>
-                <p id="scoreMarkError" class="text-danger" style="margin-left: 570px; margin-top: 10px"></p>
+                <p id="scoreMarkError" class="text-danger" style="margin-left: 550px; margin-top: 10px"></p>
                 <div id="commit">
-                    <label class="homeworkLabel">
+                    <label class="homeworkLabel" style="margin-bottom: 10px">
                         此作业评价：
                     </label>
-                    <textarea  class="form-control"   rows="7" cols="10">
-
-                    </textarea>
+                    <textarea id="commitText"  class="form-control" rows="7" >${homeworkScore.evaluate}</textarea>
                 </div>
                 <div id="submitThis">
                     <button id="markButton" type="button" class="btn btn-success btn-lg">提交批改</button>

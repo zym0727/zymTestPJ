@@ -32,4 +32,15 @@ public class LoginService {
             return JSONObject.toJSONString("empty");
         }
     }
+
+    public String LoginMake(String account, HttpSession session){
+        Users user = new Users();
+        user.setAccount(account);
+        List<Users> list = userMapper.selectByUsers(user);
+        if (list != null && list.size()==1) {
+            session.setAttribute("user", list.get(0));
+            return "success";
+        }else
+           return "fail";
+    }
 }

@@ -165,8 +165,11 @@ public class TimeTaskService {
                     correctRate = (double) Math.round(correctRate * 10000) / 100;
                     homeworkScore.setCorrectRate(correctRate);
                     homeworkScore = giveScoreAndEvaluate(homeworkScore, correctRate);
-                    System.out.println("correctRate"+correctRate);
+                    System.out.println("correctRate" + correctRate);
                 }
+            } else if (homeworkScore.getFileName() != null) {
+                homeworkScore.setScore(0);
+                homeworkScore.setEvaluate("请让老师手动进行批改评分！");
             } else {
                 homeworkScore.setScore(0);
                 homeworkScore.setEvaluate("作业答案是空的，没有提交作业！");

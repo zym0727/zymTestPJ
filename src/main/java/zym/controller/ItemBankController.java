@@ -3,6 +3,7 @@ package zym.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
 import zym.pojo.ItemBank;
 import zym.pojo.Question;
+import zym.pojo.TestData;
 import zym.pojo.param.ItemBankPage;
 import zym.pojo.param.QuestionPage;
 import zym.service.ItemBankService;
@@ -36,12 +38,28 @@ public class ItemBankController {
     }
 
     @RequestMapping(path = {"/question/getPage"}, method = RequestMethod.GET)
-    public String getQuestion() {
+    public String getQuestion(Model model) {
+        model.addAttribute("questionList", questionService.getQuestionList());
+        model.addAttribute("itemBankList", itemBankService.getItemBankList());
         return "itemBank/question";
     }
 
     @RequestMapping(path = {"/programHomework/getPage"}, method = RequestMethod.GET)
-    public String getProgramHomeworkSetting() {
+    public String getProgramHomeworkSetting(Model model) {
+        model.addAttribute("itemBankList", itemBankService.getItemBankList());
+        return "itemBank/programSetting";
+    }
+
+    @RequestMapping(path = {"/testData/save"}, method = RequestMethod.POST)
+    public String saveTestData(TestData testData, Model model) {
+        if (StringUtils.isEmpty(testData) || StringUtils.isEmpty(testData.getQuestionId()) ||
+                (StringUtils.isEmpty(testData.getInput()) && StringUtils.isEmpty(testData.getOutput())))
+            throw new MessageException("参数为空");
+        model = questionService.setModel(
+                questionService.saveTestData(testData), model, testData.getQuestionId());
+        model.addAttribute("itemBankList", itemBankService.getItemBankList());
+        ItemBank itemBank = itemBankService.getItemBankByQuestionId(testData.getQuestionId());
+        model.addAttribute("itemBankId", itemBank == null ? null : itemBank.getId());
         return "itemBank/programSetting";
     }
 
@@ -107,7 +125,8 @@ public class ItemBankController {
     @ResponseBody
     public String updateQuestion(Question question) {
         if (StringUtils.isEmpty(question) || StringUtils.isEmpty(question.getId()) ||
-                StringUtils.isEmpty(question.getQuestionNumber()) || StringUtils.isEmpty(question.getDescription())
+                StringUtils.isEmpty(question.getQuestionNumber())
+                || StringUtils.isEmpty(question.getDescription())
                 || StringUtils.isEmpty(question.getItemId()))
             throw new MessageException("参数为空");
         return questionService.updateQuestion(question);
@@ -116,8 +135,8 @@ public class ItemBankController {
     @RequestMapping(path = {"/question/add"}, method = RequestMethod.POST)
     @ResponseBody
     public String addQuestion(Question question) {
-        if (StringUtils.isEmpty(question) || StringUtils.isEmpty(question.getId()) ||
-                StringUtils.isEmpty(question.getQuestionNumber()) || StringUtils.isEmpty(question.getDescription())
+        if (StringUtils.isEmpty(question) || StringUtils.isEmpty(question.getQuestionNumber())
+                || StringUtils.isEmpty(question.getDescription())
                 || StringUtils.isEmpty(question.getItemId()))
             throw new MessageException("参数为空");
         return questionService.insertQuestion(question);
@@ -142,9 +161,21 @@ public class ItemBankController {
 
     @RequestMapping(path = {"/id/get"}, method = RequestMethod.GET)
     @ResponseBody
-    public int getItemBankId(String ids){
+    public int getItemBankId(String ids) {
         if (StringUtils.isEmpty(ids))
             throw new MessageException("参数为空");
         return itemBankService.getItemBankId(ids);
+    }
+
+    @RequestMapping(path = {"/testData/batchDelete/{questionId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String batchDeleteTestData(@PathVariable Integer questionId) {
+        return questionService.deleteTestDataList(questionId);
+    }
+
+    @RequestMapping(path = {"/testData/getAll/{questionId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getAllTestData(@PathVariable Integer questionId) {
+        return questionService.getTestDataByQuestionId(questionId);
     }
 }

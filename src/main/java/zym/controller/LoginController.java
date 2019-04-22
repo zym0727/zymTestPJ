@@ -3,6 +3,7 @@ package zym.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +28,12 @@ public class LoginController {
     private LoginService loginService;
 
     @RequestMapping(path = {"/", "/index"}, method = RequestMethod.GET)
-    public String index() {
+    public String index(HttpServletRequest request, HttpSession session) {
+        Principal principal = request.getUserPrincipal();
+        if (principal != null && principal.getName() != null) {
+            if (loginService.LoginMake(principal.getName(), session).equals("success"))
+                return "/main/main";
+        }
         return "index";
     }
 

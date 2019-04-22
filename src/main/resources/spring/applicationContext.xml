@@ -92,6 +92,33 @@
         </tx:attributes>
     </tx:advice>
 
+    <bean id="userDetailsService" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <property name="usersByUsernameQuery" value="select account, password, enabled from users where account = ?"/>
+        <property name="authoritiesByUsernameQuery"
+                  value="select u.account, r.role_name from users u left join role r on u.role_id=r.id where u.account = ?"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="rememberMeServices"
+                class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <constructor-arg index="0" value="zym"/>
+        <constructor-arg index="1" ref="userDetailsService"/>
+        <!--<beans:property name="alwaysRemember" value="true"/>-->
+        <property name="parameter" value="rememberMe"/>
+        <property name="tokenValiditySeconds" value="86400"/>
+    </bean>
+
+    <bean id="rememberMeFilter" class=
+            "org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+        <constructor-arg index="0" ref="authenticationManager"/>
+        <constructor-arg index="1" ref="rememberMeServices"/>
+    </bean>
+
+    <bean id="rememberMeAuthenticationProvider" class=
+            "org.springframework.security.authentication.RememberMeAuthenticationProvider">
+        <constructor-arg value="zym"/>
+    </bean>
+
     <!-- spring-security 配置 -->
     <security:http auto-config="true" use-expressions="true">
         <!-- 静态资源都可以访问 -->
@@ -123,17 +150,15 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         -->
         <security:csrf />
-        <security:remember-me />
+        <security:remember-me remember-me-parameter="remember-me"
+                              token-validity-seconds="86400" user-service-ref="userDetailsService"/>
     </security:http>
+
     <security:authentication-manager alias="authenticationManager">
     <security:authentication-provider>
         <security:jdbc-user-service data-source-ref="dataSource"
                                     users-by-username-query="select account, password, enabled from users where account = ?"
                                     authorities-by-username-query="select u.account, r.role_name from users u left join role r on u.role_id=r.id where u.account = ?"/>
-        <!--<security:user-service>-->
-            <!--<security:user name="admin" password="admin123" authorities="ROLE_ADMIN" />-->
-            <!--<security:user name="teacher" password="teacher" authorities="ROLE_TEACHER" />-->
-        <!--</security:user-service>-->
     </security:authentication-provider>
     </security:authentication-manager>
 </beans>

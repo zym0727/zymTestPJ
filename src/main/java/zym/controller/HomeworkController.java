@@ -181,4 +181,13 @@ public class HomeworkController {
     public Homework getHomework(@PathVariable Integer homeworkId){
         return homeworkService.getHomework(homeworkId);
     }
+
+    @RequestMapping(path = {"/teacher/mark"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String markHomework(HomeworkScore homeworkScore){
+        if (StringUtils.isEmpty(homeworkScore) || StringUtils.isEmpty(homeworkScore.getId()) ||
+                StringUtils.isEmpty(homeworkScore.getScore()))
+            throw new MessageException("参数为空");
+        return homeworkService.updateHomeworkScore(homeworkScore);
+    }
 }

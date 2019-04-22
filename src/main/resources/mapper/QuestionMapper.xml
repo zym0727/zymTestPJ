@@ -114,7 +114,7 @@
   <!-- 模糊查询sql语句 -->
   <sql id="exampleWhere">
     <where>
-      <if test="questionNumber != null">
+      <if test="questionNumber != null and questionNumber != ''">
         and q.question_number = #{questionNumber,jdbcType=VARCHAR}
       </if>
       <if test="questionName != null">

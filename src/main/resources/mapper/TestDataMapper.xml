@@ -79,4 +79,13 @@
     from test_data
     where question_id = #{questionId,jdbcType=INTEGER}
   </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from test_data
+    where id IN
+    <foreach collection="list" item="testData" open="(" separator="," close=")">
+      ${testData.id}
+    </foreach>
+  </delete>
 </mapper>

@@ -307,4 +307,9 @@ public class HomeworkService {
         model.addAttribute("questionNumber", questionIds.length);
         return "success";
     }
+
+    public String updateHomeworkScore(HomeworkScore homeworkScore){
+        homeworkScoreMapper.updateByPrimaryKeySelective(homeworkScore);
+        return JSONObject.toJSONString("success");
+    }
 }

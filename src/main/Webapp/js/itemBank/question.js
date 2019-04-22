@@ -1,6 +1,9 @@
 ﻿function addQuestion() {
     $("#saveQuestionName").val("");
+    $("#saveItemBankId").selectpicker('val',"");
+    $("#saveQuestionNumber").val("");
     $("#saveQuestionDescription").val("");
+    $("#saveAnswer").val("");
     $("#saveModal").modal("show");
 }
 

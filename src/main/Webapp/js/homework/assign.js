@@ -113,4 +113,44 @@ $(function () {
             }
         });
     })
+
+
 });
+
+function checkInputOutput() {
+    if ($("#questionSelect").val() === "") {
+        alert("没有选择题目！");
+        return false;
+    }
+    if ($("#oneInput").val() === "" && $("#oneOutput").val() === "") {
+        alert("输入输出不能都为空！");
+        return false;
+    }
+    return true;
+}
+
+function DeleteTestData() {
+    var questionId = $("#questionId").val();
+    if(questionId === ""){
+        alert("当前并没有显示任何输入输出信息哦")
+    } else {
+        if(confirm("确认删除该题目下的输入输出数据？")){
+            $.ajax({
+                url: "/itemBank/testData/batchDelete/" + questionId,
+                method: "get",
+                dataType: "json",
+                success: function (data) {
+                    if (data === "success") {
+                        alert("删除成功！");
+                        $("#inputOutputText").val("");
+                    } else {
+                        alert("删除失败！")
+                    }
+                },
+                error: function () {
+                    alert("删除失败！");
+                }
+            })
+        }
+    }
+}

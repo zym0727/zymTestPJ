@@ -1,11 +1,34 @@
 ﻿$("#questionList").attr("class","nav-link active");
 
+$("#itemBankSelect").val("");
+
+$("#questionSelect").val("");
+
 $(function () {
     initTheTable();
-
     $("#questionQueryBtn").bind("click",function () {
         $('#questionTable').bootstrapTable("destroy");
         initTheTable();
+    });
+
+    $("#itemBankSelect").change(function () {
+        var id = $("#itemBankSelect").val();
+        $("#questionSelect").find("option").remove();
+        $.ajax({
+            url: "/homework/teacher/questionList/" + id,
+            method: "get",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    var tempId = '<option  value="' + item.questionNumber + '">' + item.questionNumber + '</option>';
+                    $("#questionSelect").append(tempId);
+                });
+                $('#questionSelect').selectpicker('refresh');
+            },
+            error: function () {
+                alert("题目加载失败");
+            }
+        });
     })
 });
 
@@ -27,8 +50,9 @@ var initTheTable= function () {
             return {
                 pageSize:this.pageSize,
                 pageNumber:this.pageNumber,
-                questionName: checkParam($("#questionName").val()), // 额外添加的参数
-                description: checkParam($("#questionDescription").val()) // 额外添加的参数
+                itemId: checkParam($("#itemBankSelect").val()), // 所属题库
+                questionNumber: checkParam($("#questionSelect").val()), // 题目编号
+                questionName: checkParam($("#questionName").val()), // 题目名字
             }
         },
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -87,7 +111,7 @@ var initTheTable= function () {
 function addFunction() {
     return [
         '<button type="button" id="btn_edit" class="btn btn-success" data-toggle="modal" data-target="#ModalInfo">' +
-        '修改</button>  ',
+        '查看修改</button>  ',
         '<button id="btn_delete" class="btn btn-warning" type="button">删除</button>'
     ].join('');
 }
@@ -98,14 +122,20 @@ window.operateEvents = {
     // 点击修改按钮执行的方法
     'click #btn_edit': function (e, value, row, index) {
         $("#updateQuestionName").val("");
+        $("#updateItemBankId").selectpicker('val',"");
+        $("#updateQuestionNumber").val("");
         $("#updateQuestionDescription").val("");
+        $("#updateAnswer").val("");
         $.ajax({
             url: "/itemBank/question/get/" + row.id,
             method: "get",
             dataType: "json",
             success: function (data) {
                 $("#updateQuestionName").val(data.questionName);
+                $("#updateItemBankId").selectpicker('val',data.itemId);
+                $("#updateQuestionNumber").val(data.questionNumber);
                 $("#updateQuestionDescription").val(data.description);
+                $("#updateAnswer").val(data.answer);
                 updateQuestionId = row.id;
                 $("#updateModal").modal("show");
             },
@@ -136,19 +166,42 @@ window.operateEvents = {
 };
 
 $("#updateConfirmBtn").click(function () {
-    var updateQuestionName = $("#updateQuestionName");
-    if(checkParam(updateQuestionName.val())===null){
+    var questionName = $("#updateQuestionName").val();
+    if (questionName === "") {
         alert("题目名字还没写哦");
         return;
     }
+    var itemBankId = $("#updateItemBankId").val();
+    if (itemBankId === "") {
+        alert("所属题库还没选哦");
+        return;
+    }
+    var questionNumber = $("#updateQuestionNumber").val();
+    if (questionNumber === "") {
+        alert("题目编号还没写哦");
+        return;
+    }
+    var description = $("#updateQuestionDescription").val();
+    if (description === "") {
+        alert("题目描述还没写哦");
+        return;
+    }
+    var answer = $("#updateAnswer").val();
+
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
-    var questionName = updateQuestionName.val();
-    var description = $("#updateQuestionDescription").val();
+
     $.ajax({
         url: "/itemBank/question/update",
         method: "post",
-        data:{id:updateQuestionId,questionName:questionName,description:description},
+        data:{
+            id:updateQuestionId,
+            questionName:questionName,
+            itemId:itemBankId,
+            questionNumber:questionNumber,
+            description:description,
+            answer:answer
+        },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
@@ -169,19 +222,39 @@ $("#updateConfirmBtn").click(function () {
 });
 
 $("#saveConfirmBtn").click(function () {
-    var saveQuestionName = $("#saveQuestionName");
-    if (checkParam(saveQuestionName.val()) === null) {
+    var questionName = $("#saveQuestionName").val();
+    if (questionName === "") {
         alert("题目名字还没写哦");
         return;
     }
+    var itemBankId = $("#saveItemBankId").val();
+    if (itemBankId === "") {
+        alert("所属题库还没选哦");
+        return;
+    }
+    var questionNumber = $("#saveQuestionNumber").val();
+    if (questionNumber === "") {
+        alert("题目编号还没写哦");
+        return;
+    }
+    var description = $("#saveQuestionDescription").val();
+    if (description === "") {
+        alert("题目描述还没写哦");
+        return;
+    }
+    var answer = $("#saveAnswer").val();
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
-    var questionName = saveQuestionName.val();
-    var description = $("#saveQuestionDescription").val();
     $.ajax({
         url: "/itemBank/question/add",
         method: "post",
-        data:{questionName:questionName,description:description},
+        data:{
+            questionName:questionName,
+            itemId:itemBankId,
+            questionNumber:questionNumber,
+            description:description,
+            answer:answer
+        },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);

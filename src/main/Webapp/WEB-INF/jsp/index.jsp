@@ -50,10 +50,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-5">
-                        <input id="remember-me" name="remember-me" type="checkbox"/>一天内记住我
-                    </div>
-                    <div class="col-md-6 col-md-offset-5">
-                        <p id="rePasswordError" class="text-danger"></p>
+                        <input id="remember-me" name="remember-me" type="checkbox" value="true"/>一天内记住我
                     </div>
                 </div>
                 <br>

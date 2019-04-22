@@ -148,9 +148,9 @@
 }
 
 #commit{
-    margin-left: 130px;
+    margin-left: 230px;
     margin-top: 40px;
-    margin-right: 100px;
+    margin-right: 200px;
 }
 
 #score{
@@ -165,7 +165,36 @@
 }
 
 #markButton{
-    margin-left: 500px;
+    margin-left: 508px;
     margin-top: 50px;
     margin-bottom: 20px;
+}
+
+#homeworkSubmit{
+    margin-top: 50px;
+    margin-left: 130px;
+    margin-right: 100px;
+}
+
+.questionSet{
+    margin-left: 240px;
+}
+
+.questionInput{
+    margin-left: 30px;
+    margin-right: 100px;
+}
+
+.programSet{
+    margin-top: 20px;
+    margin-left: 80px;
+}
+
+.inout{
+    margin-left: 40px;
+}
+
+.submitInout{
+    margin-left: 340px;
+    margin-top: 10px;
 }

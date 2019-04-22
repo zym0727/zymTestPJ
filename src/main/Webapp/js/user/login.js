@@ -21,26 +21,6 @@ function showPasswordInputSuggestion() {
     else passwordError.innerHTML = "";
 }
 
-function isRepasswordValid() {
-    return !(isNullOrEmpty("rePassword") || !checkIfPasswordIsSame());
-}
-
-function showRePasswordInputSuggestion() {
-    var rePasswordError = document.getElementById("rePasswordError");
-    if (isNullOrEmpty("repassword") === true) rePasswordError.innerHTML = "请确认密码";
-    else if (checkIfPasswordIsSame() === false) rePasswordError.innerHTML = "密码不一致";
-    else rePasswordError.innerHTML = "";
-}
-
-function showAllPasswordSuggestion() {
-    showPasswordInputSuggestion();
-    showRePasswordInputSuggestion()
-}
-
-function checkIfPasswordIsSame() {
-    return document.getElementById("password").value === document.getElementById("rePasswordError").value;
-}
-
 function satisfySubmit() {
     var submit = document.getElementById("submit");
     if (isAccountValid() && isPasswordValid()) {

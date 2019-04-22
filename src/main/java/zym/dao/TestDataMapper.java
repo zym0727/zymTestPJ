@@ -18,4 +18,6 @@ public interface TestDataMapper {
     int updateByPrimaryKey(TestData record);
 
     List<TestData> getListByQuestionId(Integer QuestionId);
+
+    int batchDelete(List<TestData> testDataList);
 }
