@@ -17,6 +17,14 @@ public class HomeworkMessage extends Homework {
 
     private String studentName;
 
+    private String className;
+
+    private Double correctRate;
+
+    private Integer score;
+
+    private String evaluate;
+
     public String getCourseName() {
         return courseName;
     }
@@ -55,5 +63,37 @@ public class HomeworkMessage extends Homework {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public Double getCorrectRate() {
+        return correctRate;
+    }
+
+    public void setCorrectRate(Double correctRate) {
+        this.correctRate = correctRate;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public String getEvaluate() {
+        return evaluate;
+    }
+
+    public void setEvaluate(String evaluate) {
+        this.evaluate = evaluate;
     }
 }

@@ -31,10 +31,10 @@
       <if test="questionId != null">
         question_id,
       </if>
-      <if test="input != null">
+      <if test="input != null and input != ''">
         input,
       </if>
-      <if test="output != null">
+      <if test="output != null and output != ''">
         output,
       </if>
     </trim>
@@ -42,10 +42,10 @@
       <if test="questionId != null">
         #{questionId,jdbcType=INTEGER},
       </if>
-      <if test="input != null">
+      <if test="input != null and input != ''">
         #{input,jdbcType=VARCHAR},
       </if>
-      <if test="output != null">
+      <if test="output != null and output != ''">
         #{output,jdbcType=VARCHAR},
       </if>
     </trim>

@@ -3,11 +3,10 @@
 <mapper namespace="zym.dao.LanguageMarkMapper">
   <resultMap id="BaseResultMap" type="zym.pojo.LanguageMark">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="question_id" jdbcType="INTEGER" property="questionId" />
     <result column="mark" jdbcType="VARCHAR" property="mark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, question_id, mark
+    id, mark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -20,23 +19,17 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="zym.pojo.LanguageMark" useGeneratedKeys="true" keyProperty="id">
-    insert into language_mark (question_id, mark)
-    values (#{questionId,jdbcType=INTEGER}, #{mark,jdbcType=VARCHAR})
+    insert into language_mark (mark)
+    values (#{mark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="zym.pojo.LanguageMark" useGeneratedKeys="true" keyProperty="id">
     insert into language_mark
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="questionId != null">
-        question_id,
-      </if>
       <if test="mark != null">
         mark,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="questionId != null">
-        #{questionId,jdbcType=INTEGER},
-      </if>
       <if test="mark != null">
         #{mark,jdbcType=VARCHAR},
       </if>
@@ -45,9 +38,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.LanguageMark">
     update language_mark
     <set>
-      <if test="questionId != null">
-        question_id = #{questionId,jdbcType=INTEGER},
-      </if>
       <if test="mark != null">
         mark = #{mark,jdbcType=VARCHAR},
       </if>
@@ -56,15 +46,22 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="zym.pojo.LanguageMark">
     update language_mark
-    set question_id = #{questionId,jdbcType=INTEGER},
-      mark = #{mark,jdbcType=VARCHAR}
+    set mark = #{mark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="getListByQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <sql id="where">
+    <where>
+      <if test="mark != null">
+        and mark like concat('%',#{mark},'%')
+      </if>
+    </where>
+  </sql>
+
+  <select id="getLanguageMarkList" parameterType="zym.pojo.LanguageMark" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from language_mark
-    where question_id = #{questionId,jdbcType=INTEGER}
+    <include refid="where" />
   </select>
 </mapper>

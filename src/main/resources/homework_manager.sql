@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50715
 File Encoding         : 65001
 
-Date: 2019-04-07 21:32:17
+Date: 2019-04-23 19:24:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,11 +29,7 @@ CREATE TABLE `course` (
   `semester` varchar(100) DEFAULT NULL COMMENT '开课学期',
   `credit` int(2) DEFAULT NULL COMMENT '学分',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='课程表';
-
--- ----------------------------
--- Records of course
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='课程表';
 
 -- ----------------------------
 -- Table structure for homework
@@ -49,11 +45,7 @@ CREATE TABLE `homework` (
   `is_assign` int(1) NOT NULL COMMENT '是否发布 1是，0否 , 2再次发布',
   `remark` varchar(200) DEFAULT NULL COMMENT '自定义附加描述；备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='作业表';
-
--- ----------------------------
--- Records of homework
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='作业表';
 
 -- ----------------------------
 -- Table structure for homework_score
@@ -65,17 +57,13 @@ CREATE TABLE `homework_score` (
   `homework_id` int(11) NOT NULL COMMENT '作业id',
   `answer` text COMMENT '作业答案',
   `submit_time` datetime NOT NULL COMMENT '上交时间',
-  `correct_rate` double(11,0) DEFAULT NULL COMMENT '正确率',
+  `correct_rate` double(11,2) DEFAULT NULL COMMENT '正确率(百分制）',
   `score` int(3) DEFAULT NULL COMMENT '成绩(百分制)',
   `evaluate` varchar(200) DEFAULT NULL COMMENT '评价',
   `file_name` varchar(100) DEFAULT NULL COMMENT '文件名称',
   `file_path` text COMMENT '文件路径',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='作业成绩表';
-
--- ----------------------------
--- Records of homework_score
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='作业成绩表';
 
 -- ----------------------------
 -- Table structure for item_bank
@@ -86,11 +74,7 @@ CREATE TABLE `item_bank` (
   `item_name` varchar(100) NOT NULL COMMENT '类别名称',
   `description` text COMMENT '描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='题库表';
-
--- ----------------------------
--- Records of item_bank
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='题库表';
 
 -- ----------------------------
 -- Table structure for language_mark
@@ -98,14 +82,9 @@ CREATE TABLE `item_bank` (
 DROP TABLE IF EXISTS `language_mark`;
 CREATE TABLE `language_mark` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `question_id` int(11) NOT NULL COMMENT '题目id',
   `mark` varchar(100) NOT NULL COMMENT '语言标记',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='题目语言登记表';
-
--- ----------------------------
--- Records of language_mark
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='题目语言登记表';
 
 -- ----------------------------
 -- Table structure for major_class
@@ -117,11 +96,7 @@ CREATE TABLE `major_class` (
   `class_name` varchar(100) NOT NULL COMMENT '班级名字',
   `grade` varchar(100) NOT NULL COMMENT '入学时间/年级',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='班级表';
-
--- ----------------------------
--- Records of major_class
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='班级表';
 
 -- ----------------------------
 -- Table structure for message_interaction
@@ -137,10 +112,6 @@ CREATE TABLE `message_interaction` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='作业留言表';
 
 -- ----------------------------
--- Records of message_interaction
--- ----------------------------
-
--- ----------------------------
 -- Table structure for question
 -- ----------------------------
 DROP TABLE IF EXISTS `question`;
@@ -151,12 +122,9 @@ CREATE TABLE `question` (
   `description` text NOT NULL COMMENT '详细内容描述',
   `item_id` int(11) NOT NULL COMMENT '题库id',
   `answer` text COMMENT '答案',
+  `language_id` int(11) DEFAULT NULL COMMENT '所属语言id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='题目表';
-
--- ----------------------------
--- Records of question
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='题目表';
 
 -- ----------------------------
 -- Table structure for role
@@ -167,11 +135,7 @@ CREATE TABLE `role` (
   `role_name` varchar(100) NOT NULL COMMENT '角色名称',
   `remark` varchar(100) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
-
--- ----------------------------
--- Records of role
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Table structure for test_data
@@ -183,11 +147,7 @@ CREATE TABLE `test_data` (
   `input` text COMMENT '一组输入',
   `output` text COMMENT '一组输出',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试数据表';
-
--- ----------------------------
--- Records of test_data
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='测试数据表';
 
 -- ----------------------------
 -- Table structure for users
@@ -205,8 +165,4 @@ CREATE TABLE `users` (
   `telephone` varchar(20) DEFAULT NULL COMMENT '电话号码',
   `enabled` int(1) NOT NULL COMMENT '是否启用，1为启用，0为不启用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
-
--- ----------------------------
--- Records of users
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户表';

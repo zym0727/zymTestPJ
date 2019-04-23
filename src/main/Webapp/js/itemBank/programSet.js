@@ -6,8 +6,11 @@ if (errorVal !== "" && errorVal === "error")
 var itemBankIdVal = $("#itemBankId").val();
 if (itemBankIdVal !== "")
     $("#itemBankSelect").selectpicker("val", itemBankIdVal);
+var languageMarkVal = $("#languageMarkId").val();
+if (languageMarkVal !== "")
+    $("#languageSelect").selectpicker("val", languageMarkVal);
 var questionIdVal = $("#questionId").val();
-if (questionIdVal !== "" && itemBankIdVal !== ""){
+if (questionIdVal !== "" && itemBankIdVal !== "") {
     $("#questionSelect").find("option").remove();
     $.ajax({
         url: "/homework/teacher/questionList/" + itemBankIdVal,
@@ -18,7 +21,7 @@ if (questionIdVal !== "" && itemBankIdVal !== ""){
                 var tempId = '<option  value="' + item.id + '">' + item.questionName + '</option>';
                 $("#questionSelect").append(tempId);
             });
-            var questionSelect =$("#questionSelect");
+            var questionSelect = $("#questionSelect");
             questionSelect.selectpicker('refresh');
             questionSelect.selectpicker("val", questionIdVal);
         },
@@ -41,6 +44,15 @@ $(function () {
                 else
                     $("#inputOutputText").val("");
             }
-        })
+        });
+        $.ajax({
+            url: "/itemBank/question/get/" + questionId,
+            method: "get",
+            dataType: "json",
+            success: function (data) {
+                if (data !== null)
+                    $("#languageSelect").selectpicker("val", data.languageId);
+            }
+        });
     })
 });

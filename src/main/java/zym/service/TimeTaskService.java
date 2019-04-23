@@ -73,8 +73,8 @@ public class TimeTaskService {
                     else {
                         String[] ids = homework.getQuestionIds().split(",");
                         //获取当前作业下所有学生提交的作业
-                        List<HomeworkScore> homeworkScoreList = homeworkScoreMapper.selectListByHomeworkId(
-                                homework.getId());
+                        List<HomeworkScore> homeworkScoreList = homeworkScoreMapper.
+                                selectListByHomeworkId(homework.getId());
                         if (homeworkScoreList != null && homeworkScoreList.size() > 0)
                             correctHomework(homeworkScoreList, ids);
                     }
@@ -86,7 +86,7 @@ public class TimeTaskService {
     //批改作业
     private void correctHomework(List<HomeworkScore> homeworkScoreList, String[] ids) {
         homeworkScoreList.forEach(homeworkScore -> {
-            System.out.println("homeworkScore"+homeworkScore.getId());
+            System.out.println("homeworkScore" + homeworkScore.getId());
             String answer = homeworkScore.getAnswer();
             if (answer != null) {
                 String[] answers = answer.split("div----------div");
@@ -98,16 +98,17 @@ public class TimeTaskService {
                     int i, count = 0;
                     int all = answers.length;
                     for (i = 0; i < ids.length; i++) {
-                        Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(ids[i]));
+                        Question question = questionMapper.selectByPrimaryKey(
+                                Integer.parseInt(ids[i]));
                         if (question != null) {
                             List<TestData> testDataList = testDataMapper.getListByQuestionId(
                                     question.getId());
                             //自动批改的程序作业是一定有测试数据的,非程序作业没有测试数据
-                            if (testDataList != null && testDataList.size() > 0) {
-                                List<LanguageMark> languageMarkList = languageMarkMapper
-                                        .getListByQuestionId(question.getId());//获取当前题目的标记语言，如java
-                                if (languageMarkList != null && languageMarkList.size() > 0) {
-                                    LanguageMark languageMark = languageMarkList.get(0);
+                            if (testDataList != null && testDataList.size() > 0
+                                    && question.getLanguageId() != null) {
+                                LanguageMark languageMark = languageMarkMapper.selectByPrimaryKey(
+                                        question.getLanguageId());//获取当前题目的标记语言，如java
+                                if (languageMark != null) {
                                     if (languageMark.getMark() != null) {
                                         long createTime = System.currentTimeMillis();
                                         LanguageTest languageTest = null;
@@ -128,32 +129,31 @@ public class TimeTaskService {
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }
-                                            if (result == null){
+                                            if (result == null) {
                                                 try {
                                                     //编译正确，开始执行多组输入验证对应的输出
                                                     count += languageTest.execute(testDataList);
-                                                    all += testDataList.size()-1;//叠加测试数量
+                                                    all += testDataList.size() - 1;//叠加测试数量
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
                                                 }
-                                            }
-                                            else{
+                                            } else {
                                                 try {
                                                     //编译错误信息，其原始编码格式是cp936
-                                                    result = new String(result.getBytes("cp936")
-                                                            ,"utf-8");
+                                                    result = new String(result.getBytes(
+                                                            "cp936"), "utf-8");
                                                 } catch (UnsupportedEncodingException e) {
                                                     e.printStackTrace();
                                                 }
-                                                System.out.println("result:"+result);
+                                                System.out.println("result:" + result);
                                             }
                                         } else
                                             log.info("标记语言表中id为：" + languageMark.getId() +
                                                     "的标记语言不匹配代码，请更新程序！");
                                     }
                                 } else
-                                    log.info("题目中id为：" + question.getId() + "的标记语言为空而有测试数据，"
-                                            + "出现问题！");
+                                    log.info("题目中id为：" + question.getId() + "的标记语言为空" +
+                                            "而有测试数据，出现问题！");
                             } else {
                                 if (question.getAnswer().trim().equals(answers[i].trim()))
                                     count++;
@@ -200,4 +200,3 @@ public class TimeTaskService {
         return homeworkScore;
     }
 }
-

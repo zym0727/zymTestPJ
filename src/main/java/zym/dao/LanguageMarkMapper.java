@@ -17,5 +17,5 @@ public interface LanguageMarkMapper {
 
     int updateByPrimaryKey(LanguageMark record);
 
-    List<LanguageMark> getListByQuestionId(Integer QuestionId);
+    List<LanguageMark> getLanguageMarkList(LanguageMark record);
 }

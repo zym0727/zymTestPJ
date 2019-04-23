@@ -161,6 +161,7 @@
     <include refid="exampleWhere" />
   </select>
 
+  <!--根据学生id查询课程列表-->
   <select id="selectCourseListByStudentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>

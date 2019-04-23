@@ -61,13 +61,6 @@ public class ItemBankService {
         return itemBankMapper.selectByPrimaryKey(id);
     }
 
-    public ItemBank getItemBankByQuestionId(int questionId) {
-        Question question = questionMapper.selectByPrimaryKey(questionId);
-        if (question != null)
-            return itemBankMapper.selectByPrimaryKey(question.getItemId());
-        return null;
-    }
-
     public String batchDelete(String ids){
         String[] idArray = ids.split(",");
         List<String> list = new ArrayList<>();

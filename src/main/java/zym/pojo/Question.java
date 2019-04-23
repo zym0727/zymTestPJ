@@ -13,6 +13,8 @@ public class Question {
 
     private String answer;
 
+    private Integer languageId;
+
     public Integer getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer == null ? null : answer.trim();
+    }
+
+    public Integer getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Integer languageId) {
+        this.languageId = languageId;
     }
 }

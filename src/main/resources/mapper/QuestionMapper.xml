@@ -8,9 +8,10 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="item_id" jdbcType="INTEGER" property="itemId" />
     <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="language_id" jdbcType="INTEGER" property="languageId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, question_number, question_name, description, item_id, answer
+    id, question_number, question_name, description, item_id, answer, language_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,10 +25,11 @@
   </delete>
   <insert id="insert" parameterType="zym.pojo.Question" useGeneratedKeys="true" keyProperty="id">
     insert into question (question_number, question_name,
-      description, item_id, answer
+      description, item_id, answer, language_id
       )
     values (#{questionNumber,jdbcType=VARCHAR}, #{questionName,jdbcType=VARCHAR},
-      #{description,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}
+      #{description,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR},
+      #{languageId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="zym.pojo.Question" useGeneratedKeys="true" keyProperty="id">
@@ -48,6 +50,9 @@
       <if test="answer != null">
         answer,
       </if>
+      <if test="languageId != null">
+        language_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="questionNumber != null">
@@ -64,6 +69,9 @@
       </if>
       <if test="answer != null">
         #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="languageId != null">
+        #{languageId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -85,6 +93,9 @@
       <if test="answer != null">
         answer = #{answer,jdbcType=VARCHAR},
       </if>
+      <if test="languageId != null">
+        language_id = #{languageId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -94,7 +105,8 @@
       question_name = #{questionName,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
       item_id = #{itemId,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARCHAR}
+      answer = #{answer,jdbcType=VARCHAR},
+      language_id = #{languageId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

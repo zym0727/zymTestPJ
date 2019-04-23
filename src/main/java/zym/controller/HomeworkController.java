@@ -71,13 +71,17 @@ public class HomeworkController {
         return "homework/studentSee";
     }
 
-    @RequestMapping(path = {"/student/submitHomework/{homeworkId}"}, method = RequestMethod.GET)
-    public String getStudentHomeworkPage(@PathVariable Integer homeworkId, Model model,
+    @RequestMapping(path = {"/teacher/checkHomework"}, method = RequestMethod.POST)
+    public String getStudentHomeworkPage(HttpSession session) {
+        return "homework/homeworkScore";
+    }
+
+    public String getHomeworkScoreCheckPage(@PathVariable Integer homeworkId, Model model,
                                          HttpSession session) {
         String s = homeworkService.getStudentHomework(homeworkId, model, session);
         if (s.equals("success"))
             return "homework/submit";
-        else{
+        else {
             model.addAttribute("courseList", courseService.selectCourseList(session));
             return "homework/studentSee";
         }
@@ -85,7 +89,7 @@ public class HomeworkController {
 
     @RequestMapping(path = {"/teacher/studentHomework/{homeworkScoreId}"}, method = RequestMethod.GET)
     public String getStudentHomeworkDetail(@PathVariable Integer homeworkScoreId, Model model,
-                                           HttpSession session){
+                                           HttpSession session) {
         String s = homeworkService.getStudentHomeworkDetail(homeworkScoreId, model);
         if (s.equals("success"))
             return "homework/mark";
@@ -111,7 +115,7 @@ public class HomeworkController {
         return homeworkService.saveOrUpdateAssignHomework(homework, true);
     }
 
-    @RequestMapping(path = {"/student/homeworkList","/teacher/homeworkList"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/homeworkList", "/teacher/homeworkList"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getStudentHomeworkList(HttpSession httpSession,
                                              StudentHomeworkPage studentHomeworkPage) {
@@ -122,7 +126,7 @@ public class HomeworkController {
         return homeworkService.getStudentHomeworkList(httpSession, studentHomeworkPage);
     }
 
-    @RequestMapping(path = {"/student/count","/teacher/count"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/count", "/teacher/count"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getStudentHomeworkCount(HttpSession httpSession, Integer courseId) {
         return homeworkService.getStudentHomeworkCount(httpSession, courseId);
@@ -135,7 +139,7 @@ public class HomeworkController {
     }
 
     @RequestMapping(path = {"/student/AnswerList/get/{homeworkScoreId}",
-                            "/teacher/AnswerList/get/{homeworkScoreId}"}, method = RequestMethod.GET)
+            "/teacher/AnswerList/get/{homeworkScoreId}"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONArray getHomeworkScoreAnswer(@PathVariable Integer homeworkScoreId) {
         return homeworkService.getHomeworkScoreAnswer(homeworkScoreId);
@@ -178,13 +182,13 @@ public class HomeworkController {
 
     @RequestMapping(path = {"/teacher/get/{homeworkId}"}, method = RequestMethod.GET)
     @ResponseBody
-    public Homework getHomework(@PathVariable Integer homeworkId){
+    public Homework getHomework(@PathVariable Integer homeworkId) {
         return homeworkService.getHomework(homeworkId);
     }
 
     @RequestMapping(path = {"/teacher/mark"}, method = RequestMethod.POST)
     @ResponseBody
-    public String markHomework(HomeworkScore homeworkScore){
+    public String markHomework(HomeworkScore homeworkScore) {
         if (StringUtils.isEmpty(homeworkScore) || StringUtils.isEmpty(homeworkScore.getId()) ||
                 StringUtils.isEmpty(homeworkScore.getScore()))
             throw new MessageException("参数为空");

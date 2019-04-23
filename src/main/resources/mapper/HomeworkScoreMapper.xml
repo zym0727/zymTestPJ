@@ -206,4 +206,64 @@
       ${homeworkScore.id}
     </foreach>
   </delete>
+
+  <!--教师查询学生作业成绩信息-->
+  <resultMap id="scoreResultMap" type="zym.pojo.param.HomeworkMessage">
+    <!--这儿记录的是homeworkScore表的id-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="evaluate" jdbcType="VARCHAR" property="evaluate" />
+    <result column="correct_rate" jdbcType="DOUBLE" property="correctRate" />
+    <result column="user_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="question_ids" jdbcType="VARCHAR" property="questionIds" />
+  </resultMap>
+
+  <!--教师查询学生作业成绩信息sql-->
+  <sql id="scoreListSql">
+    hs.id, hs.score, hs.evaluate, hs.correct_rate, u.user_name,
+     cr.course_name, mc.class_name, h.question_ids
+  </sql>
+
+  <!--教师查询学生作业成绩信息select-->
+  <sql id="scoreList">
+    select
+    <include refid="scoreListSql" />
+    from homework_score hs
+    left join homework h on hs.homework_id = h.id
+    left join course cr on h.course_id = cr.id
+    left join users u on hs.student_id = u.id
+    left join major_class mc on u.class_id = mc.id
+    <where>
+      cr.teacher_id = #{teacherId,jdbcType=INTEGER}
+      <if test="courseId != null">
+        and cr.id = #{courseId,jdbcType=INTEGER}
+      </if>
+      <if test=" == null">
+        and cr.class_ids like
+        concat('%',#{classId,jdbcType=INTEGER},'%')
+      </if>
+      <if test="homeworkId != null">
+        and h.id = = #{homeworkId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!--教师查询学生作业成绩信息list-->
+  <select id="getHomeworkScoreList" parameterType="zym.pojo.param.HomeworkSeeScorePage"
+          resultMap="scoreResultMap">
+    <include refid="scoreList" />
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!--教师查询学生作业成绩信息list数量-->
+  <select id="coutHomeworkScoreList" parameterType="zym.pojo.param.HomeworkSeeScorePage"
+          resultType="int">
+    select count(1) from (
+    <include refid="scoreList" />
+    ) as t
+  </select>
 </mapper>

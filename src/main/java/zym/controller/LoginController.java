@@ -37,7 +37,6 @@ public class LoginController {
         return "index";
     }
 
-
     @RequestMapping(path = "/firstSee", method = RequestMethod.GET)
     public String firstSee(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();

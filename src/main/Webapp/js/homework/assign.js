@@ -118,6 +118,10 @@ $(function () {
 });
 
 function checkInputOutput() {
+    if ($("#itemBankSelect").val() === "") {
+        alert("没有选择题库！");
+        return false;
+    }
     if ($("#questionSelect").val() === "") {
         alert("没有选择题目！");
         return false;
@@ -126,15 +130,19 @@ function checkInputOutput() {
         alert("输入输出不能都为空！");
         return false;
     }
+    if ($("#languageSelect").val() === "") {
+        alert("没有选择程序语言！");
+        return false;
+    }
     return true;
 }
 
 function DeleteTestData() {
     var questionId = $("#questionId").val();
-    if(questionId === ""){
+    if (questionId === "") {
         alert("当前并没有显示任何输入输出信息哦")
     } else {
-        if(confirm("确认删除该题目下的输入输出数据？")){
+        if (confirm("确认删除该题目下的输入输出数据？")) {
             $.ajax({
                 url: "/itemBank/testData/batchDelete/" + questionId,
                 method: "get",

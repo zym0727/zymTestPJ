@@ -26,14 +26,14 @@
                 </div>
                 <div style="margin-top: 10px">
                     <textarea class="form-control" id="inputOutputText"
-                              rows="14" cols="100" readonly>${inputOutput}</textarea>
+                              rows="12" cols="100" readonly>${inputOutput}</textarea>
                 </div>
                 <form method="POST" action="${pageContext.request.contextPath}/itemBank/testData/save"
                       onsubmit="return checkInputOutput();" style="margin-left: 100px">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <div style="margin-left: 120px; margin-top: 20px">
                         <label>选择题库:</label>
-                        <select id="itemBankSelect" name="select"
+                        <select id="itemBankSelect" name="itemBankId"
                                 class="selectpicker show-tick form-control col-sm-2"
                                 data-width="98%" data-first-option="false"
                                 title="请选择" data-live-search="true">
@@ -58,12 +58,26 @@
                         <label>一组输出</label>
                     </div>
                     <textarea class="inout" id="oneOutput" rows="4" cols="100" name="output"></textarea>
+                    <div style="margin-left: 268px; margin-top: 10px">
+                        <label>选择语言</label>
+                        <select id="languageSelect" name="languageMarkId"
+                                class="selectpicker show-tick form-control col-sm-2"
+                                data-width="98%" data-first-option="false"
+                                title="请选择" data-live-search="true">
+                        <c:forEach items="${languageMarkList}" var="languageMark">
+                            <option value="${languageMark.id}">
+                                    ${languageMark.mark}
+                            </option>
+                        </c:forEach>
+                        </select>
+                    </div>
                     <div class="submitInout">
                         <button type="submit" value="提交" class="btn btn-success btn-lg">提交</button>
                     </div>
                     <input id="error" type="hidden" value="${error}" />
                     <input id="questionId" type="hidden" value="${questionId}" />
                     <input id="itemBankId" type="hidden" value="${itemBankId}" />
+                    <input id="languageMarkId" type="hidden" value="${languageMarkId}" />
                 </form>
             </div>
         </div>

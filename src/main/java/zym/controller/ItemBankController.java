@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
 import zym.pojo.ItemBank;
 import zym.pojo.Question;
-import zym.pojo.TestData;
 import zym.pojo.param.ItemBankPage;
 import zym.pojo.param.QuestionPage;
+import zym.pojo.param.TestDataExtra;
 import zym.service.ItemBankService;
 import zym.service.QuestionService;
 
@@ -47,19 +47,23 @@ public class ItemBankController {
     @RequestMapping(path = {"/programHomework/getPage"}, method = RequestMethod.GET)
     public String getProgramHomeworkSetting(Model model) {
         model.addAttribute("itemBankList", itemBankService.getItemBankList());
+        model.addAttribute("languageMarkList", questionService.getLanguageMarkList(null));
         return "itemBank/programSetting";
     }
 
     @RequestMapping(path = {"/testData/save"}, method = RequestMethod.POST)
-    public String saveTestData(TestData testData, Model model) {
-        if (StringUtils.isEmpty(testData) || StringUtils.isEmpty(testData.getQuestionId()) ||
-                (StringUtils.isEmpty(testData.getInput()) && StringUtils.isEmpty(testData.getOutput())))
+    public String saveTestData(TestDataExtra testDataExtra, Model model) {
+        if (StringUtils.isEmpty(testDataExtra) || StringUtils.isEmpty(testDataExtra.getQuestionId())
+                || (StringUtils.isEmpty(testDataExtra.getInput()) && StringUtils.isEmpty(testDataExtra.getOutput()))
+                || StringUtils.isEmpty(testDataExtra.getItemBankId())
+                || StringUtils.isEmpty(testDataExtra.getLanguageMarkId()))
             throw new MessageException("参数为空");
-        model = questionService.setModel(
-                questionService.saveTestData(testData), model, testData.getQuestionId());
+        model = questionService.setModel(questionService.saveTestData(testDataExtra), model,
+                testDataExtra.getQuestionId(), testDataExtra.getLanguageMarkId());
         model.addAttribute("itemBankList", itemBankService.getItemBankList());
-        ItemBank itemBank = itemBankService.getItemBankByQuestionId(testData.getQuestionId());
-        model.addAttribute("itemBankId", itemBank == null ? null : itemBank.getId());
+        model.addAttribute("languageMarkList", questionService.getLanguageMarkList(null));
+        model.addAttribute("itemBankId", testDataExtra.getItemBankId());
+        model.addAttribute("languageMarkId", testDataExtra.getLanguageMarkId());
         return "itemBank/programSetting";
     }
 

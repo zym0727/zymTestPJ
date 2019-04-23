@@ -1,0 +1,1 @@
+﻿$("#checkResult").attr("class", "nav-link active");
