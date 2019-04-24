@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import zym.dao.HomeworkMapper;
 import zym.dao.HomeworkScoreMapper;
+import zym.dao.MajorClassMapper;
 import zym.dao.QuestionMapper;
 import zym.pojo.*;
 import zym.pojo.param.HomeworkManagePage;
@@ -37,6 +38,9 @@ public class HomeworkService {
 
     @Autowired
     private HomeworkScoreMapper homeworkScoreMapper;
+
+    @Autowired
+    private MajorClassMapper majorClassMapper;
 
     public String saveOrUpdateAssignHomework(Homework homework, Boolean isSave) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -311,5 +315,17 @@ public class HomeworkService {
     public String updateHomeworkScore(HomeworkScore homeworkScore){
         homeworkScoreMapper.updateByPrimaryKeySelective(homeworkScore);
         return JSONObject.toJSONString("success");
+    }
+
+    public List<HomeworkMessage> getHomeworkListByTeacherId(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user == null)
+            return null;
+        Users users = (Users) user;
+        return spiltToName(homeworkMapper.getHomeworkListByTeacherId(users.getId()));
+    }
+
+    public List<MajorClass> getMajorClassList(){
+        return majorClassMapper.getMajorClassList(null);
     }
 }

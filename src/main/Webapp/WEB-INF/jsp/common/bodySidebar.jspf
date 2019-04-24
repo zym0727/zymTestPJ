@@ -36,7 +36,7 @@
                         <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/itemBank/programHomework/getPage"
                                class="nav-link" id="programHomeworkSetting">
-                                <i class="icon icon-list"></i> 程序作业设置
+                                <i class="icon icon-list"></i> 程序题目设置
                             </a>
                         </li>
                     </ul>

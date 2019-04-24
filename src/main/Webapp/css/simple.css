@@ -1,26 +1,43 @@
-.ml-1{font-size: 16px}
-#findBar{padding:20px 0 0 50px;text-align: center;}
-.myLabel{text-align: right; margin-top:8px;}
-.font{font-size: 16px;}
-#updateModal,#saveModal {
+.ml-1 {
+    font-size: 16px
+}
+
+#findBar {
+    padding: 20px 0 0 50px;
+    text-align: center;
+}
+
+.myLabel {
+    text-align: right;
+    margin-top: 8px;
+}
+
+.font {
+    font-size: 16px;
+}
+
+#updateModal, #saveModal {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
 }
-#tips{
+
+#tips {
     font-size: 30px;
-    font-family:"Showcard Gothic";
+    font-family: "Showcard Gothic";
     color: green;
     text-align: center;
 }
-#tips1{
-    margin-top:15px;
+
+#tips1 {
+    margin-top: 15px;
     font-size: 16px;
-    color:#0ebeda;
+    color: #0ebeda;
     margin-left: 40px;
 }
-#tip{
+
+#tip {
     padding-right: 40px;
     padding-left: 75px;
     margin-right: auto;
@@ -28,19 +45,22 @@
     margin-top: 50px;
     padding-bottom: 20px;
 }
-#colorRed{
+
+#colorRed {
     color: red;
 }
 
-#assign{
+#assign {
     padding: 100px auto auto auto;
 }
+
 .alert-warning {
     color: #fff;
     background-color: #f8fbcb;
     border-color: #baeca9;
 }
-#assign{
+
+#assign {
     padding-right: 40px;
     padding-left: 75px;
     margin-right: auto;
@@ -48,38 +68,47 @@
     margin-top: 50px;
     padding-bottom: 20px;
 }
-#courseChoose{
+
+#courseChoose, #homeworkChoose, #classChoose {
     margin-right: 10px;
     margin-left: 70px;
 }
-#itemBankChoose,#questionChoose,#selfDefinedDescription{
+
+#itemBankChoose, #questionChoose, #selfDefinedDescription {
     margin-right: 10px;
 }
-#questionChoose{
+
+#questionChoose {
     margin-left: 40px;
 }
-#time,#questionMake,#selfDefined{
+
+#time, #questionMake, #selfDefined {
     margin-right: 20px;
     margin-left: 70px;
     margin-top: 50px;
 }
-#assignThis{
+
+#assignThis {
     margin-right: 20px;
     margin-left: 70px;
     margin-top: 30px;
 }
-#isAutomatic{
+
+#isAutomatic {
     margin-right: 20px;
     margin-left: 400px;
     margin-top: 20px;
 }
-#optionsRadios2{
+
+#optionsRadios2 {
     margin-left: 20px;
 }
-#endTime{
+
+#endTime {
     margin-left: 135px
 }
-#assignButton{
+
+#assignButton {
     margin-left: 362px;
 }
 
@@ -88,38 +117,41 @@
     color: #5c809a
     /*color: #9a1513*/
 }
+
 /* 当有鼠标悬停在链接上 */
 .bootstrap-table a:hover {
     color: #248835
 }
+
 /* 已访问的链接 */
 .bootstrap-table a:visited {
     color: #5c809a
 }
 
-.homeworkLabel{
+.homeworkLabel {
     margin-top: 30px;
 }
 
-#assignLabel{
+#assignLabel {
     margin-right: 30px;
     margin-left: 120px;
     margin-top: 20px;
 }
 
-#deadlineLabel{
+#deadlineLabel {
     margin-right: 30px;
     margin-left: 170px;
     margin-top: 20px;
 }
-.scrollSet{
+
+.scrollSet {
     overflow-x: auto;
     overflow-y: auto;
     height: 854px;
-    width:2000px;
+    width: 2000px;
 }
 
-#submitButton{
+#submitButton {
     margin-left: 516px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -130,71 +162,71 @@
     margin-left: 10px;
 }
 
-.help-block{
+.help-block {
     margin-top: 14px;
     color: #9a918a;
 }
 
-#downloadFile{
+#downloadFile {
     margin-top: 27px;
     margin-left: 30px;
     display: none;
     color: #949e46;
 }
 
-#courseLine{
+#courseLine {
     margin-left: 130px;
     margin-top: 40px;
 }
 
-#commit{
+#commit {
     margin-left: 230px;
     margin-top: 40px;
     margin-right: 200px;
 }
 
-#score{
+#score {
     margin-left: 430px;
     margin-top: 40px;
     margin-right: 100px;
 }
 
-#scoreMark{
+#scoreMark {
     margin-top: 37px;
     margin-left: 15px;
 }
 
-#markButton{
+#markButton {
     margin-left: 508px;
     margin-top: 50px;
     margin-bottom: 20px;
 }
 
-#homeworkSubmit{
+#homeworkSubmit {
     margin-top: 50px;
     margin-left: 130px;
     margin-right: 100px;
 }
 
-.questionSet{
+.questionSet {
     margin-left: 240px;
 }
 
-.questionInput{
+.questionInput {
     margin-left: 30px;
     margin-right: 100px;
 }
 
-.programSet{
+.programSet {
     margin-top: 20px;
     margin-left: 80px;
 }
 
-.inout{
+.inout {
     margin-left: 40px;
 }
 
-.submitInout{
+.submitInout {
     margin-left: 340px;
     margin-top: 20px;
 }

@@ -2,6 +2,8 @@ package zym.dao;
 
 import zym.pojo.MajorClass;
 
+import java.util.List;
+
 public interface MajorClassMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface MajorClassMapper {
     int updateByPrimaryKeySelective(MajorClass record);
 
     int updateByPrimaryKey(MajorClass record);
+
+    List<MajorClass> getMajorClassList(MajorClass record);
 }

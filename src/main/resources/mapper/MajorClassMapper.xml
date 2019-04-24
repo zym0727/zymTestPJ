@@ -20,18 +20,15 @@
     delete from major_class
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="zym.pojo.MajorClass">
-    insert into major_class (id, class_number, class_name, 
+  <insert id="insert" parameterType="zym.pojo.MajorClass" useGeneratedKeys="true" keyProperty="id">
+    insert into major_class (class_number, class_name,
       grade)
-    values (#{id,jdbcType=INTEGER}, #{classNumber,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+    values (#{classNumber,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR},
       #{grade,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="zym.pojo.MajorClass">
+  <insert id="insertSelective" parameterType="zym.pojo.MajorClass" useGeneratedKeys="true" keyProperty="id">
     insert into major_class
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="classNumber != null">
         class_number,
       </if>
@@ -43,9 +40,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="classNumber != null">
         #{classNumber,jdbcType=VARCHAR},
       </if>
@@ -79,4 +73,27 @@
       grade = #{grade,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--模糊查询班级sql-->
+  <sql id="where">
+    <where>
+      <if test="classNumber != null">
+        and class_number = #{classNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="className != null">
+        and class_name = #{className,jdbcType=VARCHAR}
+      </if>
+      <if test="grade != null">
+        and grade = #{grade,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!--模糊查询班级-->
+  <select id="getMajorClassList" parameterType="zym.pojo.MajorClass" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from major_class
+    <include refid="where" />
+  </select>
 </mapper>

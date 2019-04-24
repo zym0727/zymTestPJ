@@ -71,12 +71,16 @@ public class HomeworkController {
         return "homework/studentSee";
     }
 
-    @RequestMapping(path = {"/teacher/checkHomework"}, method = RequestMethod.POST)
-    public String getStudentHomeworkPage(HttpSession session) {
+    @RequestMapping(path = {"/teacher/checkHomework"}, method = RequestMethod.GET)
+    public String getHomeworkScoreCheckPage(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByTeacherId(session));
+        model.addAttribute("classList",homeworkService.getMajorClassList());
         return "homework/homeworkScore";
     }
 
-    public String getHomeworkScoreCheckPage(@PathVariable Integer homeworkId, Model model,
+    @RequestMapping(path = {"/student/submitHomework/{homeworkId}"}, method = RequestMethod.GET)
+    public String getStudentHomeworkPage(@PathVariable Integer homeworkId, Model model,
                                          HttpSession session) {
         String s = homeworkService.getStudentHomework(homeworkId, model, session);
         if (s.equals("success"))
