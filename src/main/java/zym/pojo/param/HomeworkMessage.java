@@ -25,6 +25,8 @@ public class HomeworkMessage extends Homework {
 
     private String evaluate;
 
+    private String classIds;
+
     public String getCourseName() {
         return courseName;
     }
@@ -95,5 +97,13 @@ public class HomeworkMessage extends Homework {
 
     public void setEvaluate(String evaluate) {
         this.evaluate = evaluate;
+    }
+
+    public String getClassIds() {
+        return classIds;
+    }
+
+    public void setClassIds(String classIds) {
+        this.classIds = classIds;
     }
 }

@@ -96,4 +96,12 @@
     from major_class
     <include refid="where" />
   </select>
+
+  <!--查询字符串中的班级-->
+  <select id="getMajorClassListByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from major_class
+    where id in (${classIds})
+  </select>
 </mapper>

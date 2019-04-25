@@ -6,7 +6,10 @@
 <head>
     <title>作业管理系统</title>
     <%@include file="../common/mainHeader.jspf" %>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-table.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
+    <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-table.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-table-zh-CN.js"></script>
     <script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap-select.min.js"></script>
 </head>
 <body>
@@ -34,7 +37,7 @@
                     <c:forEach items="${homeworkMessageList}" var="homeworkMessage">
                         <option value="${homeworkMessage.id}">
                                 ${homeworkMessage.questionName}
-                                    (课程：${homeworkMessage.courseName}
+                                    (课程：${homeworkMessage.courseName},
                                     发布时间: <fmt:formatDate value="${homeworkMessage.assignTime}"
                                                          pattern="yyyy-MM-dd HH:mm" />
                                     截止时间：<fmt:formatDate value="${homeworkMessage.deadline}"
@@ -53,6 +56,9 @@
                         </option>
                     </c:forEach>
                 </select>
+            </div>
+            <div>
+                <table id="homeworkScoreTable" class="table table-striped"></table>
             </div>
         </div>
     </div>

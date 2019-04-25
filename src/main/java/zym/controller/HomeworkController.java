@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
 import zym.pojo.Homework;
 import zym.pojo.HomeworkScore;
-import zym.pojo.param.HomeworkManagePage;
-import zym.pojo.param.QuestionDetail;
-import zym.pojo.param.StudentHomeworkPage;
+import zym.pojo.MajorClass;
+import zym.pojo.param.*;
 import zym.service.CourseService;
 import zym.service.HomeworkService;
 import zym.service.ItemBankService;
@@ -197,5 +196,29 @@ public class HomeworkController {
                 StringUtils.isEmpty(homeworkScore.getScore()))
             throw new MessageException("参数为空");
         return homeworkService.updateHomeworkScore(homeworkScore);
+    }
+
+    @RequestMapping(path = {"/teacher/homeworkSeeScore"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getHomeworkSeeScoreList(HttpSession httpSession,
+                                              HomeworkSeeScorePage homeworkSeeScorePage) {
+        if (StringUtils.isEmpty(homeworkSeeScorePage)
+                || StringUtils.isEmpty(homeworkSeeScorePage.getPageNumber())
+                || StringUtils.isEmpty(homeworkSeeScorePage.getPageSize()))
+            throw new MessageException("参数为空");
+        return homeworkService.getHomeworkSeeScoreList(httpSession, homeworkSeeScorePage);
+    }
+
+    @RequestMapping(path = {"/teacher/homeworkList/{courseId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<HomeworkMessage> getHomeworkList(@PathVariable Integer courseId,
+                                                 HttpSession httpSession) {
+        return homeworkService.getHomeworkList(courseId, httpSession);
+    }
+
+    @RequestMapping(path = {"/teacher/majorClassList/{homeworkId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<MajorClass> getMajorClassListByHomeworkId(@PathVariable Integer homeworkId){
+        return homeworkService.getMajorClassListByHomeworkId(homeworkId);
     }
 }

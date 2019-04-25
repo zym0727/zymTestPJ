@@ -27,5 +27,5 @@ public interface HomeworkScoreMapper {
 
     List<HomeworkMessage> getHomeworkScoreList(HomeworkSeeScorePage homeworkSeeScorePage);
 
-    int coutHomeworkScoreList(HomeworkSeeScorePage homeworkSeeScorePage);
+    int countHomeworkScoreList(HomeworkSeeScorePage homeworkSeeScorePage);
 }

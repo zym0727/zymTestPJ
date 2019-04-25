@@ -1,5 +1,6 @@
 package zym.dao;
 
+import org.apache.ibatis.annotations.Param;
 import zym.pojo.MajorClass;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface MajorClassMapper {
     int updateByPrimaryKey(MajorClass record);
 
     List<MajorClass> getMajorClassList(MajorClass record);
+
+    List<MajorClass> getMajorClassListByIds(@Param("classIds") String classIds);
 }

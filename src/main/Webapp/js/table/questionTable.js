@@ -52,7 +52,7 @@ var initTheTable= function () {
                 pageNumber:this.pageNumber,
                 itemId: checkParam($("#itemBankSelect").val()), // 所属题库
                 questionNumber: checkParam($("#questionSelect").val()), // 题目编号
-                questionName: checkParam($("#questionName").val()), // 题目名字
+                questionName: checkParam($("#questionName").val()) // 题目名字
             }
         },
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）

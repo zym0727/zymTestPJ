@@ -12,6 +12,7 @@ import zym.dao.QuestionMapper;
 import zym.pojo.*;
 import zym.pojo.param.HomeworkManagePage;
 import zym.pojo.param.HomeworkMessage;
+import zym.pojo.param.HomeworkSeeScorePage;
 import zym.pojo.param.StudentHomeworkPage;
 import zym.util.DateUtil;
 
@@ -86,7 +87,6 @@ public class HomeworkService {
             return result;
         }
         Users users = (Users) user;
-        int id = users.getId();
         studentHomeworkPage.setId(users.getId());
         //当前用户是学生
         if (users.getRoleId() == 3) {
@@ -261,7 +261,8 @@ public class HomeworkService {
         return jsonArray;
     }
 
-    public JSONObject getHomeworkMessageList(HttpSession httpSession, HomeworkManagePage homeworkManagePage) {
+    public JSONObject getHomeworkMessageList(HttpSession httpSession,
+                                             HomeworkManagePage homeworkManagePage) {
         JSONObject result = new JSONObject();
         homeworkManagePage.setOffset(
                 (homeworkManagePage.getPageNumber() - 1) * homeworkManagePage.getPageSize());
@@ -300,11 +301,11 @@ public class HomeworkService {
         return homeworkMapper.selectByPrimaryKey(homeworkId);
     }
 
-    public String getStudentHomeworkDetail(Integer homeworkScoreId, Model model){
+    public String getStudentHomeworkDetail(Integer homeworkScoreId, Model model) {
         HomeworkScore homeworkScore = homeworkScoreMapper.selectByPrimaryKey(homeworkScoreId);
-        if(homeworkScore==null)
+        if (homeworkScore == null)
             return "null";
-        model.addAttribute("homeworkScore",homeworkScore);
+        model.addAttribute("homeworkScore", homeworkScore);
         Homework homework = homeworkMapper.selectByPrimaryKey(homeworkScore.getHomeworkId());
         model.addAttribute("courseId", homework.getCourseId());
         String[] questionIds = homework.getQuestionIds().split(",");
@@ -312,7 +313,7 @@ public class HomeworkService {
         return "success";
     }
 
-    public String updateHomeworkScore(HomeworkScore homeworkScore){
+    public String updateHomeworkScore(HomeworkScore homeworkScore) {
         homeworkScoreMapper.updateByPrimaryKeySelective(homeworkScore);
         return JSONObject.toJSONString("success");
     }
@@ -325,7 +326,46 @@ public class HomeworkService {
         return spiltToName(homeworkMapper.getHomeworkListByTeacherId(users.getId()));
     }
 
-    public List<MajorClass> getMajorClassList(){
+    public List<MajorClass> getMajorClassList() {
         return majorClassMapper.getMajorClassList(null);
+    }
+
+    public JSONObject getHomeworkSeeScoreList(HttpSession httpSession,
+                                              HomeworkSeeScorePage homeworkSeeScorePage) {
+        JSONObject result = new JSONObject();
+        homeworkSeeScorePage.setOffset(
+                (homeworkSeeScorePage.getPageNumber() - 1) * homeworkSeeScorePage.getPageSize());
+        Object user = httpSession.getAttribute("user");
+        if (user == null) {
+            result.put("total", 0);
+            result.put("rows", new ArrayList<>());
+            return result;
+        }
+        Users teacher = (Users) user;
+        homeworkSeeScorePage.setTeacherId(teacher.getId());
+        result.put("total", homeworkScoreMapper.countHomeworkScoreList(homeworkSeeScorePage));
+        result.put("rows", spiltToName(homeworkScoreMapper.getHomeworkScoreList(homeworkSeeScorePage)));
+        return result;
+    }
+
+    public List<HomeworkMessage> getHomeworkList(Integer courseId, HttpSession httpSession) {
+        Object user = httpSession.getAttribute("user");
+        if (user == null)
+            return null;
+        Users teacher = (Users) user;
+        HomeworkManagePage homeworkManagePage = new HomeworkManagePage();
+        homeworkManagePage.setTeacherId(teacher.getId());
+        homeworkManagePage.setCourseId(courseId);
+        return spiltToName(homeworkMapper.getHomeworkMessageList(homeworkManagePage));
+    }
+
+    public List<MajorClass> getMajorClassListByHomeworkId(Integer homeworkId) {
+        HomeworkManagePage homeworkManagePage = new HomeworkManagePage();
+        homeworkManagePage.setId(homeworkId);
+        List<HomeworkMessage> list = homeworkMapper.getHomeworkMessageList(homeworkManagePage);
+        if (list != null && list.size() > 0 && list.get(0).getClassIds() != null)
+            return majorClassMapper.getMajorClassListByIds(list.get(0).getClassIds());
+        else
+            return null;
     }
 }

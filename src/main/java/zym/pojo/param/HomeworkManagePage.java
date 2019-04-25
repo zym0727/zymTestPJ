@@ -9,6 +9,8 @@ public class HomeworkManagePage extends Page {
 
     private Integer teacherId;
 
+    private Integer id;
+
     public Integer getCourseId() {
         return courseId;
     }
@@ -23,5 +25,13 @@ public class HomeworkManagePage extends Page {
 
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -240,12 +240,11 @@
       <if test="courseId != null">
         and cr.id = #{courseId,jdbcType=INTEGER}
       </if>
-      <if test=" == null">
-        and cr.class_ids like
-        concat('%',#{classId,jdbcType=INTEGER},'%')
+      <if test="classId != null">
+        and u.class_id = #{classId,jdbcType=INTEGER}
       </if>
       <if test="homeworkId != null">
-        and h.id = = #{homeworkId,jdbcType=INTEGER}
+        and h.id = #{homeworkId,jdbcType=INTEGER}
       </if>
     </where>
   </sql>
@@ -260,7 +259,7 @@
   </select>
 
   <!--教师查询学生作业成绩信息list数量-->
-  <select id="coutHomeworkScoreList" parameterType="zym.pojo.param.HomeworkSeeScorePage"
+  <select id="countHomeworkScoreList" parameterType="zym.pojo.param.HomeworkSeeScorePage"
           resultType="int">
     select count(1) from (
     <include refid="scoreList" />

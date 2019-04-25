@@ -7,6 +7,8 @@
     <settings>
         <!-- 这个类从configuration xml  settings  mapUnderscoreToCamelCase  驼峰命名规则   -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--mybatis sql打印-->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
     </settings>
     <typeAliases>
         <package  name="zym.pojo" />

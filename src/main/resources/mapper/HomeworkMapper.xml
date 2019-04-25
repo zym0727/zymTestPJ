@@ -133,6 +133,7 @@
     <result column="course_name" jdbcType="VARCHAR" property="courseName" />
     <result column="class_time" jdbcType="VARCHAR" property="classTime" />
     <result column="user_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="class_ids" jdbcType="VARCHAR" property="classIds" />
   </resultMap>
 
   <!--学生查询未提交作业sql字段-->
@@ -286,7 +287,8 @@
 
   <!--教师查询详细作业信息列表sql字段-->
   <sql id="HomeworkMessageList">
-    h.id, h.assign_time, h.deadline, h.question_ids, h.is_automatic, h.is_assign, h.remark, c1.course_name
+    h.id, h.assign_time, h.deadline, h.question_ids,
+     h.is_automatic, h.is_assign, h.remark, c1.course_name, c1.class_ids
   </sql>
 
   <!--教师查询详细作业信息列表sql-->
@@ -300,6 +302,9 @@
       </if>
       <if test="courseId != null">
         and c1.id = #{courseId,jdbcType=INTEGER}
+      </if>
+      <if test="id != null">
+        and h.id = #{id,jdbcType=INTEGER}
       </if>
     </where>
   </sql>
