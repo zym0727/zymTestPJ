@@ -1,6 +1,5 @@
 package zym.filter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +17,7 @@ import java.security.Principal;
  * @author zym
  * *
  */
-public class LoginFilter implements Filter{
+public class LoginFilter implements Filter {
 
     private LoginService loginService;
 
@@ -35,7 +34,7 @@ public class LoginFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         Principal principal = request.getUserPrincipal();
         if (principal != null && principal.getName() != null) {
-            if(isRememberMeAuthenticated()){
+            if (isRememberMeAuthenticated()) {
                 HttpSession httpSession = request.getSession();
                 Object user = httpSession.getAttribute("user");
                 if (user == null)
