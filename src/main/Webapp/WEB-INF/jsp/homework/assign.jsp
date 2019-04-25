@@ -21,17 +21,14 @@
 
         <div class="container">
 
-            <div id="tip" class="col-sm-8 alert alert-warning alert-dismissible">
-                <div id="tips">
-                    tips
-                </div>
-                <div id="tips1">
-                    请合理设置此次作业<span id="colorRed">是否自动批改</span>，
-                    如果是<strong>文件上传的作业</strong>请设置<strong>手动批改</strong>
-                </div>
-            </div>
-
             <div id="assign">
+
+                <div id="theTitle">
+                    <label class="control-label">作业标题：</label>
+                    <input type="text" name="title" id="homeworkTitle" class="col-md-9"
+                           minlength="1"  maxlength="50">
+                </div>
+
                 <div id="courseSelect" class="form-inline">
                     <label id="courseChoose" class="control-label">课程:</label>
                     <select name="select" id="selectCourse" class="selectpicker show-tick form-control col-sm-9"
@@ -43,6 +40,7 @@
                         </c:forEach>
                     </select>
                 </div>
+
                 <div id="time">
                     <label class="control-label">发布时间：</label>
                     <input class="input-medium search-query col-md-3" name="createDatetime_start form-control"
@@ -51,6 +49,7 @@
                     <input class="input-medium search-query col-md-3" name="createDatetime_end form-control"
                                  value="" id="datetimepicker_end" readonly/>
                 </div>
+
                 <div id="questionMake" class="form-inline">
                     <label id="itemBankChoose" class="control-label">题库:</label>
                     <select name="select" id="itemBankSelect" class="selectpicker show-tick form-control col-sm-2"
@@ -71,7 +70,7 @@
                 <div id="selfDefined">
                     <label id="selfDefinedDescription" class="control-label">此次作业附加备注或描述（可选）:</label>
                     <div class="form-group">
-                        <textarea id="remarkText" rows="5" cols="110"></textarea>
+                        <textarea id="remarkText" rows="7" cols="110"></textarea>
                     </div>
                 </div>
 
@@ -85,6 +84,12 @@
                         <label>
                             <input type="radio" name="marking" id="optionsRadios2" value="1">自动批改
                         </label>
+                    </div>
+                </div>
+
+                <div id="tip" class="col-sm-4">
+                    <div id="tips1">
+                        如果是文件上传的作业请设置手动批改
                     </div>
                 </div>
 

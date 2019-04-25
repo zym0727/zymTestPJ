@@ -3,7 +3,9 @@ package zym.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,9 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
 import zym.service.LoginService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
 
 /**
  * @author zym
@@ -28,20 +28,16 @@ public class LoginController {
     private LoginService loginService;
 
     @RequestMapping(path = {"/", "/index"}, method = RequestMethod.GET)
-    public String index(HttpServletRequest request, HttpSession session) {
-        Principal principal = request.getUserPrincipal();
-        if (principal != null && principal.getName() != null) {
-            if (loginService.LoginMake(principal.getName(), session).equals("success"))
-                return "/main/main";
-        }
-        return "index";
+    public String index() {
+        //记住我功能登录
+        if (isRememberMeAuthenticated())
+            return "/main/main";
+        else
+            return "index";
     }
 
     @RequestMapping(path = "/firstSee", method = RequestMethod.GET)
-    public String firstSee(HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-        log.info("账号名字:"+principal.getName());
-        log.info("当前用户信息:"+principal.toString());
+    public String firstSee() {
         return "/main/main";
     }
 
@@ -51,5 +47,11 @@ public class LoginController {
         if (account == null || password == null)
             throw new MessageException("参数为空");
         return loginService.LoginTest(account, password, session);
+    }
+
+    private boolean isRememberMeAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && RememberMeAuthenticationToken.class.isAssignableFrom(
+                authentication.getClass());
     }
 }

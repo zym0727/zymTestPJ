@@ -93,10 +93,10 @@ var initTheTable = function (courseId) {
                 return pageSize * (pageNumber - 1) + index + 1;
             }
         }, {
-            field: 'questionName',
-            title: '作业所选题目名称',
+            field: 'title',
+            title: '作业标题',
             align: 'center',
-            width: 450
+            width: 350
         }, {
             field: 'courseName',
             title: '课程',
@@ -106,12 +106,12 @@ var initTheTable = function (courseId) {
             field: 'assignTime',
             title: '发布时间',
             align: 'center',
-            width: 100
+            width: 150
         }, {
             field: 'deadline',
             title: '截止时间',
             align: 'center',
-            width: 100
+            width: 150
         }, {
             field: 'operations',
             title: '操作',

@@ -1,7 +1,12 @@
 ﻿function assignHomework(isAssign) {
+    var title = $("#homeworkTitle").val();
+    if (title === "") {
+        alert("作业标题没有写！");
+        return;
+    }
     var courseId = $("#selectCourse").val();
     if (courseId === "") {
-        alert("请选择课程");
+        alert("请选择课程！");
         return;
     }
     var assignTime = $("#datetimepicker_start").val();
@@ -42,6 +47,7 @@
             url: "/homework/teacher/assign",
             method: "post",
             data: {
+                title: title,
                 courseId: courseId,
                 assignTime: new Date(assignTime),
                 deadline: new Date(deadline),
@@ -69,6 +75,7 @@
             method: "post",
             data: {
                 id: updateHomeworkId,
+                title: title,
                 courseId: courseId,
                 assignTime: new Date(assignTime),
                 deadline: new Date(deadline),
@@ -118,6 +125,10 @@ $(function () {
 });
 
 function checkInputOutput() {
+    if ($("#homeworkTitle").val() === "") {
+        alert("作业标题没有写！");
+        return false;
+    }
     if ($("#itemBankSelect").val() === "") {
         alert("没有选择题库！");
         return false;

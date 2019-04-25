@@ -89,16 +89,16 @@ var initTheTable = function (status) {
                 return pageSize * (pageNumber - 1) + index + 1;
             }
         }, {
-            field: 'questionName',
-            title: '作业所选题目名称',
+            field: 'title',
+            title: '作业标题',
             align: 'center',
-            width: 450,
+            width: 400,
             formatter: aFormatter //添加超链接的方法
         }, {
             field: 'studentName',
             title: '学生姓名',
             align: 'center',
-            width: 100,
+            width: 150,
             formatter: aFormatter //添加超链接的方法
         }, {
             field: 'courseName',
@@ -109,7 +109,7 @@ var initTheTable = function (status) {
             field: 'classTime',
             title: '上课时间',
             align: 'center',
-            width: 100
+            width: 150
         }]
     });
 };

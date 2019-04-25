@@ -110,10 +110,10 @@ var initTheTable = function () {
                 return pageSize * (pageNumber - 1) + index + 1;
             }
         }, {
-            field: 'questionName',
-            title: '作业所选题目名称',
+            field: 'title',
+            title: '作业标题',
             align: 'center',
-            width: 450
+            width: 400
         }, {
             field: 'courseName',
             title: '课程',
@@ -123,7 +123,7 @@ var initTheTable = function () {
             field: 'studentName',
             title: '学生',
             align: 'center',
-            width: 100
+            width: 150
         }, {
             field: 'score',
             title: '成绩',

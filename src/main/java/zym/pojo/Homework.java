@@ -8,6 +8,8 @@ import java.util.Date;
 public class Homework {
     private Integer id;
 
+    private String title;
+
     private Integer courseId;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
@@ -88,5 +90,13 @@ public class Homework {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

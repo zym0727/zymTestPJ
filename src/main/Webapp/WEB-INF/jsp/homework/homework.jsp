@@ -55,6 +55,11 @@
                         </div>
                         <div class="modal-body">
                             <form>
+                                <div id="theTitle">
+                                    <label class="control-label">作业标题：</label>
+                                    <input type="text" name="title" id="homeworkTitle" class="col-md-9"
+                                           minlength="1"  maxlength="50">
+                                </div>
                                 <div id="courseSelect" class="form-inline">
                                     <label id="courseChoose" class="control-label">课程:</label>
                                     <select name="select" id="selectCourse" class="selectpicker show-tick form-control col-sm-9"

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50715
 File Encoding         : 65001
 
-Date: 2019-04-23 19:24:29
+Date: 2019-04-25 21:11:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -37,6 +37,7 @@ CREATE TABLE `course` (
 DROP TABLE IF EXISTS `homework`;
 CREATE TABLE `homework` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL COMMENT '作业标题',
   `course_id` int(11) NOT NULL COMMENT '课程id',
   `assign_time` datetime NOT NULL COMMENT '作业发布时间',
   `deadline` datetime NOT NULL COMMENT '作业截止时间',
@@ -84,7 +85,7 @@ CREATE TABLE `language_mark` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mark` varchar(100) NOT NULL COMMENT '语言标记',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='题目语言登记表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='题目语言登记表';
 
 -- ----------------------------
 -- Table structure for major_class
@@ -124,7 +125,7 @@ CREATE TABLE `question` (
   `answer` text COMMENT '答案',
   `language_id` int(11) DEFAULT NULL COMMENT '所属语言id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='题目表';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='题目表';
 
 -- ----------------------------
 -- Table structure for role
@@ -147,7 +148,7 @@ CREATE TABLE `test_data` (
   `input` text COMMENT '一组输入',
   `output` text COMMENT '一组输出',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='测试数据表';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='测试数据表';
 
 -- ----------------------------
 -- Table structure for users

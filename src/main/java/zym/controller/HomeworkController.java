@@ -111,8 +111,10 @@ public class HomeworkController {
     @RequestMapping(path = {"/teacher/assign"}, method = RequestMethod.POST)
     @ResponseBody
     public String assignHomework(Homework homework) {
-        if (StringUtils.isEmpty(homework) || StringUtils.isEmpty(homework.getCourseId()) ||
-                StringUtils.isEmpty(homework.getAssignTime()) || StringUtils.isEmpty(homework.getDeadline())
+        if (StringUtils.isEmpty(homework) || StringUtils.isEmpty(homework.getTitle())
+                || StringUtils.isEmpty(homework.getCourseId())
+                || StringUtils.isEmpty(homework.getAssignTime())
+                || StringUtils.isEmpty(homework.getDeadline())
                 || StringUtils.isEmpty(homework.getIsAutomatic()))
             throw new MessageException("参数为空");
         return homeworkService.saveOrUpdateAssignHomework(homework, true);
@@ -175,8 +177,10 @@ public class HomeworkController {
     @RequestMapping(path = {"/teacher/update"}, method = RequestMethod.POST)
     @ResponseBody
     public String updateHomework(Homework homework) {
-        if (StringUtils.isEmpty(homework) || StringUtils.isEmpty(homework.getCourseId()) ||
-                StringUtils.isEmpty(homework.getAssignTime()) || StringUtils.isEmpty(homework.getDeadline())
+        if (StringUtils.isEmpty(homework) || StringUtils.isEmpty(homework.getTitle())
+                || StringUtils.isEmpty(homework.getCourseId())
+                || StringUtils.isEmpty(homework.getAssignTime())
+                || StringUtils.isEmpty(homework.getDeadline())
                 || StringUtils.isEmpty(homework.getIsAutomatic())
                 || StringUtils.isEmpty(homework.getId()))
             throw new MessageException("参数为空");

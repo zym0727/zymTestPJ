@@ -36,7 +36,7 @@
                 <textarea  class="form-control"   rows="5"  readonly>
                     ${remark}
                 </textarea>
-                <p  class="text-warning homeworkLabel">提交前请注意以下几点：<br><br>
+                <p  class="text-warning homeworkLabel leftFor">提交前请注意以下几点：<br><br>
                     1.请选择文件上传或者输入信息到文本框提交作业，如果文本框内有信息将不会上传文件   <br><br>
                     2.Java语言代码请按照这种格式：输入输出流：System.In 和 System.Out，主类：Main，函数：标准 main 函数。
                     <br><br>
@@ -44,7 +44,7 @@
                 </p>
                 <div id="homeworkSubmit">
                 </div>
-                <div class="form-inline">
+                <div class="form-inline leftFor">
                     <label class="homeworkLabel">
                         文件上传：
                     </label>
@@ -56,7 +56,7 @@
                         已提交文件：${homeworkScore.fileName}
                     </a>
                 </div>
-                <p class="help-block">支持doc、docx、xls、xlsx、ppt、pptx、txt、rar、zip格式，
+                <p class="help-block leftFor">支持doc、docx、xls、xlsx、ppt、pptx、txt、rar、zip格式，
                     大小不超过10M，不符合的将红色提醒</p>
                 <div id="submitThis">
                     <button id="submitButton" type="button" class="btn btn-success btn-lg">提交作业</button>

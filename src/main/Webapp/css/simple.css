@@ -23,31 +23,23 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
-#tips {
-    font-size: 30px;
-    font-family: "Showcard Gothic";
-    color: green;
-    text-align: center;
+#theTitle{
+    margin-top: 60px;
+    margin-left: 70px;
+    margin-bottom: 55px;
 }
 
 #tips1 {
     margin-top: 15px;
-    font-size: 16px;
-    color: #0ebeda;
-    margin-left: 40px;
+    font-size: 14px;
+    color: #9baf34;
+    margin-left: 20px;
 }
 
 #tip {
-    padding-right: 40px;
-    padding-left: 75px;
-    margin-right: auto;
-    margin-left: 170px;
-    margin-top: 50px;
-    padding-bottom: 20px;
-}
-
-#colorRed {
-    color: red;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: 326px;
 }
 
 #assign {
@@ -91,7 +83,7 @@
 #assignThis {
     margin-right: 20px;
     margin-left: 70px;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 #isAutomatic {
@@ -202,8 +194,12 @@
     margin-bottom: 20px;
 }
 
+.leftFor{
+    margin-left: 130px;
+}
+
 #homeworkSubmit {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-left: 130px;
     margin-right: 100px;
 }

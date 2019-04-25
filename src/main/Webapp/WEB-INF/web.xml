@@ -49,6 +49,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- 自定义把登录信息过滤器 -->
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>zym.filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!-- springMVC的DispatcherServlet -->
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>

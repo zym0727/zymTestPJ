@@ -218,12 +218,13 @@
     <result column="course_name" jdbcType="VARCHAR" property="courseName" />
     <result column="class_name" jdbcType="VARCHAR" property="className" />
     <result column="question_ids" jdbcType="VARCHAR" property="questionIds" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
   </resultMap>
 
   <!--教师查询学生作业成绩信息sql-->
   <sql id="scoreListSql">
     hs.id, hs.score, hs.evaluate, hs.correct_rate, u.user_name,
-     cr.course_name, mc.class_name, h.question_ids
+     cr.course_name, mc.class_name, h.question_ids, h.title
   </sql>
 
   <!--教师查询学生作业成绩信息select-->

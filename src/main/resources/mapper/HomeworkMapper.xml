@@ -3,6 +3,7 @@
 <mapper namespace="zym.dao.HomeworkMapper">
   <resultMap id="BaseResultMap" type="zym.pojo.Homework">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime" />
     <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
@@ -12,7 +13,7 @@
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, course_id, assign_time, deadline, question_ids, is_automatic, is_assign, remark
+    id, title, course_id, assign_time, deadline, question_ids, is_automatic, is_assign, remark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,16 +26,20 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="zym.pojo.Homework" useGeneratedKeys="true" keyProperty="id">
-    insert into homework (course_id, assign_time,
+    insert into homework (title, course_id, assign_time,
       deadline, question_ids, is_automatic, 
       is_assign, remark)
-    values (#{courseId,jdbcType=INTEGER}, #{assignTime,jdbcType=TIMESTAMP},
-      #{deadline,jdbcType=TIMESTAMP}, #{questionIds,jdbcType=VARCHAR}, #{isAutomatic,jdbcType=INTEGER}, 
+    values (#{title,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
+      #{assignTime,jdbcType=TIMESTAMP}, #{deadline,jdbcType=TIMESTAMP},
+      #{questionIds,jdbcType=VARCHAR}, #{isAutomatic,jdbcType=INTEGER},
       #{isAssign,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="zym.pojo.Homework" useGeneratedKeys="true" keyProperty="id">
     insert into homework
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        title,
+      </if>
       <if test="courseId != null">
         course_id,
       </if>
@@ -58,6 +63,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
       <if test="courseId != null">
         #{courseId,jdbcType=INTEGER},
       </if>
@@ -84,6 +92,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.Homework">
     update homework
     <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
       <if test="courseId != null">
         course_id = #{courseId,jdbcType=INTEGER},
       </if>
@@ -110,7 +121,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="zym.pojo.Homework">
     update homework
-    set course_id = #{courseId,jdbcType=INTEGER},
+    set title = #{title,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=INTEGER},
       assign_time = #{assignTime,jdbcType=TIMESTAMP},
       deadline = #{deadline,jdbcType=TIMESTAMP},
       question_ids = #{questionIds,jdbcType=VARCHAR},
@@ -123,6 +135,7 @@
   <!--学生查询作业信息-->
   <resultMap id="studentResultMap" type="zym.pojo.param.HomeworkMessage">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime" />
     <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
@@ -138,7 +151,8 @@
 
   <!--学生查询未提交作业sql字段-->
   <sql id="studentHomework">
-    h.id,h.assign_time,h.deadline,h.question_ids,h.remark,c1.course_name,c1.class_time,u.user_name
+    h.id,h.title,h.assign_time,h.deadline,h.question_ids,h.remark,
+    c1.course_name,c1.class_time,u.user_name
   </sql>
 
   <!--学生查询未提交作业sql-->
@@ -237,6 +251,9 @@
   <!--模糊查询作业-->
   <sql id="where">
     <where>
+      <if test="title != null">
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
       <if test="courseId != null">
         and course_id = #{courseId,jdbcType=INTEGER}
       </if>
@@ -287,7 +304,7 @@
 
   <!--教师查询详细作业信息列表sql字段-->
   <sql id="HomeworkMessageList">
-    h.id, h.assign_time, h.deadline, h.question_ids,
+    h.id, h.title, h.assign_time, h.deadline, h.question_ids,
      h.is_automatic, h.is_assign, h.remark, c1.course_name, c1.class_ids
   </sql>
 
@@ -337,7 +354,7 @@
 
   <!--教师查询学生作业信息sql-->
   <sql id="homeworkScoreListSql">
-    hs.id, c1.course_name, c1.class_time, h.question_ids, u2.user_name
+    hs.id, c1.course_name, c1.class_time, h.question_ids, h.title, u2.user_name
   </sql>
 
   <!--教师查询学生作业信息select-->
@@ -383,8 +400,9 @@
       ) as t
   </select>
 
+  <!--教师查询所有此教师布置的作业sql-->
   <sql id="homeworkTeacher">
-    h.id, h.course_id, h.assign_time, h.deadline,
+    h.id, h.title, h.course_id, h.assign_time, h.deadline,
     h.question_ids, h.is_automatic, h.is_assign, h.remark, cr.course_name
   </sql>
 
