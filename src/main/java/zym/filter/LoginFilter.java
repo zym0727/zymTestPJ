@@ -41,7 +41,6 @@ public class LoginFilter implements Filter {
                     loginService.LoginMake(principal.getName(), httpSession);
             }
         }
-
         filterChain.doFilter(servletRequest, servletResponse);    //继续执行
     }
 
