@@ -114,8 +114,6 @@ var initTheTable = function (status) {
     });
 };
 
-//concat('%',#{executor,jdbcType=VARCHAR},'%')
-
 function aFormatter(value, row, index) {
     return [
         '<a href="' + "/homework/teacher/studentHomework/" + row.id + '">' + value + '</a>'

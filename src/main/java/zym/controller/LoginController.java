@@ -1,7 +1,5 @@
 package zym.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +20,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class LoginController {
 
-    private static Logger log =  LoggerFactory.getLogger(LoginController.class);
+    //private static Logger log =  LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private LoginService loginService;
@@ -49,6 +47,7 @@ public class LoginController {
         return loginService.LoginTest(account, password, session);
     }
 
+    //记住我功能登录验证
     private boolean isRememberMeAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && RememberMeAuthenticationToken.class.isAssignableFrom(

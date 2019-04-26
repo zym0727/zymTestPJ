@@ -368,4 +368,27 @@ public class HomeworkService {
         else
             return null;
     }
+
+    public HomeworkScore getHomeworkScore(Integer homeworkScoreId){
+        return homeworkScoreMapper.selectByPrimaryKey(homeworkScoreId);
+    }
+
+    public JSONObject getStudentScoreList(HttpSession httpSession,
+                                          StudentHomeworkPage studentHomeworkPage){
+        JSONObject result = new JSONObject();
+        studentHomeworkPage.setOffset(
+                (studentHomeworkPage.getPageNumber() - 1) * studentHomeworkPage.getPageSize());
+        Object user = httpSession.getAttribute("user");
+        if (user == null) {
+            result.put("total", 0);
+            result.put("rows", new ArrayList<>());
+            return result;
+        }
+        Users student = (Users) user;
+        studentHomeworkPage.setId(student.getId());
+        studentHomeworkPage.setScore(1);
+        result.put("total", homeworkMapper.countMarkListStudent(studentHomeworkPage));
+        result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(studentHomeworkPage)));
+        return result;
+    }
 }

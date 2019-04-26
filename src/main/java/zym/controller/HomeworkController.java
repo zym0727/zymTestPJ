@@ -74,7 +74,7 @@ public class HomeworkController {
     public String getHomeworkScoreCheckPage(Model model, HttpSession session) {
         model.addAttribute("courseList", courseService.selectCourseList(session));
         model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByTeacherId(session));
-        model.addAttribute("classList",homeworkService.getMajorClassList());
+        model.addAttribute("classList", homeworkService.getMajorClassList());
         return "homework/homeworkScore";
     }
 
@@ -88,6 +88,12 @@ public class HomeworkController {
             model.addAttribute("courseList", courseService.selectCourseList(session));
             return "homework/studentSee";
         }
+    }
+
+    @RequestMapping(path = {"/student/score"}, method = RequestMethod.GET)
+    public String getStudentHomeworkScorePage(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        return "homework/studentScore";
     }
 
     @RequestMapping(path = {"/teacher/studentHomework/{homeworkScoreId}"}, method = RequestMethod.GET)
@@ -193,6 +199,12 @@ public class HomeworkController {
         return homeworkService.getHomework(homeworkId);
     }
 
+    @RequestMapping(path = {"/teacher/homeworkScore/get/{homeworkScoreId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public HomeworkScore getHomeworkScore(@PathVariable Integer homeworkScoreId) {
+        return homeworkService.getHomeworkScore(homeworkScoreId);
+    }
+
     @RequestMapping(path = {"/teacher/mark"}, method = RequestMethod.POST)
     @ResponseBody
     public String markHomework(HomeworkScore homeworkScore) {
@@ -222,7 +234,17 @@ public class HomeworkController {
 
     @RequestMapping(path = {"/teacher/majorClassList/{homeworkId}"}, method = RequestMethod.GET)
     @ResponseBody
-    public List<MajorClass> getMajorClassListByHomeworkId(@PathVariable Integer homeworkId){
+    public List<MajorClass> getMajorClassListByHomeworkId(@PathVariable Integer homeworkId) {
         return homeworkService.getMajorClassListByHomeworkId(homeworkId);
+    }
+
+    @RequestMapping(path = {"/student/homeworkScoreList"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getStudentScoreList(HttpSession httpSession,
+                                          StudentHomeworkPage studentHomeworkPage) {
+        if (StringUtils.isEmpty(studentHomeworkPage) || StringUtils.isEmpty(studentHomeworkPage.getPageNumber())
+                || StringUtils.isEmpty(studentHomeworkPage.getPageSize()))
+            throw new MessageException("参数为空");
+        return homeworkService.getStudentScoreList(httpSession, studentHomeworkPage);
     }
 }

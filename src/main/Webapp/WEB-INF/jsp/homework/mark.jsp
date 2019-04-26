@@ -32,7 +32,7 @@
                         此作业成绩：
                     </label>
                     <input type="text" id="scoreMark" name="scoreMark" class="form-control"
-                           placeholder="        1-3数字" value= "${homeworkScore.score}"
+                           placeholder="        0-100" value= "${homeworkScore.score}"
                            aria-describedby="basic-addon1" minlength="1"  maxlength="3"
                            required oninput="showScoreMarkInputSuggestion();">
                 </div>

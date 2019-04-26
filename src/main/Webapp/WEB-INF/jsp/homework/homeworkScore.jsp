@@ -36,7 +36,7 @@
                         data-width="98%" data-first-option="false"  title="请选择" data-live-search="true">
                     <c:forEach items="${homeworkMessageList}" var="homeworkMessage">
                         <option value="${homeworkMessage.id}">
-                                ${homeworkMessage.questionName}
+                                ${homeworkMessage.title}
                                     (课程：${homeworkMessage.courseName},
                                     发布时间: <fmt:formatDate value="${homeworkMessage.assignTime}"
                                                          pattern="yyyy-MM-dd HH:mm" />
@@ -57,9 +57,50 @@
                     </c:forEach>
                 </select>
             </div>
+
             <div>
                 <table id="homeworkScoreTable" class="table table-striped"></table>
             </div>
+
+            <!-- 编辑模态框（Modal） -->
+            <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true" style="margin-left: 60px">
+                <div class="modal-dialog" style="max-height:600px; max-width: 1000px; margin: 0">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myUpdateModalLabel" style="margin-left: 345px">
+                                修改成绩和评价</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div style="margin-left: 275px" class="form-inline">
+                                <label class="homeworkLabel">
+                                    此作业成绩：
+                                </label>
+                                <input type="text" id="scoreMark" name="scoreMark" class="form-control"
+                                       placeholder="        0-100"
+                                       aria-describedby="basic-addon1" minlength="1"  maxlength="3">
+                            </div>
+                            <div id="commit">
+                                <label class="homeworkLabel" style="margin-bottom: 10px">
+                                    此作业评价：
+                                </label>
+                                <textarea id="commitText"  class="form-control" rows="7" ></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="margin-right: 280px">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    style="margin-right: 70px">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary" id="updateConfirmBtn">
+                                提交更改
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
         </div>
     </div>
 </div>

@@ -20,7 +20,7 @@ $(function () {
                     var selectHomework = $("#selectHomework");
                     selectHomework.find("option").remove();
                     $.each(data, function (i, item) {
-                        var tempId = '<option  value="' + item.id + '">' + item.questionName + '(课程：'
+                        var tempId = '<option  value="' + item.id + '">' + item.title + '(课程：'
                             + item.courseName + ',发布时间:' + item.assignTime + '截止时间：'
                             + item.deadline + ')' + '</option>';
                         selectHomework.append(tempId);
@@ -61,7 +61,7 @@ $(function () {
     $('#selectClass').change(function () {
         $('#homeworkScoreTable').bootstrapTable("destroy");
         initTheTable();
-    })
+    });
 });
 
 var initTheTable = function () {
@@ -113,17 +113,18 @@ var initTheTable = function () {
             field: 'title',
             title: '作业标题',
             align: 'center',
-            width: 400
+            width: 400,
+            formatter: aFormatter //添加超链接的方法
         }, {
             field: 'courseName',
-            title: '课程',
+            title: '课程名称',
             align: 'center',
             width: 150
         }, {
             field: 'studentName',
             title: '学生',
             align: 'center',
-            width: 150
+            width: 100
         }, {
             field: 'score',
             title: '成绩',
@@ -133,12 +134,18 @@ var initTheTable = function () {
             field: 'operations',
             title: '操作',
             align: 'center',
-            width: 100,
+            width: 150,
             events: operateEvents,//给按钮注册事件
             formatter: addFunction//表格中增加按钮
         }]
     });
 };
+
+function aFormatter(value, row, index) {
+    return [
+        '<a href="' + "/homework/teacher/studentHomework/" + row.id + '">' + value + '</a>'
+    ].join("")
+}
 
 function addFunction() {
     return [
@@ -152,6 +159,59 @@ var updateHomeworkScoreId;
 window.operateEvents = {
     // 点击修改按钮执行的方法
     'click #btn_edit': function (e, value, row, index) {
-
+        $("#scoreMark").val("");
+        $("#commitText").val("");
+        $.ajax({
+            url: "/homework/teacher/homeworkScore/get/" + row.id,
+            method: "get",
+            dataType: "json",
+            success: function (data) {
+                $("#scoreMark").val(data.score);
+                $("#commitText").val(data.evaluate);
+                updateHomeworkScoreId = row.id;
+                $("#updateModal").modal("show");
+            },
+            error:function () {
+                alert("出错了,请联系管理员");
+            }
+        });
     }
 };
+
+$("#updateConfirmBtn").click(function () {
+    var score = $("#scoreMark").val();
+    var commit = $("#commitText").val();
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    if (score === "") {
+        alert("成绩没有输入哦");
+        return;
+    }
+    if (checkInputPattern("^[0-9]{1,2}$", "scoreMark") === false && score !== "100") {
+        alert("成绩格式有误");
+        return;
+    }
+    $.ajax({
+        url: "/homework/teacher/mark",
+        method: "post",
+        dataType: "json",
+        data: {
+            id: updateHomeworkScoreId,
+            score: score,
+            evaluate: commit
+        },
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function (data) {
+            if (data === "success") {
+                alert("提交批改成功");
+                $('#homeworkScoreTable').bootstrapTable("refresh");
+            }
+        },
+        error: function () {
+            alert("提交批改失败");
+        }
+    });
+    $("#updateModal").modal("hide");
+});

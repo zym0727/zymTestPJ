@@ -188,10 +188,16 @@
     ) as counts
   </select>
 
+  <!--学生查询提交作业sql字段-->
+  <sql id="studentSubHomework">
+    h.id,h.title,h.assign_time,h.deadline,h.question_ids,h.remark,hs.score,hs.evaluate,
+    c1.course_name,c1.class_time,u.user_name
+  </sql>
+
   <!--学生查询提交作业sql-->
   <sql id="submitList">
     select
-    <include refid="studentHomework"/>
+    <include refid="studentSubHomework"/>
     from homework h left join
     homework_score hs
     on h.id = hs.homework_id

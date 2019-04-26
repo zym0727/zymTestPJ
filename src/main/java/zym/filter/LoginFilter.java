@@ -31,10 +31,11 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        Principal principal = request.getUserPrincipal();
-        if (principal != null && principal.getName() != null) {
-            if (isRememberMeAuthenticated()) {
+        //如果是记住我功能进来的，存用户信息到httpSession
+        if (isRememberMeAuthenticated()) {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            Principal principal = request.getUserPrincipal();
+            if (principal != null && principal.getName() != null) {
                 HttpSession httpSession = request.getSession();
                 Object user = httpSession.getAttribute("user");
                 if (user == null)

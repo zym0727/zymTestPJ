@@ -136,6 +136,7 @@ var updateHomeworkId;
 window.operateEvents = {
     // 点击修改按钮执行的方法
     'click #btn_edit': function (e, value, row, index) {
+        $("#homeworkTitle").val("");
         $("#selectCourse").selectpicker('val',"");
         $("#datetimepicker_start").val("");
         $("#datetimepicker_end").val("");
@@ -148,6 +149,7 @@ window.operateEvents = {
             method: "get",
             dataType: "json",
             success: function (data) {
+                $("#homeworkTitle").val(data.title);
                 $('#selectCourse').selectpicker('val',data.courseId);
                 $("#datetimepicker_start").val(data.assignTime);
                 $("#datetimepicker_end").val(data.deadline);

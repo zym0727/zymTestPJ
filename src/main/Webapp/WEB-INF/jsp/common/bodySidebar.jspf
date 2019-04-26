@@ -104,8 +104,9 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="tables.html" class="nav-link">
-                        <i class="icon icon-graph"></i> 个人成绩
+                    <a href="${pageContext.request.contextPath}/homework/student/score" class="nav-link"
+                        id="studentHomeworkScorePage">
+                        <i class="icon icon-graph"></i> 作业成绩
                     </a>
                 </li>
             </security:authorize>
