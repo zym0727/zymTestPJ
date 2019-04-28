@@ -78,7 +78,7 @@
 
                     <ul class="nav-dropdown-items">
                         <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/homework/teacher/checkHomework"
+                            <a href="${pageContext.request.contextPath}/homework/teacher/checkHomeworkScore"
                                class="nav-link" id="checkResult">
                                 <i class="icon icon-settings"></i> 作业成绩查阅
                             </a>
@@ -87,7 +87,8 @@
 
                     <ul class="nav-dropdown-items">
                         <li class="nav-item">
-                            <a href="chartjs.html" class="nav-link">
+                            <a href="${pageContext.request.contextPath}/homework/teacher/score/analysis"
+                               class="nav-link" id="scoreChart">
                                 <i class="icon icon-graph"></i> 成绩统计分析
                             </a>
                         </li>

@@ -1,6 +1,7 @@
 package zym.dao;
 
 import zym.pojo.HomeworkScore;
+import zym.pojo.param.Count;
 import zym.pojo.param.HomeworkMessage;
 import zym.pojo.param.HomeworkSeeScorePage;
 
@@ -28,4 +29,10 @@ public interface HomeworkScoreMapper {
     List<HomeworkMessage> getHomeworkScoreList(HomeworkSeeScorePage homeworkSeeScorePage);
 
     int countHomeworkScoreList(HomeworkSeeScorePage homeworkSeeScorePage);
+
+    List<HomeworkScore> getUnSubmitHomeworkScoreList();
+
+    int avgCount(Count count);
+
+    int avgCountBetween(Count count);
 }

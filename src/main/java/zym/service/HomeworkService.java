@@ -5,24 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import zym.dao.HomeworkMapper;
-import zym.dao.HomeworkScoreMapper;
-import zym.dao.MajorClassMapper;
-import zym.dao.QuestionMapper;
+import zym.dao.*;
 import zym.pojo.*;
-import zym.pojo.param.HomeworkManagePage;
-import zym.pojo.param.HomeworkMessage;
-import zym.pojo.param.HomeworkSeeScorePage;
-import zym.pojo.param.StudentHomeworkPage;
+import zym.pojo.param.*;
 import zym.util.DateUtil;
 
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zym
@@ -42,6 +33,9 @@ public class HomeworkService {
 
     @Autowired
     private MajorClassMapper majorClassMapper;
+
+    @Autowired
+    private CourseMapper courseMapper;
 
     public String saveOrUpdateAssignHomework(Homework homework, Boolean isSave) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -322,12 +316,32 @@ public class HomeworkService {
         Object user = session.getAttribute("user");
         if (user == null)
             return null;
-        Users users = (Users) user;
-        return spiltToName(homeworkMapper.getHomeworkListByTeacherId(users.getId()));
+        Users teacher = (Users) user;
+        return spiltToName(homeworkMapper.getHomeworkListByTeacherId(teacher.getId()));
     }
 
-    public List<MajorClass> getMajorClassList() {
-        return majorClassMapper.getMajorClassList(null);
+    public List<MajorClass> getMajorClassList(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user == null)
+            return null;
+        Users teacher = (Users) user;
+        Course course = new Course();
+        course.setTeacherId(teacher.getId());
+        List<Course> courseList = courseMapper.selectCourseList(course);
+        Set<String> ids = new HashSet<>();
+        if (courseList != null && courseList.size() > 0) {
+            for (Course c : courseList) {
+                String[] idArray = c.getClassIds().split(",");
+                ids.addAll(Arrays.asList(idArray));
+            }
+        }
+        StringBuilder res = new StringBuilder("");
+        for (String id : ids)
+            res.append(id).append(",");
+        if (res.length() > 0)
+            res.delete(res.length() - 1, res.length());
+        String s = res.toString();
+        return s.equals("") ? null : majorClassMapper.getMajorClassListByIds(s);
     }
 
     public JSONObject getHomeworkSeeScoreList(HttpSession httpSession,
@@ -390,5 +404,19 @@ public class HomeworkService {
         result.put("total", homeworkMapper.countMarkListStudent(studentHomeworkPage));
         result.put("rows", spiltToName(homeworkMapper.getMarkListByStudentId(studentHomeworkPage)));
         return result;
+    }
+
+    public JSONArray getCountScoreByCourseId(Integer courseId) {
+        Count count = new Count();
+        count.setCourseId(courseId);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(homeworkScoreMapper.avgCount(count));
+        int j = 7, i;
+        for (i = 6; i < 10; ) {
+            count.setLow((i++) * 10);
+            count.setHigh((j++) * 10);
+            jsonArray.add(homeworkScoreMapper.avgCountBetween(count));
+        }
+        return jsonArray;
     }
 }

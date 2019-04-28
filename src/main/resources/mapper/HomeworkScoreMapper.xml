@@ -266,4 +266,50 @@
     <include refid="scoreList" />
     ) as t
   </select>
+
+  <!--获取所有未提交作业的作业成绩列表-->
+  <select id="getUnSubmitHomeworkScoreList" resultMap="BaseResultMap">
+    select
+    h.id as homework_id, u.id as student_id, h.deadline as submit_time
+    from users u
+    left join homework h on h.course_id  in
+    (select co.id from course co where co.class_ids like CONCAT('%',u.class_id,'%'))
+    left join homework_score hs on hs.student_id = u.id and hs.homework_id = h.id
+    where u.role_id = '3' and hs.submit_time is null
+  </select>
+
+  <!--计算课程平均成绩sql-->
+  <sql id="count">
+    select h.id
+    from homework_score hs
+    left join homework h on hs.homework_id = h.id
+    <where>
+      <if test="courseId != null">
+        and h.course_id = #{courseId,jdbcType=INTEGER}
+      </if>
+    </where>
+    group by hs.homework_id
+  </sql>
+
+  <!--计算当前课程作业平均成绩小于60的作业数量-->
+  <select id="avgCount" parameterType="zym.pojo.param.Count" resultType="int">
+    select count(1) from (
+    <include refid="count" />
+    having avg(hs.score) &lt; 60
+    ) as t
+  </select>
+
+  <!--计算当前课程作业平均成绩区间的作业数量-->
+  <select id="avgCountBetween" parameterType="zym.pojo.param.Count" resultType="int">
+    select count(1) from (
+    <include refid="count" />
+    having avg(hs.score) &gt;= #{low,jdbcType=INTEGER}
+    <if test="high != 100">
+      and avg(hs.score) &lt; #{high,jdbcType=INTEGER}
+    </if>
+    <if test="high == 100">
+      and avg(hs.score) &lt;= #{high,jdbcType=INTEGER}
+    </if>
+    ) as t
+  </select>
 </mapper>

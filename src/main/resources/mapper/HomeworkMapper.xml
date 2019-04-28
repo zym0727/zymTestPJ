@@ -165,7 +165,10 @@
     on h.id = hs.homework_id
     left join course c1 on c1.id = h.course_id
     left join users u on u.id = c1.teacher_id
+    left join users u1 on u1.id = #{id,jdbcType=INTEGER}
     where h.is_assign = '1' and hs.submit_time is null
+    and h.course_id  in
+    (select co.id from course co where co.class_ids like CONCAT('%',u1.class_id,'%'))
     <if test="courseId != null">
       and h.course_id = #{courseId,jdbcType=INTEGER}
     </if>

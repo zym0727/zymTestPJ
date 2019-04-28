@@ -70,12 +70,20 @@ public class HomeworkController {
         return "homework/studentSee";
     }
 
-    @RequestMapping(path = {"/teacher/checkHomework"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/teacher/checkHomeworkScore"}, method = RequestMethod.GET)
     public String getHomeworkScoreCheckPage(Model model, HttpSession session) {
         model.addAttribute("courseList", courseService.selectCourseList(session));
         model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByTeacherId(session));
-        model.addAttribute("classList", homeworkService.getMajorClassList());
+        model.addAttribute("classList", homeworkService.getMajorClassList(session));
         return "homework/homeworkScore";
+    }
+
+    @RequestMapping(path = {"/teacher/score/analysis"}, method = RequestMethod.GET)
+    public String getHomeworkScoreCount(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByTeacherId(session));
+        model.addAttribute("classList", homeworkService.getMajorClassList(session));
+        return "homework/scoreCount";
     }
 
     @RequestMapping(path = {"/student/submitHomework/{homeworkId}"}, method = RequestMethod.GET)
@@ -246,5 +254,11 @@ public class HomeworkController {
                 || StringUtils.isEmpty(studentHomeworkPage.getPageSize()))
             throw new MessageException("参数为空");
         return homeworkService.getStudentScoreList(httpSession, studentHomeworkPage);
+    }
+
+    @RequestMapping(path = {"/teacher/courseScore/{courseId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONArray getCountScoreByCourseId(@PathVariable Integer courseId){
+        return homeworkService.getCountScoreByCourseId(courseId);
     }
 }

@@ -83,6 +83,26 @@ public class TimeTaskService {
         }
     }
 
+    //当作业截止,没有提交作业的同学系统将自动提交并批改为0分，10分钟扫描一次(固定为10分整，如11:10)
+    @Scheduled(cron = "0 0/10 * * * ? ")
+    public void saveHomeworkScore() throws ParseException {
+        //获取未提交的作业成绩列表
+        List<HomeworkScore> homeworkScoreList = homeworkScoreMapper.getUnSubmitHomeworkScoreList();
+        if (homeworkScoreList != null && homeworkScoreList.size() > 0) {
+            Date now = DateUtil.getNow();
+            for (HomeworkScore homeworkScore : homeworkScoreList) {
+                //在这儿的SubmitTime实际上是对应作业的deadline，如果截止日期已经过了，那么把这些没交的同学成绩自动记为0
+                if (now.getTime() == homeworkScore.getSubmitTime().getTime() ||
+                        now.getTime() > homeworkScore.getSubmitTime().getTime()) {
+                    homeworkScore.setScore(0);
+                    homeworkScore.setEvaluate("测试");
+                    homeworkScoreMapper.insert(homeworkScore);
+                }
+            }
+        }
+
+    }
+
     //批改作业
     private void correctHomework(List<HomeworkScore> homeworkScoreList, String[] ids) {
         homeworkScoreList.forEach(homeworkScore -> {
