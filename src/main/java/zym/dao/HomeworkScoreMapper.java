@@ -35,4 +35,8 @@ public interface HomeworkScoreMapper {
     int avgCount(Count count);
 
     int avgCountBetween(Count count);
+
+    int countLow(Count count);
+
+    int countBetween(Count count);
 }

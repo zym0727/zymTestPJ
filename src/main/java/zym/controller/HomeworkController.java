@@ -261,4 +261,14 @@ public class HomeworkController {
     public JSONArray getCountScoreByCourseId(@PathVariable Integer courseId){
         return homeworkService.getCountScoreByCourseId(courseId);
     }
+
+    @RequestMapping(path = {"/teacher/score"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONArray getCountScoreByCourseId(Count count){
+        if (StringUtils.isEmpty(count) || (StringUtils.isEmpty(count.getCourseId())
+                && StringUtils.isEmpty(count.getClassId()) && StringUtils.isEmpty(count.getClassId()))
+                || (StringUtils.isEmpty(count.getCourseId()) && StringUtils.isEmpty(count.getClassId())))
+            throw new MessageException("参数为空");
+        return homeworkService.getCountScore(count);
+    }
 }

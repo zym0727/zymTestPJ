@@ -419,4 +419,16 @@ public class HomeworkService {
         }
         return jsonArray;
     }
+
+    public JSONArray getCountScore(Count count) {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(homeworkScoreMapper.countLow(count));
+        int j = 7, i;
+        for (i = 6; i < 10; ) {
+            count.setLow((i++) * 10);
+            count.setHigh((j++) * 10);
+            jsonArray.add(homeworkScoreMapper.countBetween(count));
+        }
+        return jsonArray;
+    }
 }

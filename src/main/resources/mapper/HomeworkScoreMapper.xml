@@ -278,11 +278,16 @@
     where u.role_id = '3' and hs.submit_time is null
   </select>
 
-  <!--计算课程平均成绩sql-->
+  <!--计算成绩sql-->
   <sql id="count">
     select h.id
     from homework_score hs
     left join homework h on hs.homework_id = h.id
+  </sql>
+
+  <!--计算课程平均成绩sql-->
+  <sql id="avgCountSQL">
+    <include refid="count" />
     <where>
       <if test="courseId != null">
         and h.course_id = #{courseId,jdbcType=INTEGER}
@@ -291,10 +296,29 @@
     group by hs.homework_id
   </sql>
 
+  <!--计算课程中的某作业班级成绩情况sql-->
+  <sql id="countSQL">
+    <include refid="count" />
+    left join users u on hs.student_id = u.id
+  </sql>
+
+  <!--计算课程中的某作业班级成绩情况if-->
+  <sql id="if">
+    <if test="homeworkId != null">
+      and h.id = #{homeworkId,jdbcType=INTEGER}
+    </if>
+    <if test="courseId != null">
+      and h.course_id = #{courseId,jdbcType=INTEGER}
+    </if>
+    <if test="classId != null">
+      and u.class_id = #{classId,jdbcType=INTEGER}
+    </if>
+  </sql>
+
   <!--计算当前课程作业平均成绩小于60的作业数量-->
   <select id="avgCount" parameterType="zym.pojo.param.Count" resultType="int">
     select count(1) from (
-    <include refid="count" />
+    <include refid="avgCountSQL" />
     having avg(hs.score) &lt; 60
     ) as t
   </select>
@@ -302,7 +326,7 @@
   <!--计算当前课程作业平均成绩区间的作业数量-->
   <select id="avgCountBetween" parameterType="zym.pojo.param.Count" resultType="int">
     select count(1) from (
-    <include refid="count" />
+    <include refid="avgCountSQL" />
     having avg(hs.score) &gt;= #{low,jdbcType=INTEGER}
     <if test="high != 100">
       and avg(hs.score) &lt; #{high,jdbcType=INTEGER}
@@ -310,6 +334,34 @@
     <if test="high == 100">
       and avg(hs.score) &lt;= #{high,jdbcType=INTEGER}
     </if>
+    ) as t
+  </select>
+
+  <!--计算课程中的某作业班级成绩小于60的作业数量-->
+  <select id="countLow" parameterType="zym.pojo.param.Count" resultType="int">
+    select count(1) from (
+    <include refid="countSQL" />
+    <where>
+      hs.score &lt; 60
+      <include refid="if" />
+    </where>
+    ) as t
+  </select>
+
+  <!--计算课程中的某作业班级成绩区间的作业数量-->
+  <select id="countBetween" parameterType="zym.pojo.param.Count" resultType="int">
+    select count(1) from (
+    <include refid="countSQL" />
+    <where>
+      hs.score &gt;= #{low,jdbcType=INTEGER}
+      <if test="high != 100">
+        and hs.score &lt; #{high,jdbcType=INTEGER}
+      </if>
+      <if test="high == 100">
+        and hs.score &lt;= #{high,jdbcType=INTEGER}
+      </if>
+      <include refid="if" />
+    </where>
     ) as t
   </select>
 </mapper>

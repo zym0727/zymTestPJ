@@ -12,6 +12,10 @@ public class Count {
 
     private Integer high;
 
+    private Integer homeworkId;
+
+    private Integer classId;
+
     public Integer getCourseId() {
         return courseId;
     }
@@ -34,5 +38,21 @@ public class Count {
 
     public void setHigh(Integer high) {
         this.high = high;
+    }
+
+    public Integer getHomeworkId() {
+        return homeworkId;
+    }
+
+    public void setHomeworkId(Integer homeworkId) {
+        this.homeworkId = homeworkId;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 }

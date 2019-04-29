@@ -7,6 +7,9 @@ $('#selectHomework').val("");
 $('#selectClass').val("");
 
 function getPie(theData) {
+    clearCanvas('#pie-chart');
+    clearCanvas('#bar-chart');
+    addPie();
     var pieChart = $('#pie-chart');
     if (pieChart.length > 0) {
         new Chart(pieChart, {
@@ -35,63 +38,67 @@ function getPie(theData) {
             }
         });
     }
-    // var barChart = $('#bar-chart');
-    //  data: [34, 70, 35, 70, 100],
-    // if (barChart.length > 0) {
-    //     new Chart(barChart, {
-    //         type: 'bar',
-    //         data: {
-    //             labels: ["Red", "Blue", "Cyan", "Green", "Purple", "Orange"],
-    //             datasets: [{
-    //                 label: '# of Votes',
-    //                 data: [12, 19, 3, 5, 2, 3],
-    //                 backgroundColor: [
-    //                     'rgba(244, 88, 70, 0.5)',
-    //                     'rgba(33, 150, 243, 0.5)',
-    //                     'rgba(0, 188, 212, 0.5)',
-    //                     'rgba(42, 185, 127, 0.5)',
-    //                     'rgba(156, 39, 176, 0.5)',
-    //                     'rgba(253, 178, 68, 0.5)'
-    //                 ],
-    //                 borderColor: [
-    //                     '#F45846',
-    //                     '#2196F3',
-    //                     '#00BCD4',
-    //                     '#2ab97f',
-    //                     '#9C27B0',
-    //                     '#fdb244'
-    //                 ],
-    //                 borderWidth: 1
-    //             }]
-    //         },
-    //         options: {
-    //             legend: {
-    //                 display: false
-    //             },
-    //             scales: {
-    //                 yAxes: [{
-    //                     ticks: {
-    //                         beginAtZero: true
-    //                     }
-    //                 }]
-    //             }
-    //         }
-    //     });
-    // }
+}
+
+function getBar(theData) {
+    clearCanvas('#pie-chart');
+    clearCanvas('#bar-chart');
+    addBar();
+    var barChart = $('#bar-chart');
+    if (barChart.length > 0) {
+        new Chart(barChart, {
+            type: 'bar',
+            data: {
+                labels: ["60以下", "60-70", "70-80", "80-90", "90-100"],
+                datasets: [{
+                    label: '# of Votes',
+                    ///data: [12, 19, 5, 2, 3],
+                    data: theData,
+                    backgroundColor: [
+                        'rgba(244, 88, 70, 0.5)',
+                        'rgba(33, 150, 243, 0.5)',
+                        'rgba(42, 185, 127, 0.5)',
+                        'rgba(156, 39, 176, 0.5)',
+                        'rgba(253, 178, 68, 0.5)'
+                    ],
+                    borderColor: [
+                        '#F45846',
+                        '#2196F3',
+                        '#2ab97f',
+                        '#9C27B0',
+                        '#fdb244'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
 }
 
 function addPie() {
     $('.card-body').append('<canvas id="pie-chart" width="98%" height="45"></canvas>');
 }
 
-function clearPieCanvas() {
-    var c = $('#pie-chart');
-    if (c === undefined || c === "") {
-        addPie();
-    } else {
+function addBar() {
+    $('.card-body').append('<canvas id="bar-chart" width="98%" height="45"></canvas>');
+}
+
+function clearCanvas(select) {
+    var c = $(select);
+    if (c !== undefined || c !== "")
         c.remove();
-        addPie();
-    }
 }
 
 $(function () {
@@ -125,17 +132,16 @@ $(function () {
             success: function (data) {
                 var zero = 0;
                 data.forEach(function (t) {
-                    console.log(t);
                     if (t === 0)
                         zero++;
                 });
                 if (zero !== 5) {
-                    clearPieCanvas();
                     $('#countTitle').text("该课程下所有作业平均成绩情况");
                     getPie(data);
                 } else{
                     $('#countTitle').text("当前课程没有布置作业或者没有对应作业成绩哦");
-                    clearPieCanvas();
+                    clearCanvas('#pie-chart');
+                    clearCanvas('#bar-chart');
                 }
 
             },
@@ -146,8 +152,9 @@ $(function () {
     });
 
     $('#selectHomework').change(function () {
+        var selectHomeworkVal = $('#selectHomework').val();
         $.ajax({
-            url: "/homework/teacher/majorClassList/" + $('#selectHomework').val(),
+            url: "/homework/teacher/majorClassList/" + selectHomeworkVal,
             method: "get",
             dataType: "json",
             success: function (data) {
@@ -165,11 +172,70 @@ $(function () {
                 alert("班级加载失败");
             }
         });
+        $.ajax({
+            url: "/homework/teacher/score",
+            method: "get",
+            dataType: "json",
+            data:{
+                courseId: checkParam($('#selectCourse').val()),
+                homeworkId:checkParam(selectHomeworkVal),
+                classId:checkParam($('#selectClass').val())
+            },
+            success: function (data) {
+                var zero = 0;
+                data.forEach(function (t) {
+                    if (t === 0)
+                        zero++;
+                });
+                if (zero !== 5) {
+                    $('#countTitle').text("该课程此作业学生成绩分布情况");
+                    getBar(data);
+                } else{
+                    $('#countTitle').text("当前课程作业没有对应学生作业成绩哦");
+                    clearCanvas('#pie-chart');
+                    clearCanvas('#bar-chart');
+                }
+
+            },
+            error: function () {
+                alert("该课程此作业学生成绩分布加载失败");
+            }
+        });
     });
 
     $('#selectClass').change(function () {
-        if ($('#selectHomework').val() === "") {
+        var selectHomeworkVal = $('#selectHomework').val();
+        if (selectHomeworkVal === "") {
             alert("请选好对应的作业再选对应的班级");
         }
+        $.ajax({
+            url: "/homework/teacher/score",
+            method: "get",
+            dataType: "json",
+            data:{
+                courseId: checkParam($('#selectCourse').val()),
+                homeworkId:checkParam(selectHomeworkVal),
+                classId:checkParam($('#selectClass').val())
+            },
+            success: function (data) {
+                var zero = 0;
+                data.forEach(function (t) {
+                    if (t === 0)
+                        zero++;
+                });
+                if (zero !== 5) {
+                    $('#countTitle').text("该课程此作业下当前班级的学生成绩分布情况");
+                    getBar(data);
+                } else{
+                    $('#countTitle').text("当前课程作业没有当前班级的学生作业成绩哦");
+                    clearCanvas('#pie-chart');
+                    clearCanvas('#bar-chart');
+                }
+
+            },
+            error: function () {
+                alert("该课程此作业下当前班级的学生成绩分布加载失败");
+            }
+        });
     });
 });
