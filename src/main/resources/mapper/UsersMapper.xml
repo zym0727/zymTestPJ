@@ -27,22 +27,19 @@
     delete from users
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="zym.pojo.Users">
-    insert into users (id, role_id, account, 
+  <insert id="insert" parameterType="zym.pojo.Users" useGeneratedKeys="true" keyProperty="id">
+    insert into users (role_id, account,
       password, user_name, user_number, 
       class_id, sex, telephone, 
       enabled)
-    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, 
+    values (#{roleId,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userNumber,jdbcType=VARCHAR}, 
       #{classId,jdbcType=INTEGER}, #{sex,jdbcType=INTEGER}, #{telephone,jdbcType=VARCHAR}, 
       #{enabled,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="zym.pojo.Users">
+  <insert id="insertSelective" parameterType="zym.pojo.Users" useGeneratedKeys="true" keyProperty="id">
     insert into users
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="roleId != null">
         role_id,
       </if>
@@ -72,9 +69,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="roleId != null">
         #{roleId,jdbcType=INTEGER},
       </if>
@@ -110,10 +104,10 @@
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="account != null">
+      <if test="account != null and account!=''">
         account = #{account,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
+      <if test="password != null and password!=''">
         password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="userName != null">
@@ -186,5 +180,19 @@
         and enabled = #{enabled,jdbcType=INTEGER}
       </if>
     </where>
+  </select>
+
+  <!--用户个人信息-->
+  <resultMap id="info" type="zym.pojo.param.UserInfo" extends="BaseResultMap">
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+  </resultMap>
+
+  <!--查询用户个人信息-->
+  <select id="getUserInfoByPrimaryKey" parameterType="java.lang.Integer" resultMap="info">
+    select
+    u.id, u.account, u.password, u.user_name, u.user_number, u.sex, u.telephone, mj.class_name
+    from users u
+    left join major_class mj on u.class_id = mj.id
+    where u.id = #{id,jdbcType=INTEGER}
   </select>
 </mapper>

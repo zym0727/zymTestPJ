@@ -23,7 +23,7 @@
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">账号</span>
                             <input type="text" id="username" name="username" class="form-control"
-                                   placeholder="长度至少3并小于20，并且是字母或者数字"
+                                   placeholder="长度至少3并小于20，并是字母、数字或汉字"
                                    aria-describedby="basic-addon1" minlength="3"  maxlength="20"
                                    required oninput="showAccountInputSuggestion();">
                         </div>
@@ -38,7 +38,7 @@
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon2">密码</span>
                             <input type="password" id="password" name="password" class="form-control"
-                                   placeholder="长度至少6并小于20，并且是字母或者数字"
+                                   placeholder="长度至少6并小于20，并是字母、数字或汉字"
                                    aria-describedby="basic-addon1" minlength="6" maxlength="20"
                                    required oninput="showPasswordInputSuggestion();">
                         </div>

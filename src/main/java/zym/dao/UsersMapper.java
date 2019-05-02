@@ -1,6 +1,7 @@
 package zym.dao;
 
 import zym.pojo.Users;
+import zym.pojo.param.UserInfo;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface UsersMapper {
     int updateByPrimaryKey(Users record);
 
     List<Users> selectByUsers(Users users);
+
+    UserInfo getUserInfoByPrimaryKey(Integer id);
 }

@@ -116,6 +116,12 @@ public class HomeworkController {
         }
     }
 
+    @RequestMapping(path = {"/message"}, method = RequestMethod.GET)
+    public String getHomeworkMessagePage(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        return "homework/message";
+    }
+
     @RequestMapping(path = {"/teacher/questionList/{itemBankId}"}, method = RequestMethod.GET)
     @ResponseBody
     public List<QuestionDetail> getQuestionDetailList(@PathVariable Integer itemBankId) {
@@ -258,17 +264,33 @@ public class HomeworkController {
 
     @RequestMapping(path = {"/teacher/courseScore/{courseId}"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getCountScoreByCourseId(@PathVariable Integer courseId){
+    public JSONArray getCountScoreByCourseId(@PathVariable Integer courseId) {
         return homeworkService.getCountScoreByCourseId(courseId);
     }
 
     @RequestMapping(path = {"/teacher/score"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getCountScoreByCourseId(Count count){
+    public JSONArray getCountScoreByCourseId(Count count) {
         if (StringUtils.isEmpty(count) || (StringUtils.isEmpty(count.getCourseId())
                 && StringUtils.isEmpty(count.getClassId()) && StringUtils.isEmpty(count.getClassId()))
                 || (StringUtils.isEmpty(count.getCourseId()) && StringUtils.isEmpty(count.getClassId())))
             throw new MessageException("参数为空");
         return homeworkService.getCountScore(count);
+    }
+
+    @RequestMapping(path = {"/student/MessageTable"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getStudentMessageList(HttpSession httpSession, MessagePage messagePage) {
+        if (StringUtils.isEmpty(messagePage) || (StringUtils.isEmpty(messagePage.getIsNew())))
+            throw new MessageException("参数为空");
+        return homeworkService.getStudentMessageReplyList(httpSession, messagePage);
+    }
+
+    @RequestMapping(path = {"/student/MessageReply/number"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getStudentMessageNumber(HttpSession httpSession, MessagePage messagePage) {
+        if (StringUtils.isEmpty(messagePage))
+            throw new MessageException("参数为空");
+        return homeworkService.getStudentMessageReplyNumber(httpSession, messagePage);
     }
 }

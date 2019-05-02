@@ -61,7 +61,7 @@
                 enableUpdateByExample="false" enableDeleteByExample="false"-->
                <!--enableSelectByExample="false" selectByExampleQueryId="false"/>-->
 
-        <table tableName="language_mark"   domainObjectName="LanguageMark" enableCountByExample="false"
+        <table tableName="message_interaction"   domainObjectName="MessageInteraction" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" />
 

@@ -95,7 +95,7 @@ public class TimeTaskService {
                 if (now.getTime() == homeworkScore.getSubmitTime().getTime() ||
                         now.getTime() > homeworkScore.getSubmitTime().getTime()) {
                     homeworkScore.setScore(0);
-                    homeworkScore.setEvaluate("测试");
+                    homeworkScore.setEvaluate("作业没有在截止时间前提交，系统默认成绩为0");
                     homeworkScoreMapper.insert(homeworkScore);
                 }
             }

@@ -114,13 +114,15 @@
 
             <security:authorize access="hasAnyRole('ROLE_TEACHER','ROLE_STUDENT')">
                 <li class="nav-item">
-                    <a href="tables.html" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/homework/message" class="nav-link"
+                       id=homeworkMessage">
                         <i class="icon icon-star"></i> 作业留言
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="tables.html" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/user/information" class="nav-link"
+                       id="userInformation">
                         <i class="icon icon-user"></i> 个人信息
                     </a>
                 </li>

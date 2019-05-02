@@ -61,8 +61,6 @@
                     请选择对应的课程、作业、班级来查看成绩情况
                 </div>
                 <div class="card-body">
-                    <%--<canvas id="pie-chart" width="98" height="45"></canvas>--%>
-                    <%--<canvas id="bar-chart" width="98%" height="45"></canvas>--%>
                 </div>
             </div>
         </div>

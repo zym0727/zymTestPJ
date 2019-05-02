@@ -8,7 +8,7 @@ $('#selectClass').val("");
 
 function getPie(theData) {
     clearCanvas('#pie-chart');
-    clearCanvas('#bar-chart');
+    clearCanvas('#line-chart');
     addPie();
     var pieChart = $('#pie-chart');
     if (pieChart.length > 0) {
@@ -40,34 +40,21 @@ function getPie(theData) {
     }
 }
 
-function getBar(theData) {
+function getLine(theData) {
     clearCanvas('#pie-chart');
-    clearCanvas('#bar-chart');
-    addBar();
-    var barChart = $('#bar-chart');
-    if (barChart.length > 0) {
-        new Chart(barChart, {
-            type: 'bar',
+    clearCanvas('#line-chart');
+    addLine();
+    var lineChart = $('#line-chart');
+    if (lineChart.length > 0) {
+        new Chart(lineChart, {
+            type: 'line',
             data: {
-                labels: ["60以下", "60-70", "70-80", "80-90", "90-100"],
+                labels: ["60以下", "60-65", "65-70", "70-75", "75-80", "80-85", "85-90", "90-95", "95-100"],
                 datasets: [{
-                    label: '# of Votes',
-                    ///data: [12, 19, 5, 2, 3],
+                    label: 'Users',
                     data: theData,
-                    backgroundColor: [
-                        'rgba(244, 88, 70, 0.5)',
-                        'rgba(33, 150, 243, 0.5)',
-                        'rgba(42, 185, 127, 0.5)',
-                        'rgba(156, 39, 176, 0.5)',
-                        'rgba(253, 178, 68, 0.5)'
-                    ],
-                    borderColor: [
-                        '#F45846',
-                        '#2196F3',
-                        '#2ab97f',
-                        '#9C27B0',
-                        '#fdb244'
-                    ],
+                    backgroundColor: 'rgba(66, 165, 245, 0.5)',
+                    borderColor: '#2196F3',
                     borderWidth: 1
                 }]
             },
@@ -91,8 +78,8 @@ function addPie() {
     $('.card-body').append('<canvas id="pie-chart" width="98%" height="45"></canvas>');
 }
 
-function addBar() {
-    $('.card-body').append('<canvas id="bar-chart" width="98%" height="45"></canvas>');
+function addLine() {
+    $('.card-body').append('<canvas id="line-chart" width="98%" height="45"></canvas>');
 }
 
 function clearCanvas(select) {
@@ -141,7 +128,7 @@ $(function () {
                 } else{
                     $('#countTitle').text("当前课程没有布置作业或者没有对应作业成绩哦");
                     clearCanvas('#pie-chart');
-                    clearCanvas('#bar-chart');
+                    clearCanvas('#line-chart');
                 }
 
             },
@@ -187,13 +174,13 @@ $(function () {
                     if (t === 0)
                         zero++;
                 });
-                if (zero !== 5) {
+                if (zero !== 9) {
                     $('#countTitle').text("该课程此作业学生成绩分布情况");
-                    getBar(data);
+                    getLine(data);
                 } else{
                     $('#countTitle').text("当前课程作业没有对应学生作业成绩哦");
                     clearCanvas('#pie-chart');
-                    clearCanvas('#bar-chart');
+                    clearCanvas('#line-chart');
                 }
 
             },
@@ -223,13 +210,13 @@ $(function () {
                     if (t === 0)
                         zero++;
                 });
-                if (zero !== 5) {
+                if (zero !== 9) {
                     $('#countTitle').text("该课程此作业下当前班级的学生成绩分布情况");
-                    getBar(data);
+                    getLine(data);
                 } else{
                     $('#countTitle').text("当前课程作业没有当前班级的学生作业成绩哦");
                     clearCanvas('#pie-chart');
-                    clearCanvas('#bar-chart');
+                    clearCanvas('#line-chart');
                 }
 
             },

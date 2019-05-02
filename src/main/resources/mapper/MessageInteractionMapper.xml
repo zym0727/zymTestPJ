@@ -4,12 +4,15 @@
   <resultMap id="BaseResultMap" type="zym.pojo.MessageInteraction">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="homework_id" jdbcType="INTEGER" property="homeworkId" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="message_time" jdbcType="TIMESTAMP" property="messageTime" />
+    <result column="is_reply" jdbcType="INTEGER" property="isReply" />
+    <result column="is_see" jdbcType="INTEGER" property="isSee" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, homework_id, user_id, message, message_time
+    id, homework_id, student_id, user_id, message, message_time, is_reply, is_see
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -21,20 +24,23 @@
     delete from message_interaction
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="zym.pojo.MessageInteraction">
-    insert into message_interaction (id, homework_id, user_id, 
-      message, message_time)
-    values (#{id,jdbcType=INTEGER}, #{homeworkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{message,jdbcType=VARCHAR}, #{messageTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="zym.pojo.MessageInteraction" useGeneratedKeys="true" keyProperty="id">
+    insert into message_interaction (homework_id, student_id,
+      user_id, message, message_time, 
+      is_reply, is_see)
+    values (#{homeworkId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, #{messageTime,jdbcType=TIMESTAMP}, 
+      #{isReply,jdbcType=INTEGER}, #{isSee,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="zym.pojo.MessageInteraction">
+  <insert id="insertSelective" parameterType="zym.pojo.MessageInteraction"
+          useGeneratedKeys="true" keyProperty="id">
     insert into message_interaction
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="homeworkId != null">
         homework_id,
+      </if>
+      <if test="studentId != null">
+        student_id,
       </if>
       <if test="userId != null">
         user_id,
@@ -45,13 +51,19 @@
       <if test="messageTime != null">
         message_time,
       </if>
+      <if test="isReply != null">
+        is_reply,
+      </if>
+      <if test="isSee != null">
+        is_see,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="homeworkId != null">
         #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
@@ -62,6 +74,12 @@
       <if test="messageTime != null">
         #{messageTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isReply != null">
+        #{isReply,jdbcType=INTEGER},
+      </if>
+      <if test="isSee != null">
+        #{isSee,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="zym.pojo.MessageInteraction">
@@ -69,6 +87,9 @@
     <set>
       <if test="homeworkId != null">
         homework_id = #{homeworkId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
@@ -79,15 +100,76 @@
       <if test="messageTime != null">
         message_time = #{messageTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isReply != null">
+        is_reply = #{isReply,jdbcType=INTEGER},
+      </if>
+      <if test="isSee != null">
+        is_see = #{isSee,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="zym.pojo.MessageInteraction">
     update message_interaction
     set homework_id = #{homeworkId,jdbcType=INTEGER},
+      student_id = #{studentId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       message = #{message,jdbcType=VARCHAR},
-      message_time = #{messageTime,jdbcType=TIMESTAMP}
+      message_time = #{messageTime,jdbcType=TIMESTAMP},
+      is_reply = #{isReply,jdbcType=INTEGER},
+      is_see = #{isSee,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--详细留言回复信息-->
+  <resultMap id="messageDetail" type="zym.pojo.param.MessageReply" extends="BaseResultMap">
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="student_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+
+  <!--学生查询留言回复信息sql-->
+  <sql id="studentSee">
+    h.title, u1.user_name as student_name, u2.user_name, m.id, m.message, m.message_time
+  </sql>
+
+  <!--学生查询留言回复信息sql-->
+  <sql id="messageQuery">
+    select
+    <include refid="studentSee" />
+    from message_interaction m
+    left join homework h on m.homework_id = h.id
+    left join users u1 on u1.id = m.student_id
+    left join users u2 on u2.id = m.user_id
+    <where>
+      <if test="studentId != null">
+        and m.student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="courseId != null">
+        and h.course_id = #{courseId,jdbcType=INTEGER}
+      </if>
+      <if test="isSee != null">
+        and m.is_see = #{isSee,jdbcType=INTEGER}
+      </if>
+      <if test="isReply != null">
+        and m.is_reply = #{isReply,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by m.message_time desc
+  </sql>
+
+  <!-- 学生留言回复分页查询 -->
+  <select id="getStudentMessageReplyList" parameterType="zym.pojo.param.MessagePage" resultMap="messageDetail">
+    <include refid="messageQuery"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!--学生留言回复数量 -->
+  <select id="countStudentMessageReply" parameterType="zym.pojo.param.MessagePage" resultType="int">
+    select count(1) from (
+      <include refid="messageQuery"/>
+    ) as t
+  </select>
 </mapper>

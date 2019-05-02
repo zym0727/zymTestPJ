@@ -37,6 +37,9 @@ public class HomeworkService {
     @Autowired
     private CourseMapper courseMapper;
 
+    @Autowired
+    private MessageInteractionMapper messageInteractionMapper;
+
     public String saveOrUpdateAssignHomework(Homework homework, Boolean isSave) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date assignTime = homework.getAssignTime();
@@ -383,12 +386,12 @@ public class HomeworkService {
             return null;
     }
 
-    public HomeworkScore getHomeworkScore(Integer homeworkScoreId){
+    public HomeworkScore getHomeworkScore(Integer homeworkScoreId) {
         return homeworkScoreMapper.selectByPrimaryKey(homeworkScoreId);
     }
 
     public JSONObject getStudentScoreList(HttpSession httpSession,
-                                          StudentHomeworkPage studentHomeworkPage){
+                                          StudentHomeworkPage studentHomeworkPage) {
         JSONObject result = new JSONObject();
         studentHomeworkPage.setOffset(
                 (studentHomeworkPage.getPageNumber() - 1) * studentHomeworkPage.getPageSize());
@@ -423,12 +426,64 @@ public class HomeworkService {
     public JSONArray getCountScore(Count count) {
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(homeworkScoreMapper.countLow(count));
-        int j = 7, i;
-        for (i = 6; i < 10; ) {
-            count.setLow((i++) * 10);
-            count.setHigh((j++) * 10);
+        int j = 13, i;
+        for (i = 12; i < 20; ) {
+            count.setLow((i++) * 5);
+            count.setHigh((j++) * 5);
             jsonArray.add(homeworkScoreMapper.countBetween(count));
         }
         return jsonArray;
+    }
+
+    public JSONObject getStudentMessageReplyList(HttpSession httpSession, MessagePage messagePage) {
+        JSONObject result = new JSONObject();
+        messagePage.setOffset((messagePage.getPageNumber() - 1) * messagePage.getPageSize());
+        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        if (messagePage == null) {
+            result.put("total", 0);
+            result.put("rows", new ArrayList<>());
+            return result;
+        }
+        result.put("total", messageInteractionMapper.countStudentMessageReply(messagePage));
+        result.put("rows", messageInteractionMapper.getStudentMessageReplyList(messagePage));
+        return result;
+    }
+
+    public JSONObject getStudentMessageReplyNumber(HttpSession httpSession, MessagePage messagePage) {
+        JSONObject result = new JSONObject();
+        messagePage.setIsNew(1);
+        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        if (messagePage == null) {
+            result.put("paramOne", 0);
+            result.put("paramTwo", 0);
+            return result;
+        }
+        result.put("paramOne", messageInteractionMapper.countStudentMessageReply(messagePage));
+        messagePage.setIsNew(0);
+        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        if (messagePage == null) {
+            result.put("paramOne", 0);
+            result.put("paramTwo", 0);
+            return result;
+        }
+        result.put("paramTwo", messageInteractionMapper.countStudentMessageReply(messagePage));
+        return result;
+    }
+
+    private MessagePage makeStudentMessagePage(HttpSession httpSession, MessagePage messagePage) {
+        Object user = httpSession.getAttribute("user");
+        int isNew = messagePage.getIsNew();
+        if (user == null || (isNew != 1 && isNew != 0)) {
+            return null;
+        }
+        Users student = (Users) user;
+        messagePage.setStudentId(student.getId());
+        if (isNew == 1) {//查询未查看的留言回复信息
+            messagePage.setIsSee(0);//未查看过
+            messagePage.setIsReply(1);//是回复
+        } else {//以前自己发过的留言
+            messagePage.setIsReply(0);//是留言
+        }
+        return messagePage;
     }
 }

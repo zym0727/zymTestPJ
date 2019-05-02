@@ -230,3 +230,23 @@
 .card-header {
     text-align: center;
 }
+
+#updateInfo{
+    margin-top: 15px;
+    margin-left: 455px;
+}
+
+#mesTitle{
+    margin-top: 20px;
+    margin-left: 149px;
+}
+
+.dollar1 {
+    background: #ffb22b;
+    color: #fff;
+}
+
+.dollar2 {
+    background: #00ad45;
+    color: #fff;
+}

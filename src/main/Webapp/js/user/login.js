@@ -1,12 +1,12 @@
 ﻿function isAccountValid() {
-    return !(isNullOrEmpty("username") || !checkInputPattern("^[a-zA-Z0-9]{3,20}$", "username"));
+    return !(isNullOrEmpty("username") || !checkInputPattern("^[\u4e00-\u9fa5a-zA-Z0-9]{3,20}$", "username"));
 
 }
 
 function showAccountInputSuggestion() {
     var usernameError = document.getElementById("usernameError");
     if (isNullOrEmpty("username") === true) usernameError.innerHTML = "账号为空";
-    else if (checkInputPattern("^[a-zA-Z0-9]{3,20}$", "username") === false) usernameError.innerHTML = "账号格式有误";
+    else if (checkInputPattern("^[\u4e00-\u9fa5a-zA-Z0-9]{3,20}$", "username") === false) usernameError.innerHTML = "账号格式有误";
     else usernameError.innerHTML = "";
 }
 
