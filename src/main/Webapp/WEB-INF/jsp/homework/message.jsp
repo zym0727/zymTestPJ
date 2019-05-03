@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,18 +49,264 @@
                         data-width="98%" data-first-option="false"  title="请选择" data-live-search="true">
                     <c:forEach items="${courseList}" var="course">
                         <option value="${course.id}">
-                                ${course.courseName}   (上课时间：${course.classTime}  上课班级:${course.classIds})
+                                ${course.courseName}
+                                    (上课时间：${course.classTime}  上课班级:${course.classIds})
                         </option>
                     </c:forEach>
                 </select>
             </div>
 
             <div id="toolbar">
-                <button class="btn btn-primary" type="button" onclick="addItemBank();">进行新的留言</button>
+                <button id="messageButton" class="btn btn-primary" type="button">进行新的留言</button>
             </div>
 
             <div>
                 <table id="messageTable" class="table table-striped"></table>
+            </div>
+
+            <!-- 添加模态框（Modal） -->
+            <div class="modal fade" id="saveModal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true" style="margin-left: 60px">
+                <div class="modal-dialog" style="max-height:600px; max-width: 1000px; margin: 0">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="margin-left: 370px">
+                                进行作业留言</h4>
+                        </div>
+                        <div class="modal-body">
+                                <div class="leftModal form-inline">
+                                    <label id="courseChooseModal" class="control-label">课程:</label>
+                                    <select name="select" id="selectCourseModal" class="selectpicker show-tick
+                                     form-control col-sm-10" data-width="98%" data-first-option="false"
+                                            title="请选择" data-live-search="true">
+                                        <c:forEach items="${courseList}" var="course">
+                                            <option value="${course.id}">
+                                                    ${course.courseName}
+                                                (上课时间：${course.classTime}  上课班级:${course.classIds})
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="leftModal form-inline">
+                                    <label class="control-label">作业:</label>
+                                    <select name="select" id="selectHomework" class="selectpicker show-tick
+                                     form-control col-sm-10" data-width="98%" data-first-option="false"
+                                            title="请选择" data-live-search="true">
+                                        <c:forEach items="${homeworkMessageList}" var="homeworkMessage">
+                                            <option value="${homeworkMessage.id}">
+                                                    ${homeworkMessage.title}
+                                                (课程：${homeworkMessage.courseName},
+                                                发布时间: <fmt:formatDate value="${homeworkMessage.assignTime}"
+                                                                      pattern="yyyy-MM-dd HH:mm" />
+                                                截止时间：<fmt:formatDate value="${homeworkMessage.deadline}"
+                                                                     pattern="yyyy-MM-dd HH:mm" />)
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="leftModal">
+                                    <div>
+                                        <label for="leaveMessage">留言</label>
+                                    </div>
+                                    <textarea id="leaveMessage" rows="15" cols="83"></textarea>
+                                </div>
+                        </div>
+                        <div class="modal-footer" style="padding-right: 350px">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    style="margin-right: 40px">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary" id="saveConfirmBtn">
+                                留言
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+
+            <div  class="modal fade" id="messageModal" tabindex="-1" role="dialog"
+                  aria-labelledby="myModalLabel" aria-hidden="true" style="margin-left: 210px;
+                                                                            margin-top: 40px">
+                <div class="modal-dialog" style="max-height:300px; max-width: 600px;">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div class="activity_box activity_box1">
+                                <h3>message</h3>
+                                <div class="scrollSet" style="max-height:500px; max-width: 600px;">
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:01 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Hello ! this is Michael chris</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Hi,How are you ? What about our next meeting?</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:02 AM</span></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:05 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Yeah fine, Hope you the same</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Wow that's great</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:20 PM</span></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:01 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Hello ! this is Michael chris</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Hi,How are you ? What about our next meeting?</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:02 AM</span></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:05 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Yeah fine, Hope you the same</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Wow that's great</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:20 PM</span></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:01 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Hello ! this is Michael chris</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Hi,How are you ? What about our next meeting?</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:02 AM</span></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline clear">
+                                        <div class="col-xs-3 activity-img imgRight">
+                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:05 AM</span></div>
+                                        <div class="col-xs-5 activity-img1">
+                                            <div class="activity-desc-sub">
+                                                <h5>Michael Chris</h5>
+                                                <p>Yeah fine, Hope you the same</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 activity-desc1"></div>
+                                    </div>
+                                    <div class="activity-row activity-row1 form-inline  answer">
+                                        <div class="col-xs-2 activity-desc1"></div>
+                                        <div class="col-xs-7 activity-img2">
+                                            <div class="activity-desc-sub1">
+                                                <h5>Alexander</h5>
+                                                <p>Wow that's great</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 activity-img imgLeft">
+                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
+                                                 class="img-responsive" alt=""/>
+                                            <span>06:20 PM</span></div>
+                                    </div>
+                                </div>
+                                <form action="#" method="post">
+                                    <input type="text" value="Enter your text"
+                                           onfocus="this.value = '';" onblur="if (this.value === '')
+                                           {this.value = 'Enter your text';}" required="">
+                                    <input type="submit" value="Send"/>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="padding-right: 270px ">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">退出</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

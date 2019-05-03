@@ -1,7 +1,9 @@
-﻿$("#homeworkMessage").attr("class","nav-link active");
+﻿$("#homeworkMessage").attr("class", "nav-link active");
 
 //这儿提前设置select的值，不然有个bug多次请求会显示该select的值不同，会出现""和1两者情况，文档加载则是null和""？？？
 $("#selectCourse").val("");
+
+var theNum = 1;
 
 $(function () {
     getHomeworkNumber();
@@ -14,6 +16,7 @@ $(function () {
     });
 
     $("#haveMessage").click(function () {
+        theNum = 2;
         $('#messageTable').bootstrapTable("destroy");
         initTheTable(0)
     });
@@ -21,14 +24,85 @@ $(function () {
     $("#selectCourse").change(function () {
         getHomeworkNumber();
         $('#messageTable').bootstrapTable("refresh");
-    })
+    });
+
+    $("#messageButton").click(function () {
+        $("#saveModal").modal("show");
+    });
+
+    $("#selectCourseModal").change(function () {
+        $.ajax({
+            url: "/homework/student/message/homework",
+            method: "get",
+            dataType: "json",
+            data: {
+                courseId: checkParam($("#selectCourseModal").val())
+            },
+            success: function (data) {
+                if (data !== null) {
+                    var selectHomework = $("#selectHomework");
+                    selectHomework.find("option").remove();
+                    $.each(data, function (i, item) {
+                        var tempId = '<option  value="' + item.id + '">' + item.title + '(课程：'
+                            + item.courseName + ',发布时间:' + item.assignTime + '截止时间：'
+                            + item.deadline + ')' + '</option>';
+                        selectHomework.append(tempId);
+                    });
+                    selectHomework.selectpicker('refresh');
+                }
+            },
+            error: function () {
+                alert("作业加载失败");
+            }
+        });
+    });
+
+    $("#saveConfirmBtn").click(function () {
+        var homeworkId = $("#selectHomework").val();
+        var message = $("#leaveMessage").val();
+        if (homeworkId === "") {
+            alert("作业没有选择！");
+            return;
+        }
+        if (message === "") {
+            alert("留言信息为空！");
+            return;
+        }
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token = $("meta[name='_csrf']").attr("content");
+        $.ajax({
+            url: "/homework/student/message/save",
+            method: "post",
+            data: {
+                homeworkId: homeworkId,
+                message: message
+            },
+            dataType: "json",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                if (data === "success") {
+                    getHomeworkNumber();
+                    $('#messageTable').bootstrapTable("refresh");
+                    alert("留言成功！");
+                }
+                else
+                    alert("留言失败！");
+            },
+            error: function () {
+                alert("留言失败！");
+            }
+        });
+        $("#saveModal").modal("hide");
+    });
 });
 
 
 var initTheTable = function (status) {
     var myTable = $('#messageTable');
     myTable.bootstrapTable({
-        url: '/homework/student/MessageTable',         //请求后台的URL（*）
+        url: '/homework/student/messageTable',         //请求后台的URL（*）
         method: 'get',                      //请求方式（*）
         toolbar: '#toolbar',                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
@@ -96,12 +170,12 @@ var initTheTable = function (status) {
             align: 'center',
             width: 150
         }, {
-            field:'operations',
-            title:'操作',
+            field: 'operations',
+            title: '操作',
             align: 'center',
             width: 100,
-            events:operateEvents,//给按钮注册事件
-            formatter:addFunction//表格中增加按钮
+            events: operateEvents,//给按钮注册事件
+            formatter: addFunction//表格中增加按钮
         }]
     });
 };
@@ -115,13 +189,13 @@ function addFunction() {
 
 window.operateEvents = {
     'click #btn_query': function (e, value, row, index) {
-
+        $("#messageModal").modal("show");
     }
 };
 
 function getHomeworkNumber() {
     $.ajax({
-        url: "/homework/student/MessageReply/number",
+        url: "/homework/student/messageReply/number",
         method: "get",
         dataType: "json",
         data: {courseId: checkParam($("#selectCourse").val())},

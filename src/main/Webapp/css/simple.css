@@ -250,3 +250,131 @@
     background: #00ad45;
     color: #fff;
 }
+
+.leftModal{
+    margin-left: 130px;
+    margin-bottom: 20px;
+}
+
+.activity_box {
+    background: #fff;
+    min-height: 485px;
+}
+
+.activity_box1 h3 {
+    background: #0091cd;
+    padding: 1em;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1em;
+    text-align: center;
+}
+
+.span_8 {
+    text-align: center;
+    padding: 0;
+    width: 32.33%;
+    margin-right: 1.5%;
+    -webkit-box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
+    box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
+}
+
+.activity-row1 {
+    border-bottom: none !important;
+}
+
+.activity-row, .activity-row1 {
+    text-align: left;
+}
+
+.activity-row {
+    margin-bottom: 1em;
+    padding-bottom: 1.02em;
+}
+
+.activity-img img {
+    display: inline-block;
+    -webkit-border-radius: 50%;
+    width:48px;
+    height:39px;
+}
+
+.activity-img span {
+    display: block;
+    font-size: 12px;
+    margin: .5em 0 0;
+    color: #999;
+}
+
+.activity-img1 {
+    padding: 0 !important;
+    width: 50%;
+}
+
+.activity-desc-sub, .activity-desc-sub1 {
+    padding: .7em;
+    background: #eee;
+    position: relative;
+}
+
+.activity-desc-sub h5, .activity-desc-sub1 h5 {
+    font-size: 14px;
+    color: #000;
+    margin: 0 0 .5em;
+}
+
+.activity-desc-sub p, .activity-desc-sub1 p {
+    font-size: 13px;
+    color: #999;
+    margin: 0;
+    line-height: 1.8em;
+}
+
+.activity-img2 {
+    padding: 0 !important;
+}
+
+.activity_box input[type="text"] {
+    outline: none;
+    border: 1px solid #888888;
+    padding: 10px;
+    color: #333;
+    font-size: 13px;
+    width: 70%;
+    background: #fff;
+}
+
+.activity_box input[type="submit"] {
+    outline: none;
+    width: 20%;
+    font-size: 1em;
+    color: #fff;
+    background: #629aa9;
+    border: none;
+    padding: 8px 0;
+    margin-left: 1.3em;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+}
+
+.activity_box form {
+    background: #eee;
+    padding: 1em 0;
+}
+
+.answer{
+   float: right;
+}
+.clear{
+    clear: both;
+}
+.imgRight{
+    margin-right: 15px;
+}
+
+.imgLeft{
+    margin-left: 15px;
+}

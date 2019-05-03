@@ -470,6 +470,35 @@ public class HomeworkService {
         return result;
     }
 
+    public List<HomeworkMessage> getHomeworkListByStudentId(HttpSession httpSession,
+                                                            StudentHomeworkPage studentHomeworkPage) {
+        Object user = httpSession.getAttribute("user");
+        if (user == null)
+            return null;
+        Users student = (Users) user;
+        studentHomeworkPage.setId(student.getId());
+        return homeworkMapper.getHomeworkListByStudentId(studentHomeworkPage);
+    }
+
+
+    public String saveMessageInteraction(HttpSession httpSession, MessageInteraction messageInteraction){
+        Object user = httpSession.getAttribute("user");
+        if (user == null)
+            return JSONObject.toJSONString("fail");
+        Users student = (Users) user;
+        messageInteraction.setStudentId(student.getId());
+        messageInteraction.setUserId(student.getId());
+        try {
+            messageInteraction.setMessageTime(DateUtil.getNow());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        messageInteraction.setIsReply(0);
+        messageInteraction.setIsSee(0);
+        messageInteractionMapper.insert(messageInteraction);
+        return JSONObject.toJSONString("success");
+    }
+
     private MessagePage makeStudentMessagePage(HttpSession httpSession, MessagePage messagePage) {
         Object user = httpSession.getAttribute("user");
         int isNew = messagePage.getIsNew();
@@ -483,6 +512,7 @@ public class HomeworkService {
             messagePage.setIsReply(1);//是回复
         } else {//以前自己发过的留言
             messagePage.setIsReply(0);//是留言
+            messagePage.setIsSee(null);
         }
         return messagePage;
     }

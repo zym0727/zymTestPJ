@@ -154,7 +154,6 @@ window.operateEvents = {
                 $("#datetimepicker_start").val(data.assignTime);
                 $("#datetimepicker_end").val(data.deadline);
                 $("#remarkText").val(data.remark);
-                console.log(data.isAutomatic);
                 $("input:radio[name='marking'][value='" + data.isAutomatic + "']").prop("checked", "checked");
                 $.ajax({
                     url: "/itemBank/id/get",

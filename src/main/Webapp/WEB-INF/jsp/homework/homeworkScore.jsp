@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +41,7 @@
                                     发布时间: <fmt:formatDate value="${homeworkMessage.assignTime}"
                                                          pattern="yyyy-MM-dd HH:mm" />
                                     截止时间：<fmt:formatDate value="${homeworkMessage.deadline}"
-                                                         pattern="yyyy-MM-dd HH:mm:ss" />)
+                                                         pattern="yyyy-MM-dd HH:mm" />)
                         </option>
                     </c:forEach>
                 </select>
@@ -87,7 +87,7 @@
                                 <textarea id="commitText"  class="form-control" rows="7" ></textarea>
                             </div>
                         </div>
-                        <div class="modal-footer" style="margin-right: 280px">
+                        <div class="modal-footer" style="padding-right: 315px">
                             <button type="button" class="btn btn-default" data-dismiss="modal"
                                     style="margin-right: 70px">关闭
                             </button>

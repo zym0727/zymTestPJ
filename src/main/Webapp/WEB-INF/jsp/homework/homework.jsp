@@ -120,7 +120,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer" style="margin-right: 320px">
+                        <div class="modal-footer" style="padding-right: 357px">
                             <button type="button" class="btn btn-default" data-dismiss="modal"
                                     style="margin-right: 30px">关闭
                             </button>

@@ -47,4 +47,6 @@ public interface HomeworkMapper {
     int countSubmitHomeworkListTeacher(StudentHomeworkPage studentHomeworkPage);
 
     List<HomeworkMessage> getHomeworkListByTeacherId(Integer teacherId);
+
+    List<HomeworkMessage> getHomeworkListByStudentId(StudentHomeworkPage studentHomeworkPage);
 }

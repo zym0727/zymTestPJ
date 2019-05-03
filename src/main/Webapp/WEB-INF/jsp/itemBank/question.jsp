@@ -84,7 +84,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="myUpdateModalLabel"
-                                style="margin-left: 345px">修改题目信息</h4>
+                                style="margin-left: 360px">修改题目信息</h4>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -112,9 +112,9 @@
                                            id="updateQuestionNumber">
                                 </div>
                                 <div class="form-group">
-                                    <label style="margin-left: 375px">题目描述</label>
-                                    <textarea id="updateQuestionDescription" rows="15" cols="95"
-                                              style="margin-left: 70px"></textarea>
+                                    <label style="margin-left: 385px">题目描述</label>
+                                    <textarea id="updateQuestionDescription" rows="15" cols="85"
+                                              style="margin-left: 120px"></textarea>
                                 </div>
                                 <div class="form-group form-inline">
                                     <label class="questionSet">标准答案</label>
@@ -125,10 +125,10 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal"
-                                    style="margin-right: 30px">关闭
+                                    style="margin-right: 50px">关闭
                             </button>
                             <button type="button" class="btn btn-primary" id="updateConfirmBtn"
-                                    style="margin-right: 290px">提交更改</button>
+                                    style="margin-right: 294px">提交更改</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -143,7 +143,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="myAddModalLabel"
-                                style="margin-left: 345px">添加一个题目</h4>
+                                style="margin-left: 360px">添加一个题目</h4>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -171,9 +171,9 @@
                                            id="saveQuestionNumber">
                                 </div>
                                 <div class="form-group">
-                                    <label style="margin-left: 375px">题目描述</label>
-                                    <textarea id="saveQuestionDescription" rows="15" cols="95"
-                                              style="margin-left: 70px"></textarea>
+                                    <label style="margin-left: 385px">题目描述</label>
+                                    <textarea id="saveQuestionDescription" rows="15" cols="85"
+                                              style="margin-left: 120px"></textarea>
                                 </div>
                                 <div class="form-group form-inline">
                                     <label class="questionSet">标准答案</label>
@@ -184,10 +184,10 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default"
-                                    style="margin-right: 30px" data-dismiss="modal">关闭
+                                    style="margin-right: 50px" data-dismiss="modal">关闭
                             </button>
                             <button type="button" class="btn btn-primary"
-                                    style="margin-right: 290px" id="saveConfirmBtn">添加</button>
+                                    style="margin-right: 309px" id="saveConfirmBtn">添加</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->

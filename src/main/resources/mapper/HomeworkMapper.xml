@@ -133,16 +133,7 @@
   </update>
 
   <!--学生查询作业信息-->
-  <resultMap id="studentResultMap" type="zym.pojo.param.HomeworkMessage">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="course_id" jdbcType="INTEGER" property="courseId" />
-    <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime" />
-    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
-    <result column="question_ids" jdbcType="VARCHAR" property="questionIds" />
-    <result column="is_automatic" jdbcType="INTEGER" property="isAutomatic" />
-    <result column="is_assign" jdbcType="INTEGER" property="isAssign" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  <resultMap id="studentResultMap" type="zym.pojo.param.HomeworkMessage" extends="BaseResultMap">
     <result column="course_name" jdbcType="VARCHAR" property="courseName" />
     <result column="class_time" jdbcType="VARCHAR" property="classTime" />
     <result column="user_name" jdbcType="VARCHAR" property="teacherName" />
@@ -422,5 +413,20 @@
     from homework h left join
     course cr on h.course_id = cr.id
     where cr.teacher_id = #{teacherId,jdbcType=INTEGER}
+  </select>
+
+  <!--学生在留言时查看作业-->
+  <select id="getHomeworkListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
+          resultMap="teacherResultMap">
+    select
+    <include refid="studentHomework" />
+    from homework h
+    left join course c1 on c1.id = h.course_id
+    left join users u on u.id = #{id,jdbcType=INTEGER}
+    where h.is_assign = '1' and h.course_id  in
+    (select co.id from course co where co.class_ids like CONCAT('%',u.class_id,'%'))
+    <if test="courseId != null">
+      and h.course_id = #{courseId,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

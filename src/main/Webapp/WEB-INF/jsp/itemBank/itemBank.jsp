@@ -60,7 +60,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="myUpdateModalLabel" style="text-align: center">修改题库信息</h4>
+                            <h4 class="modal-title" id="myUpdateModalLabel" style="margin-left:180px">修改题库信息</h4>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -74,9 +74,9 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                            </button>
+                        <div class="modal-footer" style="padding-right:155px">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    style="margin-right:20px">关闭</button>
                             <button type="button" class="btn btn-primary" id="updateConfirmBtn">提交更改</button>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="myAddModalLabel" style="text-align: center">添加一个题库</h4>
+                            <h4 class="modal-title" id="myAddModalLabel" style="margin-left:180px">添加一个题库</h4>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -105,9 +105,9 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                            </button>
+                        <div class="modal-footer" style="padding-right:170px">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    style="margin-right:20px">关闭</button>
                             <button type="button" class="btn btn-primary" id="saveConfirmBtn">添加</button>
                         </div>
                     </div>
