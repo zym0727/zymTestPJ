@@ -435,38 +435,56 @@ public class HomeworkService {
         return jsonArray;
     }
 
-    public JSONObject getStudentMessageReplyList(HttpSession httpSession, MessagePage messagePage) {
+    public JSONObject getMessageReplyList(HttpSession httpSession, MessagePage messagePage) {
         JSONObject result = new JSONObject();
         messagePage.setOffset((messagePage.getPageNumber() - 1) * messagePage.getPageSize());
-        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        messagePage = makeMessagePage(httpSession, messagePage);
         if (messagePage == null) {
             result.put("total", 0);
             result.put("rows", new ArrayList<>());
             return result;
         }
-        result.put("total", messageInteractionMapper.countStudentMessageReply(messagePage));
-        result.put("rows", messageInteractionMapper.getStudentMessageReplyList(messagePage));
+        if (messagePage.getRoleId() == 3) {//学生
+            result.put("total", messageInteractionMapper.countStudentMessageReply(messagePage));
+            result.put("rows", messageInteractionMapper.getStudentMessageReplyList(messagePage));
+        } else if (messagePage.getRoleId() == 2) {//老师
+            result.put("total", messageInteractionMapper.countTeacherMessageReply(messagePage));
+            result.put("rows", messageInteractionMapper.getTeacherMessageReplyList(messagePage));
+        } else {
+            result.put("total", 0);
+            result.put("rows", new ArrayList<>());
+        }
         return result;
     }
 
-    public JSONObject getStudentMessageReplyNumber(HttpSession httpSession, MessagePage messagePage) {
+    public JSONObject getMessageReplyNumber(HttpSession httpSession, MessagePage messagePage) {
         JSONObject result = new JSONObject();
         messagePage.setIsNew(1);
-        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        messagePage = makeMessagePage(httpSession, messagePage);
         if (messagePage == null) {
             result.put("paramOne", 0);
             result.put("paramTwo", 0);
             return result;
         }
-        result.put("paramOne", messageInteractionMapper.countStudentMessageReply(messagePage));
+        if (messagePage.getRoleId() == 3)//学生
+            result.put("paramOne", messageInteractionMapper.countStudentMessageReply(messagePage));
+        else if (messagePage.getRoleId() == 2)//老师
+            result.put("paramOne", messageInteractionMapper.countTeacherMessageReply(messagePage));
+        else
+            result.put("paramTwo", 0);
         messagePage.setIsNew(0);
-        messagePage = makeStudentMessagePage(httpSession, messagePage);
+        messagePage = makeMessagePage(httpSession, messagePage);
         if (messagePage == null) {
             result.put("paramOne", 0);
             result.put("paramTwo", 0);
             return result;
         }
-        result.put("paramTwo", messageInteractionMapper.countStudentMessageReply(messagePage));
+        if (messagePage.getRoleId() == 3)//学生
+            result.put("paramTwo", messageInteractionMapper.countStudentMessageReply(messagePage));
+        else if (messagePage.getRoleId() == 2)//老师
+            result.put("paramTwo", messageInteractionMapper.countTeacherMessageReply(messagePage));
+        else
+            result.put("paramTwo", 0);
         return result;
     }
 
@@ -481,7 +499,7 @@ public class HomeworkService {
     }
 
 
-    public String saveMessageInteraction(HttpSession httpSession, MessageInteraction messageInteraction){
+    public String saveMessageInteraction(HttpSession httpSession, MessageInteraction messageInteraction) {
         Object user = httpSession.getAttribute("user");
         if (user == null)
             return JSONObject.toJSONString("fail");
@@ -495,24 +513,80 @@ public class HomeworkService {
         }
         messageInteraction.setIsReply(0);
         messageInteraction.setIsSee(0);
+        MessageInteraction test = new MessageInteraction();
+        test.setStudentId(student.getId());
+        test.setHomeworkId(messageInteraction.getHomeworkId());
+        List<MessageInteraction> list = messageInteractionMapper.getMessageList(test);
+        if (list != null && list.size() > 0)
+            return JSONObject.toJSONString("repeat");
         messageInteractionMapper.insert(messageInteraction);
         return JSONObject.toJSONString("success");
     }
 
-    private MessagePage makeStudentMessagePage(HttpSession httpSession, MessagePage messagePage) {
+    public String saveReply(HttpSession httpSession, MessageInteraction messageInteraction) {
+        Object user = httpSession.getAttribute("user");
+        if (user == null)
+            return JSONObject.toJSONString("fail");
+        Users users = (Users) user;
+        messageInteraction.setUserId(users.getId());
+        try {
+            messageInteraction.setMessageTime(DateUtil.getNow());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        messageInteraction.setIsReply(1);
+        messageInteraction.setIsSee(0);
+        messageInteractionMapper.insert(messageInteraction);
+        return JSONObject.toJSONString("success");
+    }
+
+    public List<MessageReply> getAllMessageList(HttpSession httpSession, MessagePage messagePage) {
+        Object user = httpSession.getAttribute("user");
+        if (user == null) {
+            return null;
+        }
+        Users users = (Users) user;
+        if (users.getRoleId() == 3) { //当前用户是学生
+            return messageInteractionMapper.getAllMessageList(messagePage);
+        } else if (users.getRoleId() == 2) { //用户是老师
+            return messageInteractionMapper.getAllTeacherMessageList(messagePage);
+        }
+        return null;
+    }
+
+    public String updateMessage(MessageInteraction messageInteraction) {
+        messageInteractionMapper.updateByPrimaryKeySelective(messageInteraction);
+        return JSONObject.toJSONString("success");
+    }
+
+
+    private MessagePage makeMessagePage(HttpSession httpSession, MessagePage messagePage) {
         Object user = httpSession.getAttribute("user");
         int isNew = messagePage.getIsNew();
         if (user == null || (isNew != 1 && isNew != 0)) {
             return null;
         }
-        Users student = (Users) user;
-        messagePage.setStudentId(student.getId());
+        Users users = (Users) user;
+        if (users.getRoleId() == 3) { //当前用户是学生
+            messagePage.setStudentId(users.getId());
+            messagePage.setRoleId(3);
+        } else if (users.getRoleId() == 2) { //用户是老师
+            messagePage.setTeacherId(users.getId());
+            messagePage.setRoleId(2);
+        }
         if (isNew == 1) {//查询未查看的留言回复信息
             messagePage.setIsSee(0);//未查看过
-            messagePage.setIsReply(1);//是回复
+            if (users.getRoleId() == 3) { //当前用户是学生
+                messagePage.setIsReply(1);//是回复
+                messagePage.setIsNotStudent(1);//不是学生本身回复
+            } else if (users.getRoleId() == 2) { //用户是老师
+                messagePage.setIsNotTeacher(1);//不是教师本身回复
+            }
         } else {//以前自己发过的留言
             messagePage.setIsReply(0);//是留言
             messagePage.setIsSee(null);
+            messagePage.setIsNotStudent(null);
+            messagePage.setIsNotTeacher(null);
         }
         return messagePage;
     }

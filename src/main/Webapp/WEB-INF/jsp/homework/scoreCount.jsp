@@ -39,7 +39,7 @@
                             发布时间: <fmt:formatDate value="${homeworkMessage.assignTime}"
                                                   pattern="yyyy-MM-dd HH:mm" />
                             截止时间：<fmt:formatDate value="${homeworkMessage.deadline}"
-                                                 pattern="yyyy-MM-dd HH:mm:ss" />)
+                                                 pattern="yyyy-MM-dd HH:mm" />)
                         </option>
                     </c:forEach>
                 </select>

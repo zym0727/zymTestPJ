@@ -16,6 +16,16 @@ public class MessagePage extends Page {
 
     private Integer isNew;
 
+    private Integer isNotStudent;
+
+    private Integer homeworkId;
+
+    private Integer teacherId;
+
+    private Integer isNotTeacher;
+
+    private Integer roleId;
+
     public Integer getStudentId() {
         return studentId;
     }
@@ -54,5 +64,45 @@ public class MessagePage extends Page {
 
     public void setIsNew(Integer isNew) {
         this.isNew = isNew;
+    }
+
+    public Integer getIsNotStudent() {
+        return isNotStudent;
+    }
+
+    public void setIsNotStudent(Integer isNotStudent) {
+        this.isNotStudent = isNotStudent;
+    }
+
+    public Integer getHomeworkId() {
+        return homeworkId;
+    }
+
+    public void setHomeworkId(Integer homeworkId) {
+        this.homeworkId = homeworkId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getIsNotTeacher() {
+        return isNotTeacher;
+    }
+
+    public void setIsNotTeacher(Integer isNotTeacher) {
+        this.isNotTeacher = isNotTeacher;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

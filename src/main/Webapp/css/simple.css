@@ -23,7 +23,7 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
-#theTitle{
+#theTitle {
     margin-top: 60px;
     margin-left: 70px;
     margin-bottom: 55px;
@@ -194,7 +194,7 @@
     margin-bottom: 20px;
 }
 
-.leftFor{
+.leftFor {
     margin-left: 130px;
 }
 
@@ -231,12 +231,12 @@
     text-align: center;
 }
 
-#updateInfo{
+#updateInfo {
     margin-top: 15px;
     margin-left: 455px;
 }
 
-#mesTitle{
+#mesTitle {
     margin-top: 20px;
     margin-left: 149px;
 }
@@ -251,7 +251,7 @@
     color: #fff;
 }
 
-.leftModal{
+.leftModal {
     margin-left: 130px;
     margin-bottom: 20px;
 }
@@ -275,9 +275,9 @@
     padding: 0;
     width: 32.33%;
     margin-right: 1.5%;
-    -webkit-box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
-    box-shadow: 0 0 5px -2px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.75);
 }
 
 .activity-row1 {
@@ -296,43 +296,59 @@
 .activity-img img {
     display: inline-block;
     -webkit-border-radius: 50%;
-    width:48px;
-    height:39px;
+    width: 48px;
+    height: 39px;
 }
 
 .activity-img span {
     display: block;
-    font-size: 12px;
-    margin: .5em 0 0;
+    font-size: 14px;
+    text-align: center;
     color: #999;
+    margin-bottom: 10px;
 }
 
 .activity-img1 {
     padding: 0 !important;
-    width: 50%;
-}
-
-.activity-desc-sub, .activity-desc-sub1 {
-    padding: .7em;
-    background: #eee;
-    position: relative;
-}
-
-.activity-desc-sub h5, .activity-desc-sub1 h5 {
-    font-size: 14px;
-    color: #000;
-    margin: 0 0 .5em;
-}
-
-.activity-desc-sub p, .activity-desc-sub1 p {
-    font-size: 13px;
-    color: #999;
-    margin: 0;
-    line-height: 1.8em;
+    max-width: 85%;
 }
 
 .activity-img2 {
     padding: 0 !important;
+    max-width: 88%;
+}
+
+.activity-desc-sub {
+    padding: .7em;
+    background: #eee;
+    position: relative;
+    width: auto;
+}
+
+.activity-desc-sub1 {
+    padding: .7em;
+    background: #eee;
+    position: relative;
+    width: auto;
+}
+
+.activity-img {
+    margin-top: 40px;
+}
+
+.time span {
+    display: block;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.activity-desc-sub p, .activity-desc-sub1 p {
+    font-size: 15px;
+    color: #583737;
+    margin: 0;
+    line-height: 1.8em;
 }
 
 .activity_box input[type="text"] {
@@ -360,21 +376,31 @@
     -o-transition: 0.5s all;
 }
 
-.activity_box form {
-    background: #eee;
+#sendMessage {
+    margin-left: 30px;
     padding: 1em 0;
 }
 
-.answer{
-   float: right;
+.answer {
+    float: right;
 }
-.clear{
+
+.clear {
     clear: both;
 }
-.imgRight{
+
+.imgRight {
     margin-right: 15px;
 }
 
-.imgLeft{
+.imgLeft {
     margin-left: 15px;
+}
+
+.messageRight{
+    margin-right: 90px;
+}
+
+.messageLeft{
+    margin-left: 90px;
 }

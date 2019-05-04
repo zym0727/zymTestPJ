@@ -19,7 +19,17 @@ public interface MessageInteractionMapper {
 
     int updateByPrimaryKey(MessageInteraction record);
 
+    List<MessageInteraction> getMessageList(MessageInteraction messageInteraction);
+
     List<MessageReply> getStudentMessageReplyList(MessagePage messagePage);
 
     int countStudentMessageReply(MessagePage messagePage);
+
+    List<MessageReply> getAllMessageList(MessagePage messagePage);
+
+    List<MessageReply> getTeacherMessageReplyList(MessagePage messagePage);
+
+    int countTeacherMessageReply(MessagePage messagePage);
+
+    List<MessageReply> getAllTeacherMessageList(MessagePage messagePage);
 }

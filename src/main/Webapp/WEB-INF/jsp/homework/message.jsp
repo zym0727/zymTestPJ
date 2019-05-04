@@ -20,7 +20,8 @@
     <div class="main-container">
         <%@include file="../common/bodySidebar.jspf" %>
         <div class="container">
-            <section class="dashboard-counts no-padding-bottom" style="margin-left: 200px;margin-right: 200px">
+            <section class="dashboard-counts no-padding-bottom"
+                     style="margin-left: 200px;margin-right: 200px">
                 <div class="container-fluid">
                     <div class="row bg-white has-shadow">
                         <!-- Item -->
@@ -134,180 +135,26 @@
                         <div class="modal-body">
                             <div class="activity_box activity_box1">
                                 <h3>message</h3>
-                                <div class="scrollSet" style="max-height:500px; max-width: 600px;">
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:01 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Hello ! this is Michael chris</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Hi,How are you ? What about our next meeting?</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:02 AM</span></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:05 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Yeah fine, Hope you the same</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Wow that's great</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:20 PM</span></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:01 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Hello ! this is Michael chris</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Hi,How are you ? What about our next meeting?</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:02 AM</span></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:05 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Yeah fine, Hope you the same</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Wow that's great</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:20 PM</span></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:01 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Hello ! this is Michael chris</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Hi,How are you ? What about our next meeting?</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:02 AM</span></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline clear">
-                                        <div class="col-xs-3 activity-img imgRight">
-                                            <img src='${pageContext.request.contextPath}/img/1.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:05 AM</span></div>
-                                        <div class="col-xs-5 activity-img1">
-                                            <div class="activity-desc-sub">
-                                                <h5>Michael Chris</h5>
-                                                <p>Yeah fine, Hope you the same</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4 activity-desc1"></div>
-                                    </div>
-                                    <div class="activity-row activity-row1 form-inline  answer">
-                                        <div class="col-xs-2 activity-desc1"></div>
-                                        <div class="col-xs-7 activity-img2">
-                                            <div class="activity-desc-sub1">
-                                                <h5>Alexander</h5>
-                                                <p>Wow that's great</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 activity-img imgLeft">
-                                            <img src='${pageContext.request.contextPath}/img/2.jpg'
-                                                 class="img-responsive" alt=""/>
-                                            <span>06:20 PM</span></div>
-                                    </div>
+                                <div id="messageSee" class="scrollSet" style="max-height:500px;
+                                 max-width: 600px;width: 100%;" >
                                 </div>
-                                <form action="#" method="post">
-                                    <input type="text" value="Enter your text"
-                                           onfocus="this.value = '';" onblur="if (this.value === '')
-                                           {this.value = 'Enter your text';}" required="">
-                                    <input type="submit" value="Send"/>
-                                </form>
+                                <div>
+                                    <textarea id="sendMessage" type="text" rows="3" cols="68"></textarea>
+                                <div>
                             </div>
                         </div>
 
-                        <div class="modal-footer" style="padding-right: 270px ">
+                        <div class="modal-footer" style="padding-right: 195px ">
+                            <button id="sendButton" type="button" class="btn btn-success"
+                                    style="margin-right: 40px">发送</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">退出</button>
                         </div>
 
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 </div>

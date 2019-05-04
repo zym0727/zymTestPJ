@@ -117,12 +117,19 @@ public class HomeworkController {
         }
     }
 
-    @RequestMapping(path = {"/message"}, method = RequestMethod.GET)
-    public String getHomeworkMessagePage(Model model, HttpSession session) {
+    @RequestMapping(path = {"/student/message"}, method = RequestMethod.GET)
+    public String getStudentHomeworkMessagePage(Model model, HttpSession session) {
         model.addAttribute("courseList", courseService.selectCourseList(session));
         model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByStudentId(
                 session, new StudentHomeworkPage()));
         return "homework/message";
+    }
+
+    @RequestMapping(path = {"/teacher/message"}, method = RequestMethod.GET)
+    public String getTeacherHomeworkMessagePage(Model model, HttpSession session) {
+        model.addAttribute("courseList", courseService.selectCourseList(session));
+        model.addAttribute("homeworkMessageList", homeworkService.getHomeworkListByTeacherId(session));
+        return "homework/teacherMessage";
     }
 
     @RequestMapping(path = {"/teacher/questionList/{itemBankId}"}, method = RequestMethod.GET)
@@ -281,20 +288,21 @@ public class HomeworkController {
         return homeworkService.getCountScore(count);
     }
 
-    @RequestMapping(path = {"/student/messageTable"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/messageTable","/teacher/messageTable"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject getStudentMessageList(HttpSession httpSession, MessagePage messagePage) {
+    public JSONObject getMessageList(HttpSession httpSession, MessagePage messagePage) {
         if (StringUtils.isEmpty(messagePage) || (StringUtils.isEmpty(messagePage.getIsNew())))
             throw new MessageException("参数为空");
-        return homeworkService.getStudentMessageReplyList(httpSession, messagePage);
+        return homeworkService.getMessageReplyList(httpSession, messagePage);
     }
 
-    @RequestMapping(path = {"/student/messageReply/number"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/messageReply/number",
+            "/teacher/messageReply/number"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject getStudentMessageNumber(HttpSession httpSession, MessagePage messagePage) {
+    public JSONObject getMessageNumber(HttpSession httpSession, MessagePage messagePage) {
         if (StringUtils.isEmpty(messagePage))
             throw new MessageException("参数为空");
-        return homeworkService.getStudentMessageReplyNumber(httpSession, messagePage);
+        return homeworkService.getMessageReplyNumber(httpSession, messagePage);
     }
 
     @RequestMapping(path = {"/student/message/homework"}, method = RequestMethod.GET)
@@ -315,5 +323,36 @@ public class HomeworkController {
                 || StringUtils.isEmpty(messageInteraction.getHomeworkId()))
             throw new MessageException("参数为空");
         return homeworkService.saveMessageInteraction(httpSession, messageInteraction);
+    }
+
+    @RequestMapping(path = {"/student/reply/save","/teacher/reply/save"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String insertNewReply(HttpSession httpSession, MessageInteraction messageInteraction) {
+        if (StringUtils.isEmpty(messageInteraction)
+                || StringUtils.isEmpty(messageInteraction.getStudentId())
+                || StringUtils.isEmpty(messageInteraction.getMessage())
+                || StringUtils.isEmpty(messageInteraction.getHomeworkId()))
+            throw new MessageException("参数为空");
+        return homeworkService.saveReply(httpSession, messageInteraction);
+    }
+
+    @RequestMapping(path = {"/student/message/all","/teacher/message/all"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<MessageReply> getAllMessage(HttpSession httpSession, MessagePage messagePage) {
+        if (StringUtils.isEmpty(messagePage)|| StringUtils.isEmpty(messagePage.getStudentId())
+                || StringUtils.isEmpty(messagePage.getHomeworkId()))
+            throw new MessageException("参数为空");
+        return homeworkService.getAllMessageList(httpSession,messagePage);
+    }
+
+    @RequestMapping(path = {"/student/message/update","/teacher/message/update"},
+            method = RequestMethod.POST)
+    @ResponseBody
+    public String updateMessage(MessageInteraction messageInteraction) {
+        if (StringUtils.isEmpty(messageInteraction)
+                || StringUtils.isEmpty(messageInteraction.getId())
+                || StringUtils.isEmpty(messageInteraction.getIsSee()))
+            throw new MessageException("参数为空");
+        return homeworkService.updateMessage(messageInteraction);
     }
 }

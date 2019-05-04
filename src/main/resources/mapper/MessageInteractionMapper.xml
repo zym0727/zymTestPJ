@@ -121,6 +121,41 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <!--模糊查询sql-->
+  <sql id="where">
+    <where>
+      <if test="homeworkId != null">
+        and homework_id = #{homeworkId,jdbcType=INTEGER}
+      </if>
+      <if test="studentId != null">
+        and student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="message != null">
+        and message = #{message,jdbcType=VARCHAR}
+      </if>
+      <if test="messageTime != null">
+        and message_time = #{messageTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="isReply != null">
+        and is_reply = #{isReply,jdbcType=INTEGER}
+      </if>
+      <if test="isSee != null">
+        and is_see = #{isSee,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!--模糊查询-->
+  <select id="getMessageList" parameterType="zym.pojo.MessageInteraction" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from message_interaction
+    <include refid="where" />
+  </select>
+
   <!--详细留言回复信息-->
   <resultMap id="messageDetail" type="zym.pojo.param.MessageReply" extends="BaseResultMap">
     <result column="title" jdbcType="VARCHAR" property="title" />
@@ -128,15 +163,16 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
   </resultMap>
 
-  <!--学生查询留言回复信息sql-->
-  <sql id="studentSee">
-    h.title, u1.user_name as student_name, u2.user_name, m.id, m.message, m.message_time
+  <!--查询留言回复信息sql-->
+  <sql id="messageSQL">
+    h.title, u1.user_name as student_name, u2.user_name, m.id, m.message, m.message_time,
+    m.student_id, m.homework_id
   </sql>
 
   <!--学生查询留言回复信息sql-->
   <sql id="messageQuery">
     select
-    <include refid="studentSee" />
+    <include refid="messageSQL" />
     from message_interaction m
     left join homework h on m.homework_id = h.id
     left join users u1 on u1.id = m.student_id
@@ -154,13 +190,20 @@
       <if test="isReply != null">
         and m.is_reply = #{isReply,jdbcType=INTEGER}
       </if>
+      <if test="isNotStudent != null and studentId != null">
+        and m.user_id != #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="homeworkId != null">
+        and m.homework_id = #{homeworkId,jdbcType=INTEGER}
+      </if>
     </where>
-    order by m.message_time desc
   </sql>
 
   <!-- 学生留言回复分页查询 -->
-  <select id="getStudentMessageReplyList" parameterType="zym.pojo.param.MessagePage" resultMap="messageDetail">
+  <select id="getStudentMessageReplyList" parameterType="zym.pojo.param.MessagePage"
+          resultMap="messageDetail">
     <include refid="messageQuery"/>
+    order by m.message_time desc
     <if test="offset != null and pageSize != null">
       LIMIT #{offset},#{pageSize}
     </if>
@@ -170,6 +213,71 @@
   <select id="countStudentMessageReply" parameterType="zym.pojo.param.MessagePage" resultType="int">
     select count(1) from (
       <include refid="messageQuery"/>
+      order by m.message_time desc
     ) as t
+  </select>
+
+  <!--学生获取指定留言下的所有回复-->
+  <select id="getAllMessageList" parameterType="zym.pojo.param.MessagePage" resultMap="messageDetail">
+    <include refid="messageQuery"/>
+    order by m.message_time asc
+  </select>
+
+  <!--教师查询留言回复信息sql-->
+  <sql id="teacherMessage" >
+    select
+    <include refid="messageSQL" />
+    from message_interaction m
+    left join homework h on m.homework_id = h.id
+    left join course c1 on c1.id = h.course_id
+    left join users u1 on u1.id = m.student_id
+    left join users u2 on u2.id = m.user_id
+    <where>
+      <if test="studentId != null">
+        and m.student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="teacherId != null">
+        and c1.teacher_id = #{teacherId,jdbcType=INTEGER}
+      </if>
+      <if test="courseId != null">
+        and c1.id = #{courseId,jdbcType=INTEGER}
+      </if>
+      <if test="isSee != null">
+        and m.is_see = #{isSee,jdbcType=INTEGER}
+      </if>
+      <if test="isReply != null">
+        and m.is_reply = #{isReply,jdbcType=INTEGER}
+      </if>
+      <if test="isNotTeacher != null and teacherId != null">
+        and m.user_id != #{teacherId,jdbcType=INTEGER}
+      </if>
+      <if test="homeworkId != null">
+        and m.homework_id = #{homeworkId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 教师留言回复分页查询 -->
+  <select id="getTeacherMessageReplyList" parameterType="zym.pojo.param.MessagePage"
+          resultMap="messageDetail">
+    <include refid="teacherMessage"/>
+    order by m.message_time desc
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!--教师留言回复数量 -->
+  <select id="countTeacherMessageReply" parameterType="zym.pojo.param.MessagePage" resultType="int">
+    select count(1) from (
+    <include refid="teacherMessage"/>
+    order by m.message_time desc
+    ) as t
+  </select>
+
+  <!--教师获取指定留言下的所有回复-->
+  <select id="getAllTeacherMessageList" parameterType="zym.pojo.param.MessagePage" resultMap="messageDetail">
+    <include refid="teacherMessage"/>
+    order by m.message_time asc
   </select>
 </mapper>

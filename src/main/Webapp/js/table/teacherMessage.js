@@ -1,7 +1,9 @@
-﻿$("#homeworkMessage").attr("class", "nav-link active");
+﻿$("#teacherReply").attr("class", "nav-link active");
 
 //这儿提前设置select的值，不然有个bug多次请求会显示该select的值不同，会出现""和1两者情况，文档加载则是null和""？？？
 $("#selectCourse").val("");
+
+$('#selectHomework').val("");
 
 var theNum = 1;
 
@@ -13,34 +15,24 @@ $(function () {
     $("#newReply").click(function () {
         theNum = 1;
         getHomeworkNumber();
-        $('#messageTable').bootstrapTable("destroy");
+        $('#teacherMessageTable').bootstrapTable("destroy");
         initTheTable(1)
     });
 
     $("#haveMessage").click(function () {
         theNum = 2;
         getHomeworkNumber();
-        $('#messageTable').bootstrapTable("destroy");
+        $('#teacherMessageTable').bootstrapTable("destroy");
         initTheTable(0)
     });
 
     $("#selectCourse").change(function () {
         getHomeworkNumber();
-        $('#messageTable').bootstrapTable("refresh");
-    });
-
-    $("#messageButton").click(function () {
-        $("#saveModal").modal("show");
-    });
-
-    $("#selectCourseModal").change(function () {
+        $('#teacherMessageTable').bootstrapTable("refresh");
         $.ajax({
-            url: "/homework/student/message/homework",
+            url: "/homework/teacher/homeworkList/" + $("#selectCourse").val(),
             method: "get",
             dataType: "json",
-            data: {
-                courseId: checkParam($("#selectCourseModal").val())
-            },
             success: function (data) {
                 if (data !== null) {
                     var selectHomework = $("#selectHomework");
@@ -60,46 +52,9 @@ $(function () {
         });
     });
 
-    $("#saveConfirmBtn").click(function () {
-        var homeworkId = $("#selectHomework").val();
-        var message = $("#leaveMessage").val();
-        if (homeworkId === "") {
-            alert("作业没有选择！");
-            return;
-        }
-        if (message === "") {
-            alert("留言信息为空！");
-            return;
-        }
-        var header = $("meta[name='_csrf_header']").attr("content");
-        var token = $("meta[name='_csrf']").attr("content");
-        $.ajax({
-            url: "/homework/student/message/save",
-            method: "post",
-            data: {
-                homeworkId: homeworkId,
-                message: message
-            },
-            dataType: "json",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            },
-            success: function (data) {
-                if (data === "success") {
-                    getHomeworkNumber();
-                    $('#messageTable').bootstrapTable("refresh");
-                    alert("留言成功！");
-                }
-                else if (data === "repeat")
-                    alert("当前作业你已经有留言了！");
-                else
-                    alert("留言失败！");
-            },
-            error: function () {
-                alert("留言失败！");
-            }
-        });
-        $("#saveModal").modal("hide");
+    $("#selectHomework").change(function () {
+        getHomeworkNumber();
+        $('#teacherMessageTable').bootstrapTable("refresh");
     });
 
     $("#sendButton").click(function () {
@@ -117,7 +72,7 @@ $(function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
         $.ajax({
-            url: "/homework/student/reply/save",
+            url: "/homework/teacher/reply/save",
             method: "post",
             data: {
                 homeworkId: homeworkIdParam,
@@ -131,9 +86,9 @@ $(function () {
             success: function (data) {
                 if (data === "success") {
                     var scroll = $("#messageSee");
-                    scroll.append(student(userNameParam, timeParam, textVal));
+                    scroll.append(teacher(userNameParam, timeParam, textVal));
                     $("#sendMessage").val('');
-                    scroll.scrollTop(scroll.outerHeight(true) * scroll.outerHeight(true) );
+                    scroll.scrollTop(scroll.outerHeight(true) * scroll.outerHeight(true));
                 }
                 else
                     alert("留言失败！");
@@ -145,7 +100,7 @@ $(function () {
     })
 });
 
-function student(studentName, time, message) {
+function teacher(teacherName, time, message) {
     return '<div class="activity-row activity-row1 form-inline clear answer">\n' +
         '   <div class="col-xs-2 activity-desc1"></div>\n' +
         '   <div class="col-xs-7 activity-img2">\n' +
@@ -157,18 +112,18 @@ function student(studentName, time, message) {
         '       </div>\n' +
         '   </div>\n' +
         '   <div class="col-xs-3 activity-img imgLeft">\n' +
-        '       <img src="/img/1.jpg"\n' +
-        '           class="img-responsive" alt=""/>\n' +
-        '       <span>' + studentName + '</span></div>\n' +
-        '</div>';
-}
-
-function teacher(teacherName, time, message) {
-    return '<div class="activity-row activity-row1 form-inline clear">\n' +
-        '   <div class="col-xs-3 activity-img imgRight">\n' +
         '       <img src="/img/2.jpg"\n' +
         '           class="img-responsive" alt=""/>\n' +
         '       <span>' + teacherName + '</span></div>\n' +
+        '</div>';
+}
+
+function student(studentName, time, message) {
+    return '<div class="activity-row activity-row1 form-inline clear">\n' +
+        '   <div class="col-xs-3 activity-img imgRight">\n' +
+        '       <img src="/img/1.jpg"\n' +
+        '           class="img-responsive" alt=""/>\n' +
+        '       <span>' + studentName + '</span></div>\n' +
         '   <div class="col-xs-5 activity-img1">\n' +
         '       <div class="time messageRight">\n' +
         '           <span>' + time + '</span>\n' +
@@ -182,9 +137,9 @@ function teacher(teacherName, time, message) {
 }
 
 var initTheTable = function (status) {
-    var myTable = $('#messageTable');
+    var myTable = $('#teacherMessageTable');
     myTable.bootstrapTable({
-        url: '/homework/student/messageTable',         //请求后台的URL（*）
+        url: '/homework/teacher/messageTable',         //请求后台的URL（*）
         method: 'get',                      //请求方式（*）
         toolbar: '#toolbar',                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
@@ -197,7 +152,7 @@ var initTheTable = function (status) {
         },
         formatNoMatches: function formatNoMatches() {
             if (status === 1)
-                return '没有新回复的留言哦';
+                return '没有未查看的新留言或回复';
             else if (status === 0)
                 return '你没有任何留言';
         },
@@ -206,7 +161,8 @@ var initTheTable = function (status) {
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber,
                 isNew: status,
-                courseId: checkParam($("#selectCourse").val())
+                courseId: checkParam($("#selectCourse").val()),
+                homeworkId: checkParam($("#selectHomework").val())
             }
         },
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -214,7 +170,7 @@ var initTheTable = function (status) {
         pageSize: 10,                       //每页的记录行数（*）
         pageList: [10, 20, 30],        //可供选择的每页的行数（*）
         clickToSelect: true,                //是否启用点击选中行
-        height: $(window).height() - 362,
+        height: $(window).height() - 440,
         width: $(window).width(),
         uniqueId: "id",                     //每一行的唯一标识，一般为主键列
         columns: [{
@@ -223,11 +179,11 @@ var initTheTable = function (status) {
             align: 'center',
             width: 50,
             formatter: function (value, row, index) {
-                var messageTable = $('#messageTable');
+                var teacherMessageTable = $('#teacherMessageTable');
                 //获取每页显示的数量
-                var pageSize = messageTable.bootstrapTable('getOptions').pageSize;
+                var pageSize = teacherMessageTable.bootstrapTable('getOptions').pageSize;
                 //获取当前是第几页
-                var pageNumber = messageTable.bootstrapTable('getOptions').pageNumber;
+                var pageNumber = teacherMessageTable.bootstrapTable('getOptions').pageNumber;
                 //返回序号，注意index是从0开始的，所以要加上1
                 return pageSize * (pageNumber - 1) + index + 1;
             }
@@ -277,12 +233,11 @@ window.operateEvents = {
         studentIdParam = row.studentId;
         homeworkIdParam = row.homeworkId;
         timeParam = row.messageTime;
-        userNameParam = row.studentName;
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
         if (theNum === 1) {
             $.ajax({
-                url: "/homework/student/message/update",
+                url: "/homework/teacher/message/update",
                 method: "post",
                 data: {
                     id: row.id,
@@ -304,7 +259,7 @@ window.operateEvents = {
         }
         var scroll = $("#messageSee");
         $.ajax({
-            url: "/homework/student/message/all",
+            url: "/homework/teacher/message/all",
             method: "get",
             dataType: "json",
             data: {
@@ -312,16 +267,18 @@ window.operateEvents = {
                 homeworkId: homeworkIdParam
             },
             success: function (data) {
-                if(data===null){
+                if (data === null) {
                     alert("出错了,请联系管理员");
                     return;
                 }
                 scroll.empty();
                 data.forEach(function (t) {
-                    if (t.studentName === t.userName)
-                        scroll.append(student(t.studentName, t.messageTime, t.message));
-                    else
+                    if (t.studentName !== t.userName) {
                         scroll.append(teacher(t.userName, t.messageTime, t.message));
+                        userNameParam = t.userName;
+                    }
+                    else
+                        scroll.append(student(t.studentName, t.messageTime, t.message));
                 });
             },
             error: function () {
@@ -334,11 +291,12 @@ window.operateEvents = {
 
 function getHomeworkNumber() {
     $.ajax({
-        url: "/homework/student/messageReply/number",
+        url: "/homework/teacher/messageReply/number",
         method: "get",
         dataType: "json",
         data: {
-            courseId: checkParam($("#selectCourse").val())
+            courseId: checkParam($("#selectCourse").val()),
+            homeworkId: checkParam($("#selectHomework").val())
         },
         success: function (data) {
             $("#newReplyNumber").text(data.paramOne);
