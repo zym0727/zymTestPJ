@@ -4,38 +4,83 @@
         <i class="fa fa-bars"></i>
     </a>
 
-    <a class="navbar-brand" href="#">
-
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/firstSee">
+        <p id="projectTitle">作业上传与自动批改系统</p>
     </a>
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item d-md-down-none">
-            <a href="#">
-                <i class="fa fa-bell"></i>
-                <span class="badge badge-pill badge-danger">5</span>
-            </a>
+            <security:authorize access="hasRole('ROLE_STUDENT')">
+                <script>
+                    var userRole = 'student';
+                </script>
+                <a href="${pageContext.request.contextPath}/homework/student/message">
+                    <i class="fa fa-bell"></i>
+                    <span id="studentRemind" class="badge badge-pill badge-danger"></span>
+                </a>
+            </security:authorize>
+            <security:authorize access="hasRole('ROLE_TEACHER')">
+                <script>
+                    var userRole = 'teacher';
+                </script>
+                <a href="${pageContext.request.contextPath}/homework/teacher/message">
+                    <i class="fa fa-bell"></i>
+                    <span id="teacherRemind" class="badge badge-pill badge-danger"></span>
+                </a>
+            </security:authorize>
         </li>
 
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false" style="padding-right: 17px">
                 <span class="small ml-1 d-md-down-none">${user.userName}</span>
             </a>
 
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Account</div>
+            <div class="dropdown-menu dropdown-menu-right" style="min-width: 7rem;">
+                <div class="dropdown-header">${user.account}</div>
 
-                <a href="#" class="dropdown-item">
-                    <i class="fa fa-envelope"></i> Messages
+                <a href="${pageContext.request.contextPath}/firstSee" class="dropdown-item">
+                    <i class="fa fa-wrench"></i> 首页
                 </a>
 
-                <a href="#" class="dropdown-item">
-                    <i class="fa fa-wrench"></i> Settings
+                <security:authorize access="hasAnyRole('ROLE_TEACHER','ROLE_STUDENT')">
+                    <a href="${pageContext.request.contextPath}/user/information" class="dropdown-item">
+                        <i class="fa fa-envelope"></i> 个人信息
+                    </a>
+                </security:authorize>
+
+                <a id="logout" class="dropdown-item">
+                    <i class="fa fa-lock"></i> 账号退出
                 </a>
 
-                <a href="#" class="dropdown-item">
-                    <i class="fa fa-lock"></i> Logout
-                </a>
+                <div style="display: none">
+                    <form action="${pageContext.request.contextPath}/logout" method="post">
+                        <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+                        <input id="submitLogout" type="submit" value="logout">
+                    </form>
+                </div>
             </div>
         </li>
     </ul>
 </nav>
+
+<script>
+    $('#logout').click(function () {
+        $('#submitLogout').click();
+    });
+
+    function onNumberRemind(role, select) {
+        $.ajax({
+            url: "/homework/" + role + "/messageReply/number",
+            method: "get",
+            dataType: "json",
+            success: function (data) {
+                $("#" + select).text(data.paramOne);
+            }
+        });
+    }
+    if (userRole === 'student')
+        onNumberRemind('student', 'studentRemind');
+    else if (userRole === 'teacher')
+        onNumberRemind('teacher', 'teacherRemind');
+</script>

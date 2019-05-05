@@ -288,7 +288,7 @@ public class HomeworkController {
         return homeworkService.getCountScore(count);
     }
 
-    @RequestMapping(path = {"/student/messageTable","/teacher/messageTable"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/messageTable", "/teacher/messageTable"}, method = RequestMethod.GET)
     @ResponseBody
     public JSONObject getMessageList(HttpSession httpSession, MessagePage messagePage) {
         if (StringUtils.isEmpty(messagePage) || (StringUtils.isEmpty(messagePage.getIsNew())))
@@ -325,9 +325,9 @@ public class HomeworkController {
         return homeworkService.saveMessageInteraction(httpSession, messageInteraction);
     }
 
-    @RequestMapping(path = {"/student/reply/save","/teacher/reply/save"}, method = RequestMethod.POST)
+    @RequestMapping(path = {"/student/reply/save", "/teacher/reply/save"}, method = RequestMethod.POST)
     @ResponseBody
-    public String insertNewReply(HttpSession httpSession, MessageInteraction messageInteraction) {
+    public MessageReply insertNewReply(HttpSession httpSession, MessageInteraction messageInteraction) {
         if (StringUtils.isEmpty(messageInteraction)
                 || StringUtils.isEmpty(messageInteraction.getStudentId())
                 || StringUtils.isEmpty(messageInteraction.getMessage())
@@ -336,16 +336,16 @@ public class HomeworkController {
         return homeworkService.saveReply(httpSession, messageInteraction);
     }
 
-    @RequestMapping(path = {"/student/message/all","/teacher/message/all"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/student/message/all", "/teacher/message/all"}, method = RequestMethod.GET)
     @ResponseBody
     public List<MessageReply> getAllMessage(HttpSession httpSession, MessagePage messagePage) {
-        if (StringUtils.isEmpty(messagePage)|| StringUtils.isEmpty(messagePage.getStudentId())
+        if (StringUtils.isEmpty(messagePage) || StringUtils.isEmpty(messagePage.getStudentId())
                 || StringUtils.isEmpty(messagePage.getHomeworkId()))
             throw new MessageException("参数为空");
-        return homeworkService.getAllMessageList(httpSession,messagePage);
+        return homeworkService.getAllMessageList(httpSession, messagePage);
     }
 
-    @RequestMapping(path = {"/student/message/update","/teacher/message/update"},
+    @RequestMapping(path = {"/student/message/update", "/teacher/message/update"},
             method = RequestMethod.POST)
     @ResponseBody
     public String updateMessage(MessageInteraction messageInteraction) {

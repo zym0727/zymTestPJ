@@ -89,8 +89,7 @@ $(function () {
                     getHomeworkNumber();
                     $('#messageTable').bootstrapTable("refresh");
                     alert("留言成功！");
-                }
-                else if (data === "repeat")
+                } else if (data === "repeat")
                     alert("当前作业你已经有留言了！");
                 else
                     alert("留言失败！");
@@ -108,8 +107,7 @@ $(function () {
             alert("输入框为空哦！");
             return;
         }
-        if (homeworkIdParam === undefined || studentIdParam === undefined
-            || timeParam === undefined || userNameParam === undefined) {
+        if (homeworkIdParam === undefined || studentIdParam === undefined) {
             alert("出错了请稍后再试！");
             return;
         }
@@ -129,13 +127,12 @@ $(function () {
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                if (data === "success") {
+                if (data !== null) {
                     var scroll = $("#messageSee");
-                    scroll.append(student(userNameParam, timeParam, textVal));
+                    scroll.append(student(data.userName, data.messageTime, textVal));
                     $("#sendMessage").val('');
-                    scroll.scrollTop(scroll.outerHeight(true) * scroll.outerHeight(true) );
-                }
-                else
+                    scroll.scrollTop(scroll.outerHeight(true) * scroll.outerHeight(true));
+                } else
                     alert("留言失败！");
             },
             error: function () {
@@ -270,14 +267,12 @@ function addFunction() {
     ].join('');
 }
 
-var studentIdParam, homeworkIdParam, timeParam, userNameParam;
+var studentIdParam, homeworkIdParam;
 
 window.operateEvents = {
     'click #btn_query': function (e, value, row, index) {
         studentIdParam = row.studentId;
         homeworkIdParam = row.homeworkId;
-        timeParam = row.messageTime;
-        userNameParam = row.studentName;
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
         if (theNum === 1) {
@@ -312,7 +307,7 @@ window.operateEvents = {
                 homeworkId: homeworkIdParam
             },
             success: function (data) {
-                if(data===null){
+                if (data === null) {
                     alert("出错了,请联系管理员");
                     return;
                 }
@@ -348,4 +343,5 @@ function getHomeworkNumber() {
             alert("出错了,请联系管理员");
         }
     });
+    onNumberRemind('student', 'studentRemind');
 }

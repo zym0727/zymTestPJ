@@ -144,7 +144,7 @@
                              default-target-url="/firstSee" always-use-default-target="true"/>
         <!--login-processing-url="/user/login"-->
         <!--default-target-url="/main/main"-->
-        <security:logout logout-success-url="/index"/>
+        <security:logout  logout-url="/logout" logout-success-url="/index"/>
         <!-- XML 配置中默认csrf是关闭的，此处设置为打开
             如果这里打开csrf，则在form表单中需要添加
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

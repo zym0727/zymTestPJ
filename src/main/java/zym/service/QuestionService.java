@@ -108,7 +108,7 @@ public class QuestionService {
 
     private String getTestData(List<TestData> testDataList) {
         int i = 1;
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         for (TestData testData : testDataList) {
             stringBuilder.append("第").append(i++).append("组数据：")
                     .append("\n").append("输入：");

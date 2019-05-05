@@ -42,7 +42,7 @@ public class CourseService {
             for (Course c : list) {
                 String[] ids = c.getClassIds().split(",");
                 if (ids.length > 0) {
-                    StringBuilder stringBuilder = new StringBuilder("");
+                    StringBuilder stringBuilder = new StringBuilder();
                     for (String id : ids) {
                         MajorClass majorClass = majorClassMapper.selectByPrimaryKey(Integer.parseInt(id));
                         if (majorClass != null)

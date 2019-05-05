@@ -63,12 +63,10 @@ $(function () {
             alert("输入框为空哦！");
             return;
         }
-        if (homeworkIdParam === undefined || studentIdParam === undefined
-            || timeParam === undefined || userNameParam === undefined) {
+        if (homeworkIdParam === undefined || studentIdParam === undefined) {
             alert("出错了请稍后再试！");
             return;
         }
-
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
         $.ajax({
@@ -84,13 +82,12 @@ $(function () {
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                if (data === "success") {
+                if (data !== null) {
                     var scroll = $("#messageSee");
-                    scroll.append(teacher(userNameParam, timeParam, textVal));
+                    scroll.append(teacher(data.userName, data.messageTime, textVal));
                     $("#sendMessage").val('');
                     scroll.scrollTop(scroll.outerHeight(true) * scroll.outerHeight(true));
-                }
-                else
+                } else
                     alert("留言失败！");
             },
             error: function () {
@@ -226,13 +223,12 @@ function addFunction() {
     ].join('');
 }
 
-var studentIdParam, homeworkIdParam, timeParam, userNameParam;
+var studentIdParam, homeworkIdParam;
 
 window.operateEvents = {
     'click #btn_query': function (e, value, row, index) {
         studentIdParam = row.studentId;
         homeworkIdParam = row.homeworkId;
-        timeParam = row.messageTime;
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
         if (theNum === 1) {
@@ -275,9 +271,7 @@ window.operateEvents = {
                 data.forEach(function (t) {
                     if (t.studentName !== t.userName) {
                         scroll.append(teacher(t.userName, t.messageTime, t.message));
-                        userNameParam = t.userName;
-                    }
-                    else
+                    } else
                         scroll.append(student(t.studentName, t.messageTime, t.message));
                 });
             },
@@ -306,4 +300,5 @@ function getHomeworkNumber() {
             alert("出错了,请联系管理员");
         }
     });
+    onNumberRemind('teacher', 'teacherRemind');
 }

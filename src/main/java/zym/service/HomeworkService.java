@@ -137,7 +137,7 @@ public class HomeworkService {
         for (HomeworkMessage h : list) {
             String[] ids = h.getQuestionIds().split(",");
             if (ids.length > 0) {
-                StringBuilder questionName = new StringBuilder("");
+                StringBuilder questionName = new StringBuilder();
                 for (String s : ids) {
                     Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(s));
                     if (question != null)
@@ -202,7 +202,7 @@ public class HomeworkService {
         model.addAttribute("homeworkId", homework.getId());
         String[] questionIds = homework.getQuestionIds().split(",");
         model.addAttribute("questionNumber", questionIds.length);
-        StringBuilder homeworkDetail = new StringBuilder("");
+        StringBuilder homeworkDetail = new StringBuilder();
         for (int i = 0; i < questionIds.length; i++) {
             Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(questionIds[i]));
             homeworkDetail.append("第").append(i + 1).append("题：").append(question.getQuestionName())
@@ -338,7 +338,7 @@ public class HomeworkService {
                 ids.addAll(Arrays.asList(idArray));
             }
         }
-        StringBuilder res = new StringBuilder("");
+        StringBuilder res = new StringBuilder();
         for (String id : ids)
             res.append(id).append(",");
         if (res.length() > 0)
@@ -353,11 +353,8 @@ public class HomeworkService {
         homeworkSeeScorePage.setOffset(
                 (homeworkSeeScorePage.getPageNumber() - 1) * homeworkSeeScorePage.getPageSize());
         Object user = httpSession.getAttribute("user");
-        if (user == null) {
-            result.put("total", 0);
-            result.put("rows", new ArrayList<>());
-            return result;
-        }
+        if (user == null)
+            return null;
         Users teacher = (Users) user;
         homeworkSeeScorePage.setTeacherId(teacher.getId());
         result.put("total", homeworkScoreMapper.countHomeworkScoreList(homeworkSeeScorePage));
@@ -396,11 +393,8 @@ public class HomeworkService {
         studentHomeworkPage.setOffset(
                 (studentHomeworkPage.getPageNumber() - 1) * studentHomeworkPage.getPageSize());
         Object user = httpSession.getAttribute("user");
-        if (user == null) {
-            result.put("total", 0);
-            result.put("rows", new ArrayList<>());
-            return result;
-        }
+        if (user == null)
+            return null;
         Users student = (Users) user;
         studentHomeworkPage.setId(student.getId());
         studentHomeworkPage.setScore(1);
@@ -439,21 +433,16 @@ public class HomeworkService {
         JSONObject result = new JSONObject();
         messagePage.setOffset((messagePage.getPageNumber() - 1) * messagePage.getPageSize());
         messagePage = makeMessagePage(httpSession, messagePage);
-        if (messagePage == null) {
-            result.put("total", 0);
-            result.put("rows", new ArrayList<>());
-            return result;
-        }
+        if (messagePage == null)
+            return null;
         if (messagePage.getRoleId() == 3) {//学生
             result.put("total", messageInteractionMapper.countStudentMessageReply(messagePage));
             result.put("rows", messageInteractionMapper.getStudentMessageReplyList(messagePage));
         } else if (messagePage.getRoleId() == 2) {//老师
             result.put("total", messageInteractionMapper.countTeacherMessageReply(messagePage));
             result.put("rows", messageInteractionMapper.getTeacherMessageReplyList(messagePage));
-        } else {
-            result.put("total", 0);
-            result.put("rows", new ArrayList<>());
-        }
+        } else
+            return null;
         return result;
     }
 
@@ -500,21 +489,13 @@ public class HomeworkService {
 
 
     public String saveMessageInteraction(HttpSession httpSession, MessageInteraction messageInteraction) {
-        Object user = httpSession.getAttribute("user");
-        if (user == null)
+        messageInteraction = mergeMessageParam(httpSession, messageInteraction);
+        if (messageInteraction == null)
             return JSONObject.toJSONString("fail");
-        Users student = (Users) user;
-        messageInteraction.setStudentId(student.getId());
-        messageInteraction.setUserId(student.getId());
-        try {
-            messageInteraction.setMessageTime(DateUtil.getNow());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         messageInteraction.setIsReply(0);
         messageInteraction.setIsSee(0);
         MessageInteraction test = new MessageInteraction();
-        test.setStudentId(student.getId());
+        test.setStudentId(messageInteraction.getStudentId());
         test.setHomeworkId(messageInteraction.getHomeworkId());
         List<MessageInteraction> list = messageInteractionMapper.getMessageList(test);
         if (list != null && list.size() > 0)
@@ -523,28 +504,23 @@ public class HomeworkService {
         return JSONObject.toJSONString("success");
     }
 
-    public String saveReply(HttpSession httpSession, MessageInteraction messageInteraction) {
-        Object user = httpSession.getAttribute("user");
-        if (user == null)
-            return JSONObject.toJSONString("fail");
-        Users users = (Users) user;
-        messageInteraction.setUserId(users.getId());
-        try {
-            messageInteraction.setMessageTime(DateUtil.getNow());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public MessageReply saveReply(HttpSession httpSession, MessageInteraction messageInteraction) {
+        messageInteraction = mergeMessageParam(httpSession, messageInteraction);
+        if (messageInteraction == null)
+            return null;
         messageInteraction.setIsReply(1);
         messageInteraction.setIsSee(0);
         messageInteractionMapper.insert(messageInteraction);
-        return JSONObject.toJSONString("success");
+        MessageReply messageReply = new MessageReply();
+        messageReply.setMessageTime(messageInteraction.getMessageTime());
+        messageReply.setUserName(((Users) httpSession.getAttribute("user")).getUserName());
+        return messageReply;
     }
 
     public List<MessageReply> getAllMessageList(HttpSession httpSession, MessagePage messagePage) {
         Object user = httpSession.getAttribute("user");
-        if (user == null) {
+        if (user == null)
             return null;
-        }
         Users users = (Users) user;
         if (users.getRoleId() == 3) { //当前用户是学生
             return messageInteractionMapper.getAllMessageList(messagePage);
@@ -589,5 +565,21 @@ public class HomeworkService {
             messagePage.setIsNotTeacher(null);
         }
         return messagePage;
+    }
+
+    private MessageInteraction mergeMessageParam(HttpSession httpSession, MessageInteraction messageInteraction) {
+        Object user = httpSession.getAttribute("user");
+        if (user == null)
+            return null;
+        Users users = (Users) user;
+        messageInteraction.setUserId(users.getId());
+        if (users.getRoleId() == 3) //当前用户是学生
+            messageInteraction.setStudentId(users.getId());
+        try {
+            messageInteraction.setMessageTime(DateUtil.getNow());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return messageInteraction;
     }
 }
