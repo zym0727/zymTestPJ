@@ -44,9 +44,11 @@
 
             <div id="toolbar">
                 <button class="btn btn-primary" type="button" onclick="addItemBank();">增加一个题库</button>
-                <button class="btn btn-info" type="button" onclick="batchAddItemBank();">
+                <button class="btn btn-info" type="button" onclick="itemBankClick();">
                     批量上传
                 </button>
+                <input name="uploadFile" type="file" id="itemBankFile" style="display: none"
+                       onchange="batchAddItemBank();"/>
                 <button class="btn btn-danger" type="button" onclick="batchDeleteItemBank();">
                     批量删除
                 </button>

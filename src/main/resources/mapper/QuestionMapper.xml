@@ -175,5 +175,13 @@
     where item_id = #{itemId,jdbcType=INTEGER}
   </select>
 
-
+  <!-- 查重复题目编号的 -->
+  <select id="selectRepeat" parameterType="zym.pojo.Question" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from question
+    <if test="questionNumber != null and questionNumber != ''">
+      where question_number = #{questionNumber};
+    </if>
+  </select>
 </mapper>

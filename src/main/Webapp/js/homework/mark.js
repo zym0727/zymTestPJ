@@ -5,7 +5,7 @@ $.ajax({
     method: "get",
     dataType: "json",
     success: function (data) {
-        if (data.length !== 0 ) {
+        if (data.length !== 0) {
             var i = 0;
             var questionNumber = $("#questionNumber").val();
             for (i; i < questionNumber; i++)
@@ -23,7 +23,11 @@ $(function () {
     if ($("#fileName").val() !== "") {
         $("#fileSubmit").show();
         $("#hiddenTwo").show();
-    } else
+    } else if ($("#answer").val() === "null"){
+        $("#hiddenTwo").show();
+        $("#kong").show();
+    }
+    else
         $("#hiddenOne").show();
     $("#markButton").click(function () {
         var score = $("#scoreMark").val();

@@ -24,6 +24,9 @@ public class ItemBankService {
     @Autowired
     private QuestionMapper questionMapper;
 
+    @Autowired
+    private QuestionService questionService;
+
     public JSONObject getItemBankList(ItemBankPage itemBankPage) {
         itemBankPage.setOffset((itemBankPage.getPageNumber() - 1) * itemBankPage.getPageSize());
         List<ItemBank> itemBankList = itemBankMapper.selectItemBankList(itemBankPage);
@@ -46,7 +49,7 @@ public class ItemBankService {
 
     public String updateItemBank(ItemBank itemBank) {
         ItemBank origin = itemBankMapper.selectByPrimaryKey(itemBank.getId());
-        if(origin.equals(itemBank))
+        if (origin.equals(itemBank))
             return JSONObject.toJSONString("repeat");
         itemBankMapper.updateByPrimaryKeySelective(itemBank);
         return JSONObject.toJSONString("success");
@@ -57,28 +60,28 @@ public class ItemBankService {
         return JSONObject.toJSONString("success");
     }
 
-    public ItemBank getItemBank(int id){
+    public ItemBank getItemBank(int id) {
         return itemBankMapper.selectByPrimaryKey(id);
     }
 
-    public String batchDelete(String ids){
+    public String batchDelete(String ids) {
         String[] idArray = ids.split(",");
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(idArray));
-        for(String id : list){
+        for (String id : list) {
             batchDeleteQuestion(Integer.parseInt(id));
         }
         itemBankMapper.batchDelete(list);
         return JSONObject.toJSONString("success");
     }
 
-    public Integer getItemBankId(String ids){
+    public Integer getItemBankId(String ids) {
         String[] listId = ids.split(",");
         Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(listId[0]));
         return itemBankMapper.selectByPrimaryKey(question.getItemId()).getId();
     }
 
-    private void batchDeleteQuestion(Integer id){
+    private void batchDeleteQuestion(Integer id) {
         List<Question> questionList = questionMapper.selectByItemId(id);
         if (questionList.size() > 0) {
             List<String> stringList = new ArrayList<>();

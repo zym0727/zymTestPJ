@@ -68,9 +68,11 @@
 
             <div id="toolbar">
                 <button class="btn btn-primary" type="button" onclick="addQuestion();">增加一个题目</button>
-                <button class="btn btn-info" type="button" onclick="batchAddQuestion();">
+                <button class="btn btn-info" type="button" onclick="questionClick();">
                     批量上传
                 </button>
+                <input name="uploadFile" type="file" id="questionFile" style="display: none"
+                       onchange="batchAddQuestion();"/>
                 <button class="btn btn-danger" type="button" onclick="batchDeleteQuestion();">
                     批量删除
                 </button>

@@ -14,7 +14,7 @@
         <include refid="Base_Column_List"/>
         from item_bank
         where id = #{id,jdbcType=INTEGER}
-     </select>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from item_bank
     where id = #{id,jdbcType=INTEGER}
@@ -76,7 +76,7 @@
     </sql>
 
     <!-- 数据全部查询 -->
-    <select id="selectItemBankList" resultMap="BaseResultMap">
+    <select id="selectItemBankList" parameterType="zym.pojo.param.ItemBankPage" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from item_bank
@@ -87,7 +87,7 @@
     </select>
 
     <!-- 查询单表中数据总量 -->
-    <select id="countAll" resultType="int">
+    <select id="countAll" parameterType="zym.pojo.param.ItemBankPage" resultType="int">
         select count(1) from item_bank
         <include refid="exampleWhere"/>
     </select>
@@ -101,4 +101,13 @@
         </foreach>
     </delete>
 
+    <!-- 查重复题库名称的 -->
+    <select id="selectRepeat" parameterType="zym.pojo.ItemBank" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from item_bank
+        <if test="itemName != null and itemName != ''">
+            where item_name = #{itemName};
+        </if>
+    </select>
 </mapper>

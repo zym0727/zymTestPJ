@@ -23,4 +23,6 @@ public interface ItemBankMapper {
     int countAll(ItemBankPage itemBankPage);
 
     void batchDelete(List<String> list);
+
+    List<ItemBank> selectRepeat(ItemBank record);
 }

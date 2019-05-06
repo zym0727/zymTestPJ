@@ -12,7 +12,7 @@ import zym.exception.MessageException;
 import zym.service.FileService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.IOException;
 import java.text.ParseException;
 
 /**
@@ -44,5 +44,21 @@ public class FileController {
                 || StringUtils.isEmpty(userId))
             throw new MessageException("参数为空");
         return fileService.downloadHomework(fileName, request, courseId, homeworkId, userId);
+    }
+
+    @RequestMapping(value = "/teacher/itemBank/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String batchAddItemBank(MultipartFile uploadFile) throws IOException {
+        if (uploadFile == null)
+            throw new MessageException("文件为空");
+        return fileService.insertItemBankList(uploadFile);
+    }
+
+    @RequestMapping(value = "/teacher/question/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String batchAddQuestion(MultipartFile uploadFile) throws IOException {
+        if (uploadFile == null)
+            throw new MessageException("文件为空");
+        return fileService.insertQuestionList(uploadFile);
     }
 }

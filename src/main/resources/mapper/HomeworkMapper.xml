@@ -163,6 +163,7 @@
     <if test="courseId != null">
       and h.course_id = #{courseId,jdbcType=INTEGER}
     </if>
+    order by h.assign_time desc
   </sql>
 
   <!--学生查询未提交作业-->
@@ -207,6 +208,7 @@
   <select id="getSubmitListByStudentId" parameterType="zym.pojo.param.StudentHomeworkPage"
           resultMap="studentResultMap">
     <include refid="submitList"/>
+    order by h.assign_time desc
     <if test="offset != null and pageSize != null">
       LIMIT #{offset},#{pageSize}
     </if>
@@ -217,6 +219,7 @@
           resultType="int">
     select count(1) from (
     <include refid="submitList"/>
+    order by h.assign_time desc
     ) as counts
   </select>
 
@@ -229,6 +232,7 @@
     <if test="score != null">
       and hs.score is not null
     </if>
+    order by h.assign_time desc
   </sql>
 
   <!--学生查询是否批改作业-->
@@ -324,6 +328,7 @@
         and h.id = #{id,jdbcType=INTEGER}
       </if>
     </where>
+    order by h.assign_time desc
   </sql>
 
   <!--教师查询详细作业信息列表-->
@@ -381,6 +386,7 @@
         and h.course_id = #{courseId,jdbcType=INTEGER}
       </if>
     </where>
+    order by hs.submit_time desc
   </sql>
 
   <!--教师查询学生作业信息list-->
@@ -413,6 +419,7 @@
     from homework h left join
     course cr on h.course_id = cr.id
     where cr.teacher_id = #{teacherId,jdbcType=INTEGER}
+    order by h.assign_time desc
   </select>
 
   <!--学生在留言时查看作业-->
@@ -428,5 +435,6 @@
     <if test="courseId != null">
       and h.course_id = #{courseId,jdbcType=INTEGER}
     </if>
+    order by h.assign_time desc
   </select>
 </mapper>

@@ -50,6 +50,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <!-- 模糊查询sql -->
   <sql id="where">
     <where>
       <if test="mark != null">
@@ -58,10 +59,21 @@
     </where>
   </sql>
 
+  <!-- 模糊查询sql -->
   <select id="getLanguageMarkList" parameterType="zym.pojo.LanguageMark" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from language_mark
     <include refid="where" />
+  </select>
+
+  <!-- 查重复题目编号的 -->
+  <select id="selectRepeat" parameterType="zym.pojo.LanguageMark" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from language_mark
+    <if test="mark != null and mark != ''">
+      where mark = #{mark};
+    </if>
   </select>
 </mapper>

@@ -15,6 +15,7 @@
         <%@include file="../common/bodySidebar.jspf" %>
         <div class="scrollSet">
             <div class="container ">
+                <div id="kong"></div>
                 <div id="homeworkSubmit">
                 </div>
                 <div id="fileSubmit" class="form-inline" style="display: none;
@@ -34,7 +35,7 @@
                     <input type="text" id="scoreMark" name="scoreMark" class="form-control"
                            placeholder="        0-100" value= "${homeworkScore.score}"
                            aria-describedby="basic-addon1" minlength="1"  maxlength="3"
-                           required oninput="showScoreMarkInputSuggestion();">
+                           required oninput="showScoreMarkInputSuggestion();" style="width: 20%">
                 </div>
                 <p id="scoreMarkError" class="text-danger" style="margin-left: 550px; margin-top: 10px"></p>
                 <div id="commit">
@@ -49,6 +50,7 @@
                 <input id="questionNumber" type="hidden" value="${questionNumber}" />
                 <input id="fileName" type="hidden" value="${homeworkScore.fileName}" />
                 <input id="homeworkScoreId" type="hidden" value="${homeworkScore.id}" />
+                <input id="answer" type="hidden" value="${answer}" />
             </div>
             <div id="hiddenOne" class="bottom" style="margin:8px auto 0 25px;
                     display: none;

@@ -409,3 +409,8 @@
 .messageLeft{
     margin-left: 90px;
 }
+
+#kong{
+    display: none;
+    padding-top: 164px;
+}

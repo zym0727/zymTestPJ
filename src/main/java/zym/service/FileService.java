@@ -9,12 +9,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import zym.pojo.HomeworkScore;
+import zym.dao.ItemBankMapper;
+import zym.dao.LanguageMarkMapper;
+import zym.dao.QuestionMapper;
+import zym.dao.TestDataMapper;
+import zym.pojo.*;
+import zym.util.ExcelUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author zym
@@ -26,8 +32,20 @@ public class FileService {
     @Autowired
     private HomeworkService homeworkService;
 
+    @Autowired
+    private ItemBankMapper itemBankMapper;
+
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    @Autowired
+    private LanguageMarkMapper languageMarkMapper;
+
+    @Autowired
+    private TestDataMapper testDataMapper;
+
     public String saveUploadHomework(MultipartFile uploadFile, HttpServletRequest request, String courseId,
-                                 String homeworkId, String userId) throws IOException, ParseException {
+                                     String homeworkId, String userId) throws IOException, ParseException {
         String path = request.getSession().getServletContext().getRealPath("/");
         String uploadPath = path + "homeworkFile" + File.separator + courseId + File.separator + userId
                 + File.separator + homeworkId;
@@ -71,5 +89,85 @@ public class FileService {
         //application/octet-stream ： 二进制流数据（最常见的文件下载）。
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         return new ResponseEntity<>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+    }
+
+    public String insertItemBankList(MultipartFile uploadFile) throws IOException {
+        List<String[]> data = ExcelUtil.readExcel(uploadFile);
+        ItemBank itemBank = new ItemBank();
+        String result = "success";
+        for (String[] mes : data) {
+            itemBank.setItemName(mes[0]);
+            List<ItemBank> itemBankList = itemBankMapper.selectRepeat(itemBank);
+            //去重验证，题库名称相同不插入,同时对于""的一类值不添加进来
+            if (itemBankList != null && itemBankList.size() > 0)
+                result = "repeat";
+            else {
+                itemBank.setDescription(mes[1]);
+                itemBankMapper.insert(itemBank);
+            }
+        }
+        return JSONObject.toJSONString(result);
+    }
+
+    public String insertQuestionList(MultipartFile uploadFile) throws IOException {
+        List<String[]> data = ExcelUtil.readExcel(uploadFile);
+        String result = "success";
+        Question question = new Question();
+        ItemBank itemBank = new ItemBank();
+        LanguageMark languageMark = new LanguageMark();
+        TestData testData = new TestData();
+        for (String[] mes : data) {
+            if (mes.length > 3 && !mes[3].equals("")) {//题目的长度大于3，题目中的第四列不为空，为题库名称
+                question.setQuestionNumber(mes[0]);
+                List<Question> questionList = questionMapper.selectRepeat(question);
+                //去重验证，题目编号相同不插入,同时对于""的一类值不添加进来
+                if (questionList != null && questionList.size() > 0)
+                    result = "repeat";
+                else {
+                    question.setQuestionName(mes[1]);
+                    question.setDescription(mes[2]);
+                    question.setAnswer(mes[4]);
+                    itemBank.setItemName(mes[3]);
+                    List<ItemBank> itemBankList = itemBankMapper.selectRepeat(itemBank);
+                    //没有改题库id出错了
+                    if (itemBankList != null && itemBankList.size() > 0) {
+                        boolean isWong = false;
+                        //语言标记非空情况下
+                        if (!mes[0].equals("")) {
+                            languageMark.setMark(mes[5]);
+                            List<LanguageMark> languageMarkList = languageMarkMapper.selectRepeat(languageMark);
+                            //没有语言标记id出错了
+                            if (languageMarkList != null && languageMarkList.size() > 0)
+                                question.setLanguageId(languageMarkList.get(0).getId());
+                            else {
+                                result = "error";
+                                isWong = true;
+                            }
+
+                        }
+                        question.setItemId(itemBankList.get(0).getId());
+                        //正确情况下插入
+                        if (!isWong)
+                            questionMapper.insert(question);
+
+                    } else
+                        result = "error";
+                }
+            } else {//输入输出数据
+                Question test = new Question();
+                test.setQuestionNumber(mes[0]);
+                List<Question> questionList = questionMapper.selectRepeat(test);
+                //没有题目id出错了
+                if (questionList != null && questionList.size() > 0) {
+                    testData.setQuestionId(questionList.get(0).getId());
+                    testData.setInput(mes[1]);
+                    testData.setOutput(mes[2]);
+                    testDataMapper.insert(testData);
+                } else
+                    result = "error";
+
+            }
+        }
+        return JSONObject.toJSONString(result);
     }
 }

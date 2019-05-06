@@ -18,4 +18,6 @@ public interface LanguageMarkMapper {
     int updateByPrimaryKey(LanguageMark record);
 
     List<LanguageMark> getLanguageMarkList(LanguageMark record);
+
+    List<LanguageMark> selectRepeat(LanguageMark record);
 }

@@ -45,7 +45,7 @@ public class QuestionService {
 
     public String deleteQuestion(int id) {
         questionMapper.deleteByPrimaryKey(id);
-        return JSONObject.toJSONString("success");
+        return deleteTestData(id);
     }
 
     public String updateQuestion(Question question) {
@@ -70,6 +70,8 @@ public class QuestionService {
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(idArray));
         questionMapper.batchDelete(list);
+        for(String id : list)
+            deleteTestData(Integer.valueOf(id));
         return JSONObject.toJSONString("success");
     }
 
@@ -150,6 +152,13 @@ public class QuestionService {
             question.setLanguageId(null);
             questionMapper.updateByPrimaryKey(question);
         }
+        return JSONObject.toJSONString("success");
+    }
+
+    public String deleteTestData(int questionId){
+        List<TestData> testDataList = testDataMapper.getListByQuestionId(questionId);
+        if (testDataList != null && testDataList.size() > 0)
+            testDataMapper.batchDelete(testDataList);
         return JSONObject.toJSONString("success");
     }
 

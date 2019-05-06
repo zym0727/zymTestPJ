@@ -27,5 +27,5 @@ public interface QuestionMapper {
 
     void batchDelete(List<String> list);
 
-
+    List<Question> selectRepeat(Question question);
 }

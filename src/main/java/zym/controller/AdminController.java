@@ -1,0 +1,13 @@
+package zym.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @author zym
+ * *
+ */
+@Controller
+@RequestMapping(path = {"/admin"})
+public class AdminController {
+}

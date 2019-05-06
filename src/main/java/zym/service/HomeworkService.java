@@ -307,6 +307,8 @@ public class HomeworkService {
         model.addAttribute("courseId", homework.getCourseId());
         String[] questionIds = homework.getQuestionIds().split(",");
         model.addAttribute("questionNumber", questionIds.length);
+        if (homeworkScore.getAnswer() == null)
+            model.addAttribute("answer", "null");
         return "success";
     }
 
