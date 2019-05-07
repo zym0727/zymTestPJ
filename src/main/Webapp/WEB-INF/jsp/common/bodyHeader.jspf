@@ -63,24 +63,25 @@
         </li>
     </ul>
 </nav>
-
-<script>
-    $('#logout').click(function () {
-        $('#submitLogout').click();
-    });
-
-    function onNumberRemind(role, select) {
-        $.ajax({
-            url: "/homework/" + role + "/messageReply/number",
-            method: "get",
-            dataType: "json",
-            success: function (data) {
-                $("#" + select).text(data.paramOne);
-            }
+<security:authorize access="hasAnyRole('ROLE_TEACHER','ROLE_STUDENT')">
+    <script>
+        $('#logout').click(function () {
+            $('#submitLogout').click();
         });
-    }
-    if (userRole === 'student')
-        onNumberRemind('student', 'studentRemind');
-    else if (userRole === 'teacher')
-        onNumberRemind('teacher', 'teacherRemind');
-</script>
+
+        function onNumberRemind(role, select) {
+            $.ajax({
+                url: "/homework/" + role + "/messageReply/number",
+                method: "get",
+                dataType: "json",
+                success: function (data) {
+                    $("#" + select).text(data.paramOne);
+                }
+            });
+        }
+        if (userRole === 'student')
+            onNumberRemind('student', 'studentRemind');
+        else if (userRole === 'teacher')
+            onNumberRemind('teacher', 'teacherRemind');
+    </script>
+</security:authorize>

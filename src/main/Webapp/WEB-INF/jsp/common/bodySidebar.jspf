@@ -12,6 +12,43 @@
                 </a>
             </li>
 
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/userManage" class="nav-link"
+                       id="userManage">
+                        <i class="icon icon-user"></i> 用户管理
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/roleManage" class="nav-link"
+                       id="roleManage">
+                        <i class="icon icon-settings"></i> 角色管理
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/classManage" class="nav-link"
+                       id="classManage">
+                        <i class="icon icon-tag"></i> 班级管理
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/courseManage" class="nav-link"
+                    id="courseManage">
+                        <i class="icon icon-book-open"></i> 课程管理
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/languageManage" class="nav-link"
+                    id="languageManage">
+                        <i class="icon icon-grid"></i> 语言管理
+                    </a>
+                </li>
+            </security:authorize>
+
             <security:authorize access="hasRole('ROLE_TEACHER')">
                 <li class="nav-item nav-dropdown">
                     <a href="#" class="nav-link nav-dropdown-toggle">

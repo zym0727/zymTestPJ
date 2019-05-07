@@ -1,18 +1,13 @@
-﻿$("#itemBankList").attr("class", "nav-link active");
+﻿$("#languageManage").attr("class","nav-link active");
 
 $(function () {
     initTheTable();
-
-    $("#itemBankQueryBtn").bind("click", function () {
-        $('#itemTable').bootstrapTable("destroy");
-        initTheTable();
-    })
 });
 
 var initTheTable = function () {
-    var myTable = $('#itemTable');
+    var myTable = $('#languageTable');
     myTable.bootstrapTable({
-        url: '/itemBank/itemTable/list',         //请求后台的URL（*）
+        url: '/admin/languageTable/list',         //请求后台的URL（*）
         method: 'get',                      //请求方式（*）
         toolbar: '#toolbar',                //工具按钮用哪个容器
         striped: true,                      //是否显示行间隔色
@@ -23,12 +18,10 @@ var initTheTable = function () {
         onLoadError: function () {  //加载失败时执行
             return "加载失败";
         },
-        queryParams: function () { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+        queryParams: function () { // 请求服务器数据时发送的参数
             return {
                 pageSize: this.pageSize,
-                pageNumber: this.pageNumber,
-                itemName: checkParam($("#itemName").val()), // 额外添加的参数
-                description: checkParam($("#itemDescription").val()) // 额外添加的参数
+                pageNumber: this.pageNumber
             }
         },
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -48,24 +41,19 @@ var initTheTable = function () {
             align: 'center',
             width: 50,
             formatter: function (value, row, index) {
-                var itemTable = $('#itemTable');
+                var languageTable = $('#languageTable');
                 //获取每页显示的数量
-                var pageSize = itemTable.bootstrapTable('getOptions').pageSize;
+                var pageSize = languageTable.bootstrapTable('getOptions').pageSize;
                 //获取当前是第几页
-                var pageNumber = itemTable.bootstrapTable('getOptions').pageNumber;
+                var pageNumber = languageTable.bootstrapTable('getOptions').pageNumber;
                 //返回序号，注意index是从0开始的，所以要加上1
                 return pageSize * (pageNumber - 1) + index + 1;
             }
         }, {
-            field: 'itemName',
-            title: '题库名字',
+            field: 'mark',
+            title: '标记语言名称',
             align: 'center',
             width: 300
-        }, {
-            field: 'description',
-            title: '题库描述',
-            align: 'center',
-            width: 500
         }, {
             field: 'operations',
             title: '操作',
@@ -87,21 +75,19 @@ function addFunction() {
     ].join('');
 }
 
-var updateItemBankId;
+var updateLanguageId;
 
 window.operateEvents = {
     // 点击修改按钮执行的方法
     'click #btn_edit': function (e, value, row, index) {
-        $("#updateItemBankName").val("");
-        $("#updateItemBankDescription").val("");
+        $("#updateLanguage").val("");
         $.ajax({
-            url: "/itemBank/get/" + row.id,
+            url: "/admin/languageMark/get/" + row.id,
             method: "get",
             dataType: "json",
             success: function (data) {
-                $("#updateItemBankName").val(data.itemName);
-                $("#updateItemBankDescription").val(data.description);
-                updateItemBankId = row.id;
+                $("#updateLanguage").val(data.mark);
+                updateLanguageId = row.id;
                 $("#updateModal").modal("show");
             },
             error: function () {
@@ -111,16 +97,16 @@ window.operateEvents = {
     },
     // 点击删除按钮执行的方法
     'click #btn_delete': function (e, value, row, index) {
-        if (confirm("你确定要删除这个题库吗，关联题目也会删除哦")) {
+        if (confirm("你确定要删除这个语言标记吗，请务必先把相关的题目关联清除哦")) {
             $.ajax({
-                url: "/itemBank/delete/" + row.id,
+                url: "/admin/languageMark/delete/" + row.id,
                 method: "get",
                 dataType: "json",
                 success: function (data) {
                     if (data === "success") {
                         alert("删除成功！")
                     }
-                    $('#itemTable').bootstrapTable("refresh");
+                    $('#languageTable').bootstrapTable("refresh");
                 },
                 error: function () {
                     alert("删除失败！");
@@ -131,19 +117,20 @@ window.operateEvents = {
 };
 
 $("#updateConfirmBtn").click(function () {
-    var updateItemBankName = $("#updateItemBankName");
-    if (checkParam(updateItemBankName.val()) === null) {
-        alert("题库名字还没写哦");
+    var mark = $("#updateLanguage").val();
+    if (checkParam(mark) === null) {
+        alert("语言标记还没写哦");
         return;
     }
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
-    var itemName = updateItemBankName.val();
-    var description = $("#updateItemBankDescription").val();
     $.ajax({
-        url: "/itemBank/update",
+        url: "/admin/languageMark/update",
         method: "post",
-        data: {id: updateItemBankId, itemName: itemName, description: description},
+        data: {
+            id: updateLanguageId,
+            mark: mark
+        },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
@@ -151,9 +138,9 @@ $("#updateConfirmBtn").click(function () {
         success: function (data) {
             if (data === "success") {
                 alert("修改成功！");
-                $('#itemTable').bootstrapTable("refresh");
+                $('#languageTable').bootstrapTable("refresh");
             } else if (data === "repeat")
-                alert("重复了，题库名字不能有重复！");
+                alert("重复了，语言标记不能有重复！");
         },
         error: function () {
             alert("修改失败！");
@@ -163,19 +150,19 @@ $("#updateConfirmBtn").click(function () {
 });
 
 $("#saveConfirmBtn").click(function () {
-    var saveItemBankName = $("#saveItemBankName");
-    if (checkParam(saveItemBankName.val()) === null) {
-        alert("题库名字还没写哦");
+    var mark = $("#saveLanguage").val();
+    if (checkParam(mark) === null) {
+        alert("语言标记还没写哦");
         return;
     }
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
-    var itemName = saveItemBankName.val();
-    var description = $("#saveItemBankDescription").val();
     $.ajax({
-        url: "/itemBank/add",
+        url: "/admin/languageMark/add",
         method: "post",
-        data: {itemName: itemName, description: description},
+        data: {
+            mark: mark
+        },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
@@ -183,7 +170,7 @@ $("#saveConfirmBtn").click(function () {
         success: function (data) {
             if (data === "success") {
                 alert("添加成功！");
-                $('#itemTable').bootstrapTable("refresh");
+                $('#languageTable').bootstrapTable("refresh");
             } else if (data === "repeat")
                 alert("重复了，题库名字不能有重复！");
         },
@@ -192,4 +179,45 @@ $("#saveConfirmBtn").click(function () {
         }
     });
     $("#saveModal").modal("hide");
+});
+
+$("#addLanguage").click(function () {
+    $("#saveLanguage").val("");
+    $("#saveModal").modal("show");
+});
+
+$("#batchDeleteLanguage").click(function () {
+    //获取所有被选中的记录
+    var rows = $("#languageTable").bootstrapTable('getSelections');
+    if (rows.length === 0) {
+        alert("请先选择要删除的记录!");
+        return;
+    }
+    if (!confirm("确认批量删除吗,请务必先把相关的题目关联清除哦"))
+        return;
+    var ids = '';
+    for (var i = 0; i < rows.length; i++) {
+        ids += rows[i]['id'] + ",";
+    }
+    ids = ids.substring(0, ids.length - 1);
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    $.ajax({
+        url: "/admin/languageMark/batchDelete",
+        method: "post",
+        data: {ids: ids},
+        dataType: "json",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function (data) {
+            if (data === "success") {
+                alert("批量删除成功！");
+                $('#languageTable').bootstrapTable("refresh");
+            }
+        },
+        error: function () {
+            alert("批量删除失败！");
+        }
+    });
 });

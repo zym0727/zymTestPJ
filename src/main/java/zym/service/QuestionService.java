@@ -49,14 +49,15 @@ public class QuestionService {
     }
 
     public String updateQuestion(Question question) {
-        Question origin = questionMapper.selectByPrimaryKey(question.getId());
-        if (origin.equals(question))
+        if (checkRepeat(question))
             return JSONObject.toJSONString("repeat");
         questionMapper.updateByPrimaryKeySelective(question);
         return JSONObject.toJSONString("success");
     }
 
     public String insertQuestion(Question question) {
+        if (checkRepeat(question))
+            return JSONObject.toJSONString("repeat");
         questionMapper.insertSelective(question);
         return JSONObject.toJSONString("success");
     }
@@ -65,12 +66,12 @@ public class QuestionService {
         return questionMapper.selectByPrimaryKey(id);
     }
 
-    public String batchDelete(String ids) {
+    public String deleteBatch(String ids) {
         String[] idArray = ids.split(",");
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(idArray));
         questionMapper.batchDelete(list);
-        for(String id : list)
+        for (String id : list)
             deleteTestData(Integer.valueOf(id));
         return JSONObject.toJSONString("success");
     }
@@ -91,7 +92,7 @@ public class QuestionService {
         return "success";
     }
 
-    public Model setModel(String s, Model model, int questionId, int languageId) {
+    public Model updateModel(String s, Model model, int questionId, int languageId) {
         if (s.equals("success")) {
             List<TestData> testDataList = testDataMapper.getListByQuestionId(questionId);
             if (testDataList != null && testDataList.size() > 0) {
@@ -155,7 +156,7 @@ public class QuestionService {
         return JSONObject.toJSONString("success");
     }
 
-    public String deleteTestData(int questionId){
+    public String deleteTestData(int questionId) {
         List<TestData> testDataList = testDataMapper.getListByQuestionId(questionId);
         if (testDataList != null && testDataList.size() > 0)
             testDataMapper.batchDelete(testDataList);
@@ -164,5 +165,16 @@ public class QuestionService {
 
     public List<LanguageMark> getLanguageMarkList(LanguageMark languageMark) {
         return languageMarkMapper.getLanguageMarkList(languageMark);
+    }
+
+    private Boolean checkRepeat(Question question) {
+        List<Question> questionList = questionMapper.selectRepeat(question);
+        if (question.getId() != null) { //修改
+            Question origin = questionMapper.selectByPrimaryKey(question.getId());
+            //题目编号不能重复
+            return questionList != null && questionList.size() > 0 &&
+                    !questionList.get(0).getId().equals(origin.getId());
+        } else //添加
+            return questionList != null && questionList.size() > 0;
     }
 }

@@ -1,4 +1,4 @@
-﻿$("#questionList").attr("class","nav-link active");
+﻿$("#questionList").attr("class", "nav-link active");
 
 $("#itemBankSelect").val("");
 
@@ -6,7 +6,7 @@ $("#questionSelect").val("");
 
 $(function () {
     initTheTable();
-    $("#questionQueryBtn").bind("click",function () {
+    $("#questionQueryBtn").bind("click", function () {
         $('#questionTable').bootstrapTable("destroy");
         initTheTable();
     });
@@ -32,7 +32,7 @@ $(function () {
     })
 });
 
-var initTheTable= function () {
+var initTheTable = function () {
     var myTable = $('#questionTable');
     myTable.bootstrapTable({
         url: '/itemBank/questionTable/list',         //请求后台的URL（*）
@@ -43,13 +43,13 @@ var initTheTable= function () {
         pagination: true,                   //是否显示分页（*）
         sortable: false,                     //是否启用排序
         sortOrder: "asc",                   //排序方式
-        onLoadError: function(){  //加载失败时执行
+        onLoadError: function () {  //加载失败时执行
             return "加载失败";
         },
         queryParams: function () { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
             return {
-                pageSize:this.pageSize,
-                pageNumber:this.pageNumber,
+                pageSize: this.pageSize,
+                pageNumber: this.pageNumber,
                 itemId: checkParam($("#itemBankSelect").val()), // 所属题库
                 questionNumber: checkParam($("#questionSelect").val()), // 题目编号
                 questionName: checkParam($("#questionName").val()) // 题目名字
@@ -62,7 +62,7 @@ var initTheTable= function () {
         showColumns: true,                  //是否显示所有的列
         clickToSelect: true,                //是否启用点击选中行
         height: $(window).height() - 200,
-        width:$(window).width(),
+        width: $(window).width(),
         uniqueId: "id",                     //每一行的唯一标识，一般为主键列
         columns: [{
             checkbox: true
@@ -70,7 +70,7 @@ var initTheTable= function () {
             //field: 'id',
             title: '序号',
             align: 'center',
-            width:50,
+            width: 50,
             formatter: function (value, row, index) {
                 var questionTable = $('#questionTable');
                 //获取每页显示的数量
@@ -95,13 +95,13 @@ var initTheTable= function () {
             title: '所属题库',
             align: 'center',
             width: 100
-        },{
-            field:'operations',
-            title:'操作',
+        }, {
+            field: 'operations',
+            title: '操作',
             align: 'center',
             width: 180,
-            events:operateEvents,//给按钮注册事件
-            formatter:addFunction//表格中增加按钮
+            events: operateEvents,//给按钮注册事件
+            formatter: addFunction//表格中增加按钮
         }]
     });
 };
@@ -122,7 +122,7 @@ window.operateEvents = {
     // 点击修改按钮执行的方法
     'click #btn_edit': function (e, value, row, index) {
         $("#updateQuestionName").val("");
-        $("#updateItemBankId").selectpicker('val',"");
+        $("#updateItemBankId").selectpicker('val', "");
         $("#updateQuestionNumber").val("");
         $("#updateQuestionDescription").val("");
         $("#updateAnswer").val("");
@@ -132,14 +132,14 @@ window.operateEvents = {
             dataType: "json",
             success: function (data) {
                 $("#updateQuestionName").val(data.questionName);
-                $("#updateItemBankId").selectpicker('val',data.itemId);
+                $("#updateItemBankId").selectpicker('val', data.itemId);
                 $("#updateQuestionNumber").val(data.questionNumber);
                 $("#updateQuestionDescription").val(data.description);
                 $("#updateAnswer").val(data.answer);
                 updateQuestionId = row.id;
                 $("#updateModal").modal("show");
             },
-            error:function () {
+            error: function () {
                 alert("出错了,请联系管理员");
             }
         });
@@ -194,25 +194,24 @@ $("#updateConfirmBtn").click(function () {
     $.ajax({
         url: "/itemBank/question/update",
         method: "post",
-        data:{
-            id:updateQuestionId,
-            questionName:questionName,
-            itemId:itemBankId,
-            questionNumber:questionNumber,
-            description:description,
-            answer:answer
+        data: {
+            id: updateQuestionId,
+            questionName: questionName,
+            itemId: itemBankId,
+            questionNumber: questionNumber,
+            description: description,
+            answer: answer
         },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
         },
         success: function (data) {
-            if (data === "success"){
+            if (data === "success") {
                 alert("修改成功！");
                 $('#questionTable').bootstrapTable("refresh");
-            }
-            else if(data==="repeat")
-                alert("重复了，没做任何修改");
+            } else if (data === "repeat")
+                alert("重复了，题目编号不能重复");
         },
         error: function () {
             alert("修改失败！");
@@ -248,22 +247,23 @@ $("#saveConfirmBtn").click(function () {
     $.ajax({
         url: "/itemBank/question/add",
         method: "post",
-        data:{
-            questionName:questionName,
-            itemId:itemBankId,
-            questionNumber:questionNumber,
-            description:description,
-            answer:answer
+        data: {
+            questionName: questionName,
+            itemId: itemBankId,
+            questionNumber: questionNumber,
+            description: description,
+            answer: answer
         },
         dataType: "json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
         },
         success: function (data) {
-            if (data === "success"){
+            if (data === "success") {
                 alert("添加成功！");
                 $('#questionTable').bootstrapTable("refresh");
-            }
+            } else if (data === "repeat")
+                alert("重复了，题目编号不能重复");
         },
         error: function () {
             alert("添加失败！");

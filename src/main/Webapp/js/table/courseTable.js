@@ -1,0 +1,1 @@
+﻿$("#courseManage").attr("class","nav-link active");

@@ -66,10 +66,10 @@
     <!-- 模糊查询sql语句 -->
     <sql id="exampleWhere">
         <where>
-            <if test="itemName != null">
+            <if test="itemName != null and itemName !=''">
                 and item_name like concat('%',#{itemName},'%')
             </if>
-            <if test="description != null">
+            <if test="description != null and description !=''">
                 and description like concat('%',#{description},'%')
             </if>
         </where>
@@ -86,7 +86,7 @@
         </if>
     </select>
 
-    <!-- 查询单表中数据总量 -->
+    <!-- 查询数据总量 -->
     <select id="countAll" parameterType="zym.pojo.param.ItemBankPage" resultType="int">
         select count(1) from item_bank
         <include refid="exampleWhere"/>
@@ -107,7 +107,7 @@
         <include refid="Base_Column_List"/>
         from item_bank
         <if test="itemName != null and itemName != ''">
-            where item_name = #{itemName};
+            where item_name = #{itemName}
         </if>
     </select>
 </mapper>

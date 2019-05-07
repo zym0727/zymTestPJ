@@ -129,13 +129,13 @@
       <if test="questionNumber != null and questionNumber != ''">
         and q.question_number = #{questionNumber,jdbcType=VARCHAR}
       </if>
-      <if test="questionName != null">
+      <if test="questionName != null and questionName != ''">
         and q.question_name like concat('%',#{questionName},'%')
       </if>
-      <if test="description != null">
+      <if test="description != null and description != ''">
         and q.description like concat('%',#{description},'%')
       </if>
-      <if test="itemId != null">
+      <if test="itemId != null and itemId != ''">
         and q.item_id = #{itemId,jdbcType=INTEGER}
       </if>
     </where>
@@ -152,7 +152,7 @@
     </if>
   </select>
 
-  <!-- 查询单表中数据总量 -->
+  <!-- 查询数据总量 -->
   <select id="countAll" resultType="int">
     select count(1) from question q
     <include refid="exampleWhere"/>
@@ -181,7 +181,7 @@
     <include refid="Base_Column_List"/>
     from question
     <if test="questionNumber != null and questionNumber != ''">
-      where question_number = #{questionNumber};
+      where question_number = #{questionNumber}
     </if>
   </select>
 </mapper>

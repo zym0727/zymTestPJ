@@ -24,9 +24,6 @@ public class ItemBankService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    @Autowired
-    private QuestionService questionService;
-
     public JSONObject getItemBankList(ItemBankPage itemBankPage) {
         itemBankPage.setOffset((itemBankPage.getPageNumber() - 1) * itemBankPage.getPageSize());
         List<ItemBank> itemBankList = itemBankMapper.selectItemBankList(itemBankPage);
@@ -42,20 +39,21 @@ public class ItemBankService {
     }
 
     public String deleteItemBank(int id) {
-        batchDeleteQuestion(id);
+        deleteBatchQuestion(id);
         itemBankMapper.deleteByPrimaryKey(id);
         return JSONObject.toJSONString("success");
     }
 
     public String updateItemBank(ItemBank itemBank) {
-        ItemBank origin = itemBankMapper.selectByPrimaryKey(itemBank.getId());
-        if (origin.equals(itemBank))
+        if (checkRepeat(itemBank))
             return JSONObject.toJSONString("repeat");
         itemBankMapper.updateByPrimaryKeySelective(itemBank);
         return JSONObject.toJSONString("success");
     }
 
     public String insertItemBank(ItemBank itemBank) {
+        if (checkRepeat(itemBank))
+            return JSONObject.toJSONString("repeat");
         itemBankMapper.insertSelective(itemBank);
         return JSONObject.toJSONString("success");
     }
@@ -64,12 +62,12 @@ public class ItemBankService {
         return itemBankMapper.selectByPrimaryKey(id);
     }
 
-    public String batchDelete(String ids) {
+    public String deleteBatch(String ids) {
         String[] idArray = ids.split(",");
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(idArray));
         for (String id : list) {
-            batchDeleteQuestion(Integer.parseInt(id));
+            deleteBatchQuestion(Integer.parseInt(id));
         }
         itemBankMapper.batchDelete(list);
         return JSONObject.toJSONString("success");
@@ -81,7 +79,7 @@ public class ItemBankService {
         return itemBankMapper.selectByPrimaryKey(question.getItemId()).getId();
     }
 
-    private void batchDeleteQuestion(Integer id) {
+    private void deleteBatchQuestion(Integer id) {
         List<Question> questionList = questionMapper.selectByItemId(id);
         if (questionList.size() > 0) {
             List<String> stringList = new ArrayList<>();
@@ -89,5 +87,16 @@ public class ItemBankService {
                 stringList.add(String.valueOf(question.getId()));
             questionMapper.batchDelete(stringList);
         }
+    }
+
+    private Boolean checkRepeat(ItemBank itemBank) {
+        List<ItemBank> itemBankList = itemBankMapper.selectRepeat(itemBank);
+        if (itemBank.getId() != null) { //修改
+            ItemBank origin = itemBankMapper.selectByPrimaryKey(itemBank.getId());
+            //题库名称不能重复
+            return itemBankList != null && itemBankList.size() > 0 &&
+                    !itemBankList.get(0).getId().equals(origin.getId());
+        } else  //添加
+            return itemBankList != null && itemBankList.size() > 0;
     }
 }

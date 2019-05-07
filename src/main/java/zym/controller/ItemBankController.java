@@ -58,7 +58,7 @@ public class ItemBankController {
                 || StringUtils.isEmpty(testDataExtra.getItemBankId())
                 || StringUtils.isEmpty(testDataExtra.getLanguageMarkId()))
             throw new MessageException("参数为空");
-        model = questionService.setModel(questionService.saveTestData(testDataExtra), model,
+        model = questionService.updateModel(questionService.saveTestData(testDataExtra), model,
                 testDataExtra.getQuestionId(), testDataExtra.getLanguageMarkId());
         model.addAttribute("itemBankList", itemBankService.getItemBankList());
         model.addAttribute("languageMarkList", questionService.getLanguageMarkList(null));
@@ -101,7 +101,7 @@ public class ItemBankController {
     public String batchDeleteItemBank(String ids) {
         if (StringUtils.isEmpty(ids))
             throw new MessageException("参数为空");
-        return itemBankService.batchDelete(ids);
+        return itemBankService.deleteBatch(ids);
     }
 
     @RequestMapping(path = {"/itemTable/list"}, method = RequestMethod.GET)
@@ -151,7 +151,7 @@ public class ItemBankController {
     public String batchDeleteQuestion(String ids) {
         if (StringUtils.isEmpty(ids))
             throw new MessageException("参数为空");
-        return questionService.batchDelete(ids);
+        return questionService.deleteBatch(ids);
     }
 
     @RequestMapping(path = {"/questionTable/list"}, method = RequestMethod.GET)

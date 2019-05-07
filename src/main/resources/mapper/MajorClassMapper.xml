@@ -74,22 +74,22 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!--模糊查询班级sql-->
+  <!--查询班级sql-->
   <sql id="where">
     <where>
-      <if test="classNumber != null">
+      <if test="classNumber != null and classNumber != ''">
         and class_number = #{classNumber,jdbcType=VARCHAR}
       </if>
-      <if test="className != null">
+      <if test="className != null and className != ''">
         and class_name = #{className,jdbcType=VARCHAR}
       </if>
-      <if test="grade != null">
+      <if test="grade != null and grade != ''">
         and grade = #{grade,jdbcType=VARCHAR}
       </if>
     </where>
   </sql>
 
-  <!--模糊查询班级-->
+  <!--查询班级-->
   <select id="getMajorClassList" parameterType="zym.pojo.MajorClass" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -103,5 +103,56 @@
     <include refid="Base_Column_List" />
     from major_class
     where id in (${classIds})
+  </select>
+
+  <!--模糊查询班级sql-->
+  <sql id="exampleWhere">
+    <where>
+      <if test="classNumber != null and classNumber != ''">
+        and class_number like concat('%',#{classNumber},'%')
+      </if>
+      <if test="className != null and className != ''">
+        and class_name like concat('%',#{className},'%')
+      </if>
+      <if test="grade != null and grade != ''">
+        and grade like concat('%',#{grade},'%')
+      </if>
+    </where>
+  </sql>
+
+  <!-- 数据全部查询 -->
+  <select id="selectClassList" parameterType="zym.pojo.param.ClassPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from major_class
+    <include refid="exampleWhere"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 查询数据总量 -->
+  <select id="countAll" parameterType="zym.pojo.param.ClassPage" resultType="int">
+    select count(1) from major_class
+    <include refid="exampleWhere"/>
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from major_class
+    where id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      ${id}
+    </foreach>
+  </delete>
+
+  <!-- 查重复班级编号的 -->
+  <select id="selectRepeat" parameterType="zym.pojo.MajorClass" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from major_class
+    <if test="classNumber != null and classNumber != ''">
+      where class_number = #{classNumber,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>

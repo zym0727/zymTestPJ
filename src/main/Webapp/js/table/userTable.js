@@ -1,0 +1,1 @@
+﻿$("#userManage").attr("class","nav-link active");

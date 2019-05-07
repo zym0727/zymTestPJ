@@ -73,7 +73,31 @@
     <include refid="Base_Column_List"/>
     from language_mark
     <if test="mark != null and mark != ''">
-      where mark = #{mark};
+      where mark = #{mark}
     </if>
   </select>
+
+  <!-- 数据全部查询 -->
+  <select id="selectLanguageMarkList" parameterType="zym.pojo.param.Page" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from language_mark
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 查询数据总量 -->
+  <select id="countAll" resultType="int">
+    select count(1) from language_mark
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from language_mark
+    where id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      ${id}
+    </foreach>
+  </delete>
 </mapper>
