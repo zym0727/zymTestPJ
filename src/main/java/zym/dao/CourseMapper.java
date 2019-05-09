@@ -1,6 +1,8 @@
 package zym.dao;
 
 import zym.pojo.Course;
+import zym.pojo.param.CourseDetail;
+import zym.pojo.param.CoursePage;
 
 import java.util.List;
 
@@ -17,7 +19,15 @@ public interface CourseMapper {
 
     int updateByPrimaryKey(Course record);
 
-    List<Course> selectCourseList(Course course);
+    List<CourseDetail> selectCourseList(Course course);
 
-    List<Course> selectCourseListByStudentId(Integer studentId);
+    List<CourseDetail> selectCourseListByStudentId(Integer studentId);
+
+    List<CourseDetail> getCourseList(CoursePage coursePage);
+
+    int countAll(CoursePage coursePage);
+
+    void batchDelete(String[] list);
+
+    List<Course> selectRepeat(Course course);
 }

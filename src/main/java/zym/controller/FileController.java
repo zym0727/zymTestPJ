@@ -61,4 +61,13 @@ public class FileController {
             throw new MessageException("文件为空");
         return fileService.insertQuestionList(uploadFile);
     }
+
+    @RequestMapping(value = "/admin/class/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String batchAddClass(MultipartFile uploadFile) throws IOException {
+        if (uploadFile == null)
+            throw new MessageException("文件为空");
+        return fileService.insertMajorClassList(uploadFile);
+    }
+
 }

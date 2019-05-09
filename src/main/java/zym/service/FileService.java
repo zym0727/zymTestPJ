@@ -9,10 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import zym.dao.ItemBankMapper;
-import zym.dao.LanguageMarkMapper;
-import zym.dao.QuestionMapper;
-import zym.dao.TestDataMapper;
+import zym.dao.*;
 import zym.pojo.*;
 import zym.util.ExcelUtil;
 
@@ -43,6 +40,9 @@ public class FileService {
 
     @Autowired
     private TestDataMapper testDataMapper;
+
+    @Autowired
+    private MajorClassMapper majorClassMapper;
 
     public String saveUploadHomework(MultipartFile uploadFile, HttpServletRequest request, String courseId,
                                      String homeworkId, String userId) throws IOException, ParseException {
@@ -166,6 +166,25 @@ public class FileService {
                 } else
                     result = "error";
 
+            }
+        }
+        return JSONObject.toJSONString(result);
+    }
+
+    public String insertMajorClassList(MultipartFile uploadFile) throws IOException {
+        List<String[]> data = ExcelUtil.readExcel(uploadFile);
+        MajorClass majorClass = new MajorClass();
+        String result = "success";
+        for (String[] mes : data) {
+            majorClass.setClassNumber(mes[0]);
+            List<MajorClass> majorClassList = majorClassMapper.selectRepeat(majorClass);
+            //去重验证，班级编号相同不插入,同时对于""的一类值不添加进来
+            if (majorClassList != null && majorClassList.size() > 0)
+                result = "repeat";
+            else {
+                majorClass.setClassName(mes[1]);
+                majorClass.setGrade(mes[2]);
+                majorClassMapper.insert(majorClass);
             }
         }
         return JSONObject.toJSONString(result);

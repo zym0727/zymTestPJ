@@ -143,7 +143,7 @@ window.operateEvents = {
         $("#itemBankSelect").selectpicker('val',"");
         $("#questionSelect").selectpicker('val',"");
         $("#remarkText").val("");
-        $('input:radio[name="marking"]:checked').attr("checked",false);;
+        $('input:radio[name="marking"]:checked').attr("checked",false);
         $.ajax({
             url: "/homework/teacher/get/" + row.id,
             method: "get",

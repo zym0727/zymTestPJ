@@ -332,10 +332,10 @@ public class HomeworkService {
         Users teacher = (Users) user;
         Course course = new Course();
         course.setTeacherId(teacher.getId());
-        List<Course> courseList = courseMapper.selectCourseList(course);
+        List<CourseDetail> courseList = courseMapper.selectCourseList(course);
         Set<String> ids = new HashSet<>();
         if (courseList != null && courseList.size() > 0) {
-            for (Course c : courseList) {
+            for (CourseDetail c : courseList) {
                 String[] idArray = c.getClassIds().split(",");
                 ids.addAll(Arrays.asList(idArray));
             }

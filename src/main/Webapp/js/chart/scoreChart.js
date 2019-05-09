@@ -194,6 +194,7 @@ $(function () {
         var selectHomeworkVal = $('#selectHomework').val();
         if (selectHomeworkVal === "") {
             alert("请选好对应的作业再选对应的班级");
+            return;
         }
         $.ajax({
             url: "/homework/teacher/score",

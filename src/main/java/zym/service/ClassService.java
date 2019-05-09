@@ -55,6 +55,10 @@ public class ClassService {
         return JSONObject.toJSONString("success");
     }
 
+    public List<MajorClass> getClassList() {
+        return majorClassMapper.getMajorClassList(null);
+    }
+
     private Boolean checkRepeat(MajorClass majorClass) {
         List<MajorClass> majorClassList = majorClassMapper.selectRepeat(majorClass);
         if (majorClass.getId() != null) { //修改

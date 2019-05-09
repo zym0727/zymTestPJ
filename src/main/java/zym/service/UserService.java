@@ -1,7 +1,6 @@
 package zym.service;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zym.dao.UsersMapper;
@@ -9,6 +8,7 @@ import zym.pojo.Users;
 import zym.pojo.param.UserInfo;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author zym
@@ -31,5 +31,12 @@ public class UserService {
     public String updateUsers(Users users) {
         usersMapper.updateByPrimaryKeySelective(users);
         return JSONObject.toJSONString("success");
+    }
+
+    public List<Users> getTeacherList() {
+        Users users = new Users();
+        users.setRoleId(2);
+        users.setEnabled(1);
+        return usersMapper.selectByUsers(users);
     }
 }

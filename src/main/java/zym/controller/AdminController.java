@@ -3,20 +3,21 @@ package zym.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
+import zym.pojo.Course;
 import zym.pojo.LanguageMark;
 import zym.pojo.MajorClass;
 import zym.pojo.Role;
 import zym.pojo.param.ClassPage;
+import zym.pojo.param.CoursePage;
 import zym.pojo.param.Page;
-import zym.service.ClassService;
-import zym.service.LanguageMarkService;
-import zym.service.RoleService;
+import zym.service.*;
 
 /**
  * @author zym
@@ -35,6 +36,12 @@ public class AdminController {
     @Autowired
     private ClassService classService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CourseService courseService;
+
     @RequestMapping(path = {"/userManage"}, method = RequestMethod.GET)
     public String getUserManage() {
         return "admin/userInfo";
@@ -51,7 +58,9 @@ public class AdminController {
     }
 
     @RequestMapping(path = {"/courseManage"}, method = RequestMethod.GET)
-    public String getCourseManage() {
+    public String getCourseManage(Model model) {
+        model.addAttribute("teacherList",userService.getTeacherList());
+        model.addAttribute("classList",classService.getClassList());
         return "admin/courseInfo";
     }
 
@@ -178,8 +187,7 @@ public class AdminController {
     @RequestMapping(path = {"/majorClass/add"}, method = RequestMethod.POST)
     @ResponseBody
     public String addMajorClass(MajorClass majorClass) {
-        if (StringUtils.isEmpty(majorClass) || StringUtils.isEmpty(majorClass.getId())
-                || StringUtils.isEmpty(majorClass.getClassNumber())
+        if (StringUtils.isEmpty(majorClass) || StringUtils.isEmpty(majorClass.getClassNumber())
                 || StringUtils.isEmpty(majorClass.getClassName())
                 || StringUtils.isEmpty(majorClass.getGrade()))
             throw new MessageException("参数为空");
@@ -201,5 +209,63 @@ public class AdminController {
                 StringUtils.isEmpty(classPage.getPageNumber()))
             throw new MessageException("参数为空");
         return classService.getMajorClassList(classPage);
+    }
+
+    @RequestMapping(path = {"/course/delete/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteCourseById(@PathVariable Integer id) {
+        return courseService.deleteCourse(id);
+    }
+
+    @RequestMapping(path = {"/course/get/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public Course getCourseById(@PathVariable Integer id) {
+        return courseService.getCourse(id);
+    }
+
+    @RequestMapping(path = {"/course/update"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String updateCourse(Course course) {
+        if (StringUtils.isEmpty(course) || StringUtils.isEmpty(course.getId())
+                || StringUtils.isEmpty(course.getCourseNumber())
+                || StringUtils.isEmpty(course.getCourseName())
+                || StringUtils.isEmpty(course.getClassIds())
+                || StringUtils.isEmpty(course.getTeacherId())
+                || StringUtils.isEmpty(course.getClassTime())
+                || StringUtils.isEmpty(course.getSemester())
+                || StringUtils.isEmpty(course.getCredit()))
+            throw new MessageException("参数为空");
+        return courseService.updateCourse(course);
+    }
+
+    @RequestMapping(path = {"/course/add"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String addCourse(Course course) {
+        if (StringUtils.isEmpty(course) || StringUtils.isEmpty(course.getCourseNumber())
+                || StringUtils.isEmpty(course.getCourseName())
+                || StringUtils.isEmpty(course.getClassIds())
+                || StringUtils.isEmpty(course.getTeacherId())
+                || StringUtils.isEmpty(course.getClassTime())
+                || StringUtils.isEmpty(course.getSemester())
+                || StringUtils.isEmpty(course.getCredit()))
+            throw new MessageException("参数为空");
+        return courseService.saveCourse(course);
+    }
+
+    @RequestMapping(path = {"/course/batchDelete"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String batchDeleteCourse(String ids) {
+        if (StringUtils.isEmpty(ids))
+            throw new MessageException("参数为空");
+        return courseService.deleteBatch(ids);
+    }
+
+    @RequestMapping(path = {"/courseTable/list"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getCourseList(CoursePage coursePage) {
+        if (StringUtils.isEmpty(coursePage) || StringUtils.isEmpty(coursePage.getPageSize()) ||
+                StringUtils.isEmpty(coursePage.getPageNumber()))
+            throw new MessageException("参数为空");
+        return courseService.getCourseList(coursePage);
     }
 }

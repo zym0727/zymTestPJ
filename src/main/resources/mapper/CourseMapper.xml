@@ -148,7 +148,7 @@
   </sql>
 
   <!--模糊查询课程列表-->
-  <select id="selectCourseList" parameterType="zym.pojo.Course" resultMap="BaseResultMap">
+  <select id="selectCourseList" parameterType="zym.pojo.Course" resultMap="countMap">
     select
     <include refid="Base_Column_List" />
     from course
@@ -156,10 +156,84 @@
   </select>
 
   <!--根据学生id查询课程列表-->
-  <select id="selectCourseListByStudentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectCourseListByStudentId" parameterType="java.lang.Integer" resultMap="countMap">
     select
     <include refid="Base_Column_List"/>
     from course c1 where c1.class_ids like
     concat('%',(select u.class_id from users u where u.id = #{studentId,jdbcType=INTEGER}),'%')
+  </select>
+
+  <!--模糊查询（班级分开查）班级sql-->
+  <sql id="newWhere">
+    <where>
+      <if test="courseNumber != null and courseNumber != ''">
+        and course_number like concat('%',#{courseNumber,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="courseName != null and courseName != ''">
+        and course_name like concat('%',#{courseName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="teacherId != null">
+        and teacher_id = #{teacherId,jdbcType=INTEGER}
+      </if>
+      <if test="classIds != null and classIds != ''">
+        and class_ids like concat('%',#{classIds,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="classTime != null and classTime != ''">
+        and class_time like concat('%',#{classTime,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="semester != null and semester != ''">
+        and semester like concat('%',#{semester,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="credit != null">
+        and credit = #{credit,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!--课程详情-->
+  <resultMap id="countMap" type="zym.pojo.param.CourseDetail" extends="BaseResultMap">
+    <result column="user_name" jdbcType="VARCHAR" property="teacherName" />
+  </resultMap>
+
+  <!--获取表的查询sql-->
+  <sql id="whereSQL">
+    c1.id, c1.course_number, c1.course_name, us.user_name, c1.class_ids, c1.teacher_id,
+        c1.class_time, c1.semester, c1.credit
+  </sql>
+
+  <!-- 数据全部查询 -->
+  <select id="getCourseList" parameterType="zym.pojo.param.CoursePage" resultMap="countMap">
+    select
+    <include refid="whereSQL"/>
+    from course c1 left join users us on us.id = c1.teacher_id
+    <include refid="newWhere"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 查询数据总量 -->
+  <select id="countAll" parameterType="zym.pojo.param.CoursePage" resultType="int">
+    select count(1) from course
+    <include refid="newWhere"/>
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from course
+    where id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      ${id}
+    </foreach>
+  </delete>
+
+  <!-- 查重复课程编号的 -->
+  <select id="selectRepeat" parameterType="zym.pojo.Course" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from course
+    <if test="courseNumber != null and courseNumber != ''">
+      where course_number = #{courseNumber,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>
