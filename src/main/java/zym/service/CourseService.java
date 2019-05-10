@@ -48,7 +48,8 @@ public class CourseService {
         coursePage.setOffset((coursePage.getPageNumber() - 1) * coursePage.getPageSize());
         JSONObject result = new JSONObject();
         result.put("total", courseMapper.countAll(coursePage));
-        result.put("rows", splitToName(courseMapper.getCourseList(coursePage)));
+        List<CourseDetail> list = splitToName(courseMapper.getCourseList(coursePage));
+        result.put("rows", list == null ? 0 : list);
         return result;
     }
 

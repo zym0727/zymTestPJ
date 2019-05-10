@@ -1,4 +1,4 @@
-﻿$("#courseManage").attr("class","nav-link active");
+﻿$("#courseManage").attr("class", "nav-link active");
 
 $("#selectTeacher").val("");
 
@@ -12,7 +12,7 @@ $(function () {
         initTheTable();
     });
 
-    $("#batchAddClass").bind("click", function (){
+    $("#batchAddCourse").bind("click", function () {
         $("#courseFile").click();
     });
 
@@ -22,7 +22,7 @@ $(function () {
             alert("请选择Excel文件");
             return;
         }
-        var select = $("#classFile");
+        var select = $("#courseFile");
         var files = select.val();
         var ex = files.substring(files.indexOf('.') + 1);
         var header = $("meta[name='_csrf_header']").attr("content");
@@ -31,7 +31,7 @@ $(function () {
             var formFile = new FormData();
             formFile.append("uploadFile", fileObj); //加入文件对象
             $.ajax({
-                url: "/file/admin/class/upload",
+                url: "/file/admin/course/upload",
                 type: "Post",
                 data: formFile,
                 dataType: "json",
@@ -46,6 +46,8 @@ $(function () {
                         alert("批量导入成功！");
                     else if (result === "repeat")
                         alert("有课程编号重复的数据，重复部分没有插入！");
+                    else if (result === "error")
+                        alert("批量导入有些数据错误，其中教师或者班级信息有错误,务必按照模板上的Excel文件来导入！")
                     $('#courseTable').bootstrapTable("destroy");
                     initTheTable();
                 },
@@ -92,7 +94,7 @@ var initTheTable = function () {
         pageList: [10, 20, 30],        //可供选择的每页的行数（*）
         showColumns: true,                  //是否显示所有的列
         clickToSelect: true,                //是否启用点击选中行
-        height: $(window).height() - 200,
+        height: $(window).height() - 250,
         width: $(window).width(),
         uniqueId: "id",                     //每一行的唯一标识，一般为主键列
         columns: [{
@@ -169,8 +171,8 @@ window.operateEvents = {
     'click #btn_edit': function (e, value, row, index) {
         $("#updateCourseNumber").val("");
         $("#updateCourseName").val("");
-        $("#updateSelectTeacher").selectpicker('val',"");
-        $("#updateSelectClass").selectpicker('val',"");
+        $("#updateSelectTeacher").selectpicker('val', "");
+        $("#updateSelectClass").selectpicker('val', "");
         $("#updateClassTime").val("");
         $("#updateSemester").val("");
         $("#updateCredit").val("");
@@ -181,8 +183,8 @@ window.operateEvents = {
             success: function (data) {
                 $("#updateCourseNumber").val(data.courseNumber);
                 $("#updateCourseName").val(data.courseName);
-                $("#updateSelectTeacher").selectpicker('val',data.teacherId);
-                $("#updateSelectClass").selectpicker('val',data.classIds.split(","));
+                $("#updateSelectTeacher").selectpicker('val', data.teacherId);
+                $("#updateSelectClass").selectpicker('val', data.classIds.split(","));
                 $("#updateClassTime").val(data.classTime);
                 $("#updateSemester").val(data.semester);
                 $("#updateCredit").val(data.credit);
@@ -355,8 +357,8 @@ $("#saveConfirmBtn").click(function () {
 $("#addCourse").click(function () {
     $("#saveCourseNumber").val("");
     $("#saveCourseName").val("");
-    $("#saveSelectTeacher").selectpicker('val',"");
-    $("#saveSelectClass").selectpicker('val',"");
+    $("#saveSelectTeacher").selectpicker('val', "");
+    $("#saveSelectClass").selectpicker('val', "");
     $("#saveClassTime").val("");
     $("#saveSemester").val("");
     $("#saveCredit").val("");

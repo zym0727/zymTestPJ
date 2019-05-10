@@ -44,6 +44,12 @@ public class FileService {
     @Autowired
     private MajorClassMapper majorClassMapper;
 
+    @Autowired
+    private CourseMapper courseMapper;
+
+    @Autowired
+    private UsersMapper usersMapper;
+
     public String saveUploadHomework(MultipartFile uploadFile, HttpServletRequest request, String courseId,
                                      String homeworkId, String userId) throws IOException, ParseException {
         String path = request.getSession().getServletContext().getRealPath("/");
@@ -188,5 +194,56 @@ public class FileService {
             }
         }
         return JSONObject.toJSONString(result);
+    }
+
+    public String insertCourseList(MultipartFile uploadFile) throws IOException {
+        List<String[]> data = ExcelUtil.readExcel(uploadFile);
+        Course course = new Course();
+        Users users = new Users();
+        users.setRoleId(2);
+        MajorClass majorClass = new MajorClass();
+        String result = "success";
+        for (String[] mes : data) {
+            course.setCourseNumber(mes[0]);
+            List<Course> courseList = courseMapper.selectRepeat(course);
+            //去重验证，课程编号相同不插入,同时对于""的一类值不添加进来
+            if (courseList != null && courseList.size() > 0)
+                result = "repeat";
+            else {
+                course.setCourseName(mes[1]);
+                users.setUserName(mes[2]);
+                List<Users> usersList = usersMapper.selectByUsers(users);
+                String classIds = getClassIds(mes[3]);
+                if (classIds == null || usersList == null || usersList.size() == 0)
+                    result = "error";
+                else {
+                    course.setTeacherId(usersList.get(0).getId());
+                    course.setClassIds(classIds);
+                    course.setClassTime(mes[4]);
+                    course.setSemester(mes[5]);
+                    course.setCredit(Integer.parseInt(mes[6]));
+                    courseMapper.insert(course);
+                }
+            }
+        }
+        return JSONObject.toJSONString(result);
+    }
+
+    private String getClassIds(String className) {
+        if (className == null)
+            return null;
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] names = className.split(" ");
+        MajorClass majorClass = new MajorClass();
+        for (String name : names) {
+            majorClass.setClassName(name);
+            List<MajorClass> majorClassList = majorClassMapper.getMajorClassList(majorClass);
+
+            if (majorClassList != null && majorClassList.size() > 0)
+                stringBuilder.append(majorClassList.get(0).getId()).append(",");
+            else
+                return null;
+        }
+        return stringBuilder.substring(0, stringBuilder.length() - 1);
     }
 }

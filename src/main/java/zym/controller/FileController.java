@@ -70,4 +70,11 @@ public class FileController {
         return fileService.insertMajorClassList(uploadFile);
     }
 
+    @RequestMapping(value = "/admin/course/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String batchAddCourse(MultipartFile uploadFile) throws IOException {
+        if (uploadFile == null)
+            throw new MessageException("文件为空");
+        return fileService.insertCourseList(uploadFile);
+    }
 }
