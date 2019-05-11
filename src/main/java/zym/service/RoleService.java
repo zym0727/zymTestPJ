@@ -55,6 +55,10 @@ public class RoleService {
         return JSONObject.toJSONString("success");
     }
 
+    public List<Role> getRoleList(){
+        return roleMapper.selectRoleList(null);
+    }
+
     private Boolean checkRepeat(Role role) {
         List<Role> roleList = roleMapper.selectRepeat(role);
         if (role.getId() != null) { //修改

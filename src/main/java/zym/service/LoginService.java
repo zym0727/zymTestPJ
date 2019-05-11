@@ -3,7 +3,6 @@ package zym.service;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import zym.dao.UsersMapper;
 import zym.pojo.Users;
 
@@ -24,6 +23,7 @@ public class LoginService {
         Users user = new Users();
         user.setAccount(account);
         user.setPassword(password);
+        user.setEnabled(1);
         List<Users> list = userMapper.selectByUsers(user);
         if (list != null && list.size()==1) {
             session.setAttribute("user", list.get(0));

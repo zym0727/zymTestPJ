@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import zym.exception.MessageException;
-import zym.pojo.Course;
-import zym.pojo.LanguageMark;
-import zym.pojo.MajorClass;
-import zym.pojo.Role;
+import zym.pojo.*;
 import zym.pojo.param.ClassPage;
 import zym.pojo.param.CoursePage;
 import zym.pojo.param.Page;
+import zym.pojo.param.UserPage;
 import zym.service.*;
 
 /**
@@ -43,7 +41,9 @@ public class AdminController {
     private CourseService courseService;
 
     @RequestMapping(path = {"/userManage"}, method = RequestMethod.GET)
-    public String getUserManage() {
+    public String getUserManage(Model model) {
+        model.addAttribute("roleList", roleService.getRoleList());
+        model.addAttribute("classList", classService.getClassList());
         return "admin/userInfo";
     }
 
@@ -59,8 +59,8 @@ public class AdminController {
 
     @RequestMapping(path = {"/courseManage"}, method = RequestMethod.GET)
     public String getCourseManage(Model model) {
-        model.addAttribute("teacherList",userService.getTeacherList());
-        model.addAttribute("classList",classService.getClassList());
+        model.addAttribute("teacherList", userService.getTeacherList());
+        model.addAttribute("classList", classService.getClassList());
         return "admin/courseInfo";
     }
 
@@ -267,5 +267,57 @@ public class AdminController {
                 StringUtils.isEmpty(coursePage.getPageNumber()))
             throw new MessageException("参数为空");
         return courseService.getCourseList(coursePage);
+    }
+
+    @RequestMapping(path = {"/user/delete/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteUserById(@PathVariable Integer id) {
+        return userService.deleteUsers(id);
+    }
+
+    @RequestMapping(path = {"/user/get/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public Users getUserById(@PathVariable Integer id) {
+        return userService.getUsers(id);
+    }
+
+    @RequestMapping(path = {"/user/update"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String updateUser(Users users) {
+        if (StringUtils.isEmpty(users) || StringUtils.isEmpty(users.getId())
+                || StringUtils.isEmpty(users.getRoleId())
+                || StringUtils.isEmpty(users.getAccount())
+                || StringUtils.isEmpty(users.getPassword())
+                || StringUtils.isEmpty(users.getEnabled()))
+            throw new MessageException("参数为空");
+        return userService.updateUsers(users);
+    }
+
+    @RequestMapping(path = {"/user/add"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String addUser(Users users) {
+        if (StringUtils.isEmpty(users) || StringUtils.isEmpty(users.getRoleId())
+                || StringUtils.isEmpty(users.getAccount())
+                || StringUtils.isEmpty(users.getPassword())
+                || StringUtils.isEmpty(users.getEnabled()))
+            throw new MessageException("参数为空");
+        return userService.saveUsers(users);
+    }
+
+    @RequestMapping(path = {"/user/batchDelete"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String batchDeleteUser(String ids) {
+        if (StringUtils.isEmpty(ids))
+            throw new MessageException("参数为空");
+        return userService.deleteBatch(ids);
+    }
+
+    @RequestMapping(path = {"/userTable/list"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSONObject getUserList(UserPage userPage) {
+        if (StringUtils.isEmpty(userPage) || StringUtils.isEmpty(userPage.getPageSize()) ||
+                StringUtils.isEmpty(userPage.getPageNumber()))
+            throw new MessageException("参数为空");
+        return userService.getUserList(userPage);
     }
 }

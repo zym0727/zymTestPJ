@@ -76,10 +76,12 @@
                 method: "get",
                 dataType: "json",
                 success: function (data) {
-                    $("#" + select).text(data.paramOne);
+                    if (data.paramOne !== 0)
+                        $("#" + select).text(data.paramOne);
                 }
             });
         }
+
         if (userRole === 'student')
             onNumberRemind('student', 'studentRemind');
         else if (userRole === 'teacher')

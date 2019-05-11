@@ -43,16 +43,16 @@
       <if test="roleId != null">
         role_id,
       </if>
-      <if test="account != null">
+      <if test="account != null and account != ''">
         account,
       </if>
-      <if test="password != null">
+      <if test="password != null and password!=''">
         password,
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         user_name,
       </if>
-      <if test="userNumber != null">
+      <if test="userNumber != null and userNumber != ''">
         user_number,
       </if>
       <if test="classId != null">
@@ -61,7 +61,7 @@
       <if test="sex != null">
         sex,
       </if>
-      <if test="telephone != null">
+      <if test="telephone != null and telephone != ''">
         telephone,
       </if>
       <if test="enabled != null">
@@ -72,16 +72,16 @@
       <if test="roleId != null">
         #{roleId,jdbcType=INTEGER},
       </if>
-      <if test="account != null">
+      <if test="account != null and account != ''">
         #{account,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
+      <if test="password != null and password!=''">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="userNumber != null">
+      <if test="userNumber != null and userNumber != ''">
         #{userNumber,jdbcType=VARCHAR},
       </if>
       <if test="classId != null">
@@ -90,7 +90,7 @@
       <if test="sex != null">
         #{sex,jdbcType=INTEGER},
       </if>
-      <if test="telephone != null">
+      <if test="telephone != null and telephone != ''">
         #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null">
@@ -110,10 +110,10 @@
       <if test="password != null and password!=''">
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="userNumber != null">
+      <if test="userNumber != null and userNumber != ''">
         user_number = #{userNumber,jdbcType=VARCHAR},
       </if>
       <if test="classId != null">
@@ -122,7 +122,7 @@
       <if test="sex != null">
         sex = #{sex,jdbcType=INTEGER},
       </if>
-      <if test="telephone != null">
+      <if test="telephone != null and telephone != ''">
         telephone = #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null">
@@ -187,12 +187,88 @@
     <result column="class_name" jdbcType="VARCHAR" property="className" />
   </resultMap>
 
+  <!--用户个人信息sql-->
+  <sql id="userInfoSql">
+    u.id, u.role_id, u.account, u.password, u.user_name, u.user_number, u.class_id, u.sex,
+    u.telephone, u.enabled, mj.class_name
+  </sql>
+
   <!--查询用户个人信息-->
   <select id="getUserInfoByPrimaryKey" parameterType="java.lang.Integer" resultMap="info">
     select
-    u.id, u.account, u.password, u.user_name, u.user_number, u.sex, u.telephone, mj.class_name
+    <include refid="userInfoSql" />
     from users u
     left join major_class mj on u.class_id = mj.id
     where u.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--模糊查询用户列表-->
+  <sql id="where">
+    <where>
+      <if test="roleId != null">
+        and role_id = #{roleId,jdbcType=INTEGER}
+      </if>
+      <if test="account != null and account != ''">
+        and account like concat('%',#{account,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="password != null and password != ''">
+        and password like concat('%',#{password,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="userName != null and userName != ''">
+        and user_name like concat('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="userNumber != null and userNumber != ''">
+        and user_number like concat('%',#{userNumber,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="classId != null">
+        and class_id = #{classId,jdbcType=INTEGER}
+      </if>
+      <if test="sex != null">
+        and sex = #{sex,jdbcType=INTEGER}
+      </if>
+      <if test="telephone != null and telephone != ''">
+        and telephone like concat('%',#{telephone,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="enabled != null">
+        and enabled = #{enabled,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 数据全部查询 -->
+  <select id="getUserList" parameterType="zym.pojo.param.UserPage" resultMap="info">
+    select
+    <include refid="userInfoSql"/>
+    from users u
+    left join major_class mj on u.class_id = mj.id
+    <include refid="where"/>
+    <if test="offset != null and pageSize != null">
+      LIMIT #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 查询数据总量 -->
+  <select id="countAll" parameterType="zym.pojo.param.UserPage" resultType="int">
+    select count(1) from users
+    <include refid="where"/>
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="batchDelete" parameterType="java.util.List">
+    delete from users
+    where id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      ${id}
+    </foreach>
+  </delete>
+
+  <!-- 查重复课程编号的 -->
+  <select id="selectRepeat" parameterType="zym.pojo.Users" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from users
+    <if test="account != null and account != ''">
+      where account = #{account,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>

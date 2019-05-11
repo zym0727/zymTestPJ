@@ -91,7 +91,8 @@ $('#updateInfo').click(function () {
             if (data === "success") {
                 alert("修改成功");
                 window.location.reload();
-            }
+            } else if (data === "repeat")
+                alert("账号名重复了，请修改账号名字")
         },
         error: function () {
             alert("修改失功");
