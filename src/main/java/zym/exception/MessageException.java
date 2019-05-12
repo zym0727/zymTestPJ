@@ -6,10 +6,10 @@ package zym.exception;
  */
 public class MessageException extends RuntimeException {
 
-    public MessageException(){
+    public MessageException() {
     }
 
-    public MessageException(String message){
+    public MessageException(String message) {
         super(message);
     }
 }

@@ -1,11 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <nav class="navbar page-header">
-    <a href="#" class="btn btn-link sidebar-mobile-toggle d-md-none mr-auto">
-        <i class="fa fa-bars"></i>
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/firstSee">
+        <p id="projectTitle">作业上传与自动批改系统</p>
     </a>
 
     <a class="navbar-brand" href="${pageContext.request.contextPath}/firstSee">
-        <p id="projectTitle">作业上传与自动批改系统</p>
+        <p id="titleFirstSee">首页</p>
+    </a>
+
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/us">
+        <p id="us">关于我们</p>
     </a>
 
     <ul class="navbar-nav ml-auto">

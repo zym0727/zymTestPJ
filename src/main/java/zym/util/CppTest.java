@@ -15,6 +15,7 @@ public class CppTest extends LanguageTest {
 
     /**
      * C++编译，例如docker run --rm -v /c/Users/code:/usr/src/code -w /usr/src/code gcc g++ hello.cpp
+     *
      * @return
      */
     @Override
@@ -35,6 +36,7 @@ public class CppTest extends LanguageTest {
 
     /**
      * C++运行，例如docker run -i --rm -v /c/Users/code:/usr/src/code -w /usr/src/code gcc ./a.out
+     *
      * @return
      */
     @Override

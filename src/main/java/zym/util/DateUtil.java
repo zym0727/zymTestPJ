@@ -1,6 +1,5 @@
 package zym.util;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +14,7 @@ public class DateUtil {
 
     static private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(common);
 
-    static public String dateFormat(Date date){
+    static public String dateFormat(Date date) {
         return simpleDateFormat.format(date);
     }
 

@@ -19,13 +19,13 @@ public class LoginService {
     @Autowired
     private UsersMapper userMapper;
 
-    public String LoginTest(String account, String password, HttpSession session){
+    public String LoginTest(String account, String password, HttpSession session) {
         Users user = new Users();
         user.setAccount(account);
         user.setPassword(password);
         user.setEnabled(1);
         List<Users> list = userMapper.selectByUsers(user);
-        if (list != null && list.size()==1) {
+        if (list != null && list.size() == 1) {
             session.setAttribute("user", list.get(0));
             return JSONObject.toJSONString("find");
         } else {
@@ -33,14 +33,14 @@ public class LoginService {
         }
     }
 
-    public String LoginMake(String account, HttpSession session){
+    public String LoginMake(String account, HttpSession session) {
         Users user = new Users();
         user.setAccount(account);
         List<Users> list = userMapper.selectByUsers(user);
-        if (list != null && list.size()==1) {
+        if (list != null && list.size() == 1) {
             session.setAttribute("user", list.get(0));
             return "success";
-        }else
-           return "fail";
+        } else
+            return "fail";
     }
 }

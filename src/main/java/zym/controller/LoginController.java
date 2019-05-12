@@ -45,8 +45,13 @@ public class LoginController {
         return "/main/main";
     }
 
+    @RequestMapping(path = "/us", method = RequestMethod.GET)
+    public String us() {
+        return "/main/us";
+    }
+
     @RequestMapping(path = "/user/information", method = RequestMethod.GET)
-    public String getInfoPage(){
+    public String getInfoPage() {
         return "/user/information";
     }
 

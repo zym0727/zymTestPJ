@@ -77,4 +77,12 @@ public class FileController {
             throw new MessageException("文件为空");
         return fileService.insertCourseList(uploadFile);
     }
+
+    @RequestMapping(value = "/admin/user/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String batchAddUser(MultipartFile uploadFile) throws IOException {
+        if (uploadFile == null)
+            throw new MessageException("文件为空");
+        return fileService.insertUsersList(uploadFile);
+    }
 }

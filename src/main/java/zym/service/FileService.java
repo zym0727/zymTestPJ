@@ -50,6 +50,9 @@ public class FileService {
     @Autowired
     private UsersMapper usersMapper;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     public String saveUploadHomework(MultipartFile uploadFile, HttpServletRequest request, String courseId,
                                      String homeworkId, String userId) throws IOException, ParseException {
         String path = request.getSession().getServletContext().getRealPath("/");
@@ -201,7 +204,6 @@ public class FileService {
         Course course = new Course();
         Users users = new Users();
         users.setRoleId(2);
-        MajorClass majorClass = new MajorClass();
         String result = "success";
         for (String[] mes : data) {
             course.setCourseNumber(mes[0]);
@@ -224,6 +226,57 @@ public class FileService {
                     course.setCredit(Integer.parseInt(mes[6]));
                     courseMapper.insert(course);
                 }
+            }
+        }
+        return JSONObject.toJSONString(result);
+    }
+
+    public String insertUsersList(MultipartFile uploadFile) throws IOException {
+        List<String[]> data = ExcelUtil.readExcel(uploadFile);
+        Users users = new Users();
+        String result = "success";
+        Role role = new Role();
+        MajorClass majorClass = new MajorClass();
+        for (String[] mes : data) {
+            users.setAccount(mes[0]);
+            List<Users> usersList = usersMapper.selectRepeat(users);
+            //去重验证，用户账号相同不插入,同时对于""的一类值不添加进来
+            if (usersList != null && usersList.size() > 0)
+                result = "repeat";
+            else {
+                users.setPassword(mes[1]);
+                users.setUserName(mes[2]);
+                users.setUserNumber(mes[3]);
+                role.setRemark(mes[4]);
+                List<Role> roleList = roleMapper.getRoleList(role);
+                if (roleList != null && roleList.size() > 0) {
+                    users.setRoleId(roleList.get(0).getId());
+                    if (mes[5].equals("启用")) {
+                        users.setEnabled(1);
+                    } else if (mes[5].equals("不启用")) {
+                        users.setEnabled(0);
+                    }
+                    if (mes.length > 6) {
+                        if (mes[6].equals("男"))
+                            users.setSex(1);
+                        else if (mes[6].equals("女"))
+                            users.setSex(1);
+                    }
+                    if (mes.length > 7)
+                        users.setTelephone(mes[7]);
+                    if (mes.length > 8) {
+                        majorClass.setClassName(mes[7]);
+                        List<MajorClass> classList = majorClassMapper.getMajorClassList(majorClass);
+                        if (classList != null && classList.size() > 0)
+                            users.setClassId(classList.get(0).getId());
+                    }
+                    if (users.getEnabled() != null)
+                        usersMapper.insert(users);
+                    else
+                        result = "error";
+
+                } else
+                    result = "error";
             }
         }
         return JSONObject.toJSONString(result);

@@ -25,4 +25,6 @@ public interface RoleMapper {
     int countAll();
 
     void batchDelete(String[] list);
+
+    List<Role> getRoleList(Role role);
 }

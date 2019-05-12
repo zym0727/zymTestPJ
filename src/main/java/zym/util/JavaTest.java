@@ -13,11 +13,13 @@ public class JavaTest extends LanguageTest {
         super(uid, qid, code, submitTime);
     }
 
-    /**docker run -v /c/Users/bootstrap:/usr/src/bootstrap -w /usr/src/bootstrap nodejs npm run dev
+    /**
+     * docker run -v /c/Users/bootstrap:/usr/src/bootstrap -w /usr/src/bootstrap nodejs npm run dev
      * Java编译，例如docker run --rm -v /c/Users/code:/usr/src/code -w /usr/src/code openjdk:8 javac hello.java
      * 通过windows命令运行一个docker容器，把c盘上的代码挂载到容器中，使用容器的javac命令来编译工作目录中的hello.java文件
      * windows中的docker挂载一般是对/c/Users目录下有效，除非修改虚拟机的共享目录
      * 另外。一般oj系统对使用Java语言的代码有要求，如主类名需要为Main，输入为Scanner sc = new Scanner(System.in)
+     *
      * @return
      */
     @Override
@@ -38,6 +40,7 @@ public class JavaTest extends LanguageTest {
 
     /**
      * Java运行，例如docker run --rm -v /c/Users/code:/usr/src/code -w /usr/src/code openjdk:8 java hello
+     *
      * @return
      */
     @Override

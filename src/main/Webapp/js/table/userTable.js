@@ -47,9 +47,9 @@ $(function () {
                     if (result === "success")
                         alert("批量导入成功！");
                     else if (result === "repeat")
-                        alert("有课程编号重复的数据，重复部分没有插入！");
+                        alert("有用户账号重复的数据，重复部分没有插入！");
                     else if (result === "error")
-                        alert("批量导入有些数据错误，其中教师或者班级信息有错误,务必按照模板上的Excel文件来导入！")
+                        alert("批量导入有些数据错误，其中用户角色或启用有错误,务必按照模板上的Excel文件来导入！")
                     $('#userTable').bootstrapTable("destroy");
                     initTheTable();
                 },

@@ -55,7 +55,7 @@ public class RoleService {
         return JSONObject.toJSONString("success");
     }
 
-    public List<Role> getRoleList(){
+    public List<Role> getRoleList() {
         return roleMapper.selectRoleList(null);
     }
 
