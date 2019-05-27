@@ -35,7 +35,12 @@
                                                        id="feAccount">
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="feNumber">编号</label>
+                                                <security:authorize access="hasRole('ROLE_STUDENT')">
+                                                    <label for="feNumber">学号</label>
+                                                </security:authorize>
+                                                <security:authorize access="hasRole('ROLE_TEACHER')">
+                                                    <label for="feNumber">教工号</label>
+                                                </security:authorize>
                                                 <input type="text" class="form-control"
                                                        id="feNumber" readonly>
                                             </div>

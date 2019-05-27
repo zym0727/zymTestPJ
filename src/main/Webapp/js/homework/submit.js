@@ -1,4 +1,4 @@
-﻿$("#studentHomeworkPage").attr("class","nav-link active");
+﻿$("#studentHomeworkPage").attr("class", "nav-link active");
 var questionNumber = $("#questionNumber").val();
 var i = 0;
 var isSubmit = false;
@@ -9,11 +9,9 @@ if (homeworkScoreId !== "") {
         method: "get",
         dataType: "json",
         success: function (data) {
-            if (data.length !== 0 && isSubmit !== true) {
+            if (isSubmit !== true) {
                 for (i = 0; i < questionNumber; i++)
-                    $("#homeworkSubmit").append("<label class=\"homeworkLabel\">" + "第" + (i + 1) + "题：" + "</label>\n" +
-                        "<textarea id=\"homeworkSubmit" + i + "\" class=\"form-control\"   rows=\"10\" >" + data[i] + "</textarea>"
-                    );
+                    $("#homeworkSubmit" + i).val(data[i]);
                 isSubmit = true;
             }
         },
@@ -21,9 +19,10 @@ if (homeworkScoreId !== "") {
             alert("作业加载失败");
         }
     });
-} else if (questionNumber !== "" && isSubmit === false) {
-    for (i = 0; i < questionNumber; i++)
-        $("#homeworkSubmit").append("<label class=\"homeworkLabel\">" + "第" + (i + 1) + "题：" + "</label>\n" +
-            "<textarea id=\"homeworkSubmit" + i + "\" class=\"form-control\"   rows=\"10\" >" + "</textarea>"
-        );
 }
+
+$('textarea').each(function () {
+    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px');
+}).on('input', function () {
+    this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';
+});

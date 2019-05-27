@@ -18,10 +18,12 @@
         <%@include file="../common/bodySidebar.jspf" %>
         <div class="scrollSet">
             <div class="container ">
-                <label class="homeworkLabel">
-                    作业的详细信息：
-                </label>
-                <textarea id="homeworkDetail" class="form-control"   rows="25"  readonly>${homeworkDetail}</textarea>
+                <p  class="warningColor homeworkLabel leftFor">提交前请注意以下几点：<br><br>
+                    1.请选择文件上传或者输入信息到文本框提交作业，如果文本框内有信息将不会上传文件   <br><br>
+                    2.Java语言代码请按照这种格式：输入输出流：System.In 和 System.Out，主类：Main，函数：标准 main 函数。
+                    <br><br>
+                    3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告
+                </p>
                 <div class="form-inline">
                     <label id="assignLabel">
                         该作业的发布时间：${assignTime}
@@ -30,19 +32,23 @@
                         该作业的截止时间：${deadline}
                     </label>
                 </div>
-                <label class="homeworkLabel">
-                    此次作业说明：
-                </label>
-                <textarea  class="form-control"   rows="5"  readonly>
-                    ${remark}
-                </textarea>
-                <p  class="text-warning homeworkLabel leftFor">提交前请注意以下几点：<br><br>
-                    1.请选择文件上传或者输入信息到文本框提交作业，如果文本框内有信息将不会上传文件   <br><br>
-                    2.Java语言代码请按照这种格式：输入输出流：System.In 和 System.Out，主类：Main，函数：标准 main 函数。
-                    <br><br>
-                    3.请在截止日期前提交，截止日期后再提交请向相应的课程老师报告
-                </p>
+                <div class="markTh">
+                    <label class="homeworkLabel">
+                        此次作业说明：
+                    </label>
+                    <textarea  class="form-control markColor font"   rows="5"  readonly>${remark}</textarea>
+                </div>
+
                 <div id="homeworkSubmit">
+                    <c:forEach items="${homeworkDetail}" var="item" varStatus="status" >
+                        <label class="homeworkLabel">第${status.index+1}题：</label>
+                        <br>
+                        <textarea  class="form-control answerColor font"  readonly>${item.description}</textarea>
+                        <label class="homeworkLabel"> 你的回答：</label>
+                        <br>
+                        <textarea id="homeworkSubmit${status.index}" class="form-control font" rows="10"></textarea>
+                        <br>
+                    </c:forEach>
                 </div>
                 <div class="form-inline leftFor">
                     <label class="homeworkLabel">

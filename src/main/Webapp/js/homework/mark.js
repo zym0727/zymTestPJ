@@ -1,5 +1,12 @@
 ﻿$("#teacherSeeHomeworkPage").attr("class", "nav-link active");
 
+var n = 0;
+var questionNumber = $("#questionNumber").val();
+for (n; n < questionNumber; n++)
+    $("#homeworkSubmit").append("<label class=\"homeworkLabel\">" + "第" + (n + 1) + "题：" + "</label>\n" +
+        "<textarea id=\"homeworkSubmit" + n + "\" class=\"form-control\"   rows=\"10\" readonly></textarea>"
+    );
+
 $.ajax({
     url: "/homework/teacher/AnswerList/get/" + $("#homeworkScoreId").val(),
     method: "get",
@@ -7,11 +14,8 @@ $.ajax({
     success: function (data) {
         if (data.length !== 0) {
             var i = 0;
-            var questionNumber = $("#questionNumber").val();
             for (i; i < questionNumber; i++)
-                $("#homeworkSubmit").append("<label class=\"homeworkLabel\">" + "第" + (i + 1) + "题：" + "</label>\n" +
-                    "<textarea id=\"homeworkSubmit" + i + "\" class=\"form-control\"   rows=\"10\" readonly>" + data[i] + "</textarea>"
-                );
+                $("#homeworkSubmit" + i).val(data[i]);
         }
     },
     error: function () {
@@ -23,11 +27,10 @@ $(function () {
     if ($("#fileName").val() !== "") {
         $("#fileSubmit").show();
         $("#hiddenTwo").show();
-    } else if ($("#answer").val() === "null"){
+    } else if ($("#answer").val() === "null") {
         $("#hiddenTwo").show();
         $("#kong").show();
-    }
-    else
+    } else
         $("#hiddenOne").show();
     $("#markButton").click(function () {
         var score = $("#scoreMark").val();

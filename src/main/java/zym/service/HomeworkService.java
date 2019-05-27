@@ -202,16 +202,18 @@ public class HomeworkService {
         model.addAttribute("homeworkId", homework.getId());
         String[] questionIds = homework.getQuestionIds().split(",");
         model.addAttribute("questionNumber", questionIds.length);
-        StringBuilder homeworkDetail = new StringBuilder();
+//        StringBuilder homeworkDetail = new StringBuilder();
+        List<Question> questionList = new ArrayList<>();
         for (int i = 0; i < questionIds.length; i++) {
             Question question = questionMapper.selectByPrimaryKey(Integer.parseInt(questionIds[i]));
-            homeworkDetail.append("第").append(i + 1).append("题：").append(question.getQuestionName())
-                    .append("\n\n")
-                    .append(question.getDescription());
-            if (i < questionIds.length - 1)
-                homeworkDetail.append("\n\n\n\n");
+            questionList.add(question);
+//            homeworkDetail.append("第").append(i + 1).append("题：").append(question.getQuestionName())
+//                    .append("\n\n")
+//                    .append(question.getDescription());
+//            if (i < questionIds.length - 1)
+//                homeworkDetail.append("\n\n\n\n");
         }
-        model.addAttribute("homeworkDetail", homeworkDetail.toString());
+        model.addAttribute("homeworkDetail", questionList);
         HomeworkScore homeworkScore = new HomeworkScore();
         Users user = (Users) session.getAttribute("user");
         homeworkScore.setStudentId(user.getId());

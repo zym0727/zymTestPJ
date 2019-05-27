@@ -131,7 +131,7 @@
 
 #assignLabel {
     margin-right: 30px;
-    margin-left: 120px;
+    margin-left: 130px;
     margin-top: 20px;
 }
 
@@ -139,6 +139,7 @@
     margin-right: 30px;
     margin-left: 170px;
     margin-top: 20px;
+    color: red;
 }
 
 .scrollSet {
@@ -205,6 +206,11 @@
 
 #homeworkSubmit {
     margin-top: 20px;
+    margin-left: 130px;
+    margin-right: 100px;
+}
+
+.markTh{
     margin-left: 130px;
     margin-right: 100px;
 }
@@ -468,4 +474,16 @@
 #us {
     margin-top: 14px;
     margin-left: 1130px;
+}
+
+.warningColor {
+    color: #a59c2e;
+}
+
+.answerColor {
+    background: #f3fffb !important;
+}
+
+.markColor {
+    background: #ebf2f9 !important;
 }
