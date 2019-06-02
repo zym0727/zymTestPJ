@@ -98,6 +98,7 @@ public abstract class LanguageTest {
             System.out.println("两者是否相同：" + output.equals(testData.getOutput()));
             if (output.equals(testData.getOutput()))
                 correct++;
+            System.out.println();
         }
         return correct;
     }

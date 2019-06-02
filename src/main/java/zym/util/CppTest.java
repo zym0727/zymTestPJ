@@ -35,7 +35,7 @@ public class CppTest extends LanguageTest {
     }
 
     /**
-     * C++运行，例如docker run -i --rm -v /c/Users/code:/usr/src/code -w /usr/src/code gcc ./a.out
+     * C++运行，例如docker run -i --rm -v /c/Users/code:/usr/src/code -w /usr/src/code gcc timeout 3s ./a.out
      *
      * @return
      */
@@ -51,6 +51,8 @@ public class CppTest extends LanguageTest {
         executeCommands.add("-w");//指定容器的某目录为工作目录
         executeCommands.add(getDockerDir());
         executeCommands.add("gcc");//gcc镜像
+        executeCommands.add("timeout");//Linux timeout 限时函数
+        executeCommands.add("3s");
         executeCommands.add("./a.out");//C++编译后统一为a.out
         return executeCommands;
     }

@@ -39,7 +39,7 @@ public class JavaTest extends LanguageTest {
     }
 
     /**
-     * Java运行，例如docker run --rm -v /c/Users/code:/usr/src/code -w /usr/src/code openjdk:8 java hello
+     * Java运行，例如docker run --rm -v /c/Users/code:/usr/src/code -w /usr/src/code openjdk:8 timeout 3s java hello
      *
      * @return
      */
@@ -55,6 +55,8 @@ public class JavaTest extends LanguageTest {
         executeCommands.add("-w");//指定容器的某目录为工作目录
         executeCommands.add(getDockerDir());
         executeCommands.add("openjdk:8");
+        executeCommands.add("timeout");//Linux timeout 限时函数
+        executeCommands.add("3s");
         executeCommands.add("java");
         executeCommands.add("Main");
         return executeCommands;
